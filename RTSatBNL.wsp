@@ -1,0 +1,306 @@
+ENVT0100,LM:2024/06/03 14:12:07:463,DS:0000004179,CS:00570,MA:D0-AD-08-5A-A1-24,EI:           
+sActiveChild="Main.prg"
+bMdiMaximized=True
+nProgramFileCount=4
+ProgramFile1 {
+	sName="Main.prg"
+	bOpened=True
+	nWinState=2
+	Window {
+		nLeft=-1
+		nTop=-11
+		nWidth=543
+		nHeight=602
+	}
+}
+ProgramFile2 {
+	sName="RTS_server.prg"
+	bOpened=True
+	nWinState=0
+	Window {
+		nLeft=648
+		nTop=13
+		nWidth=390
+		nHeight=310
+	}
+}
+ProgramFile3 {
+	sName="Calib_tools.prg"
+	bOpened=True
+	nWinState=0
+	Window {
+		nLeft=8
+		nTop=282
+		nWidth=664
+		nHeight=380
+	}
+}
+ProgramFile4 {
+	sName="RTS_tools.prg"
+	bOpened=True
+	nWinState=0
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=426
+		nHeight=278
+	}
+}
+nIncludeFileCount=2
+IncludeFile1 {
+	sName="RTSserver.inc"
+	bOpened=False
+	nWinState=0
+	Window {
+		nLeft=617
+		nTop=79
+		nWidth=722
+		nHeight=474
+	}
+}
+IncludeFile2 {
+	sName="RTS_tools.inc"
+	bOpened=True
+	nWinState=0
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=720
+		nHeight=467
+	}
+}
+nPointFileCount=5
+PointFile1 {
+	sName="robot1.pts"
+	bOpened=False
+	nWinState=0
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=0
+		nHeight=0
+	}
+}
+PointFile2 {
+	sName="Calib_Stinger.pts"
+	bOpened=False
+	nWinState=0
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=0
+		nHeight=0
+	}
+}
+PointFile3 {
+	sName="Calib_UF_Stinger.pts"
+	bOpened=False
+	nWinState=0
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=0
+		nHeight=0
+	}
+}
+PointFile4 {
+	sName="Calib_DF_mark.pts"
+	bOpened=False
+	nWinState=0
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=0
+		nHeight=0
+	}
+}
+PointFile5 {
+	sName="Calib_DF_Socket.pts"
+	bOpened=False
+	nWinState=0
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=0
+		nHeight=0
+	}
+}
+nForceFileCount=0
+sActiveWindow="main.prg"
+CmdWindow {
+	bOpened=False
+	Window {
+		nLeft=94
+		nTop=1
+		nWidth=1132
+		nHeight=625
+	}
+	nWinState=0
+}
+RunWindow {
+	bOpened=False
+	Window {
+		nLeft=142
+		nTop=373
+		nWidth=709
+		nHeight=300
+	}
+	nWinState=0
+	nNumOfDisplays=1
+	nSplitterDistance=364
+	Display1 {
+		nCamera=0
+		sSequences="1"
+	}
+	Display2 {
+		nCamera=0
+		sSequences="1"
+	}
+	Display3 {
+		nCamera=0
+		sSequences="1"
+	}
+	Display4 {
+		nCamera=0
+		sSequences="1"
+	}
+	Display5 {
+		nCamera=0
+		sSequences="1"
+	}
+	Display6 {
+		nCamera=0
+		sSequences="1"
+	}
+}
+IOLabelEditor {
+	bOpened=False
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=0
+		nHeight=0
+	}
+	nWinState=0
+}
+IOMonitor {
+	bOpened=False
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=0
+		nHeight=0
+	}
+}
+Simulator {
+	bOpened=False
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=0
+		nHeight=0
+	}
+}
+TaskMgr {
+	bOpened=False
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=0
+		nHeight=0
+	}
+}
+Macros {
+	bOpened=False
+	Window {
+		nLeft=596
+		nTop=287
+		nWidth=488
+		nHeight=429
+	}
+}
+RobotMgr {
+	bOpened=False
+	Window {
+		nLeft=633
+		nTop=114
+		nWidth=766
+		nHeight=530
+	}
+}
+UserErrorEditor {
+	bOpened=False
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=0
+		nHeight=0
+	}
+	nWinState=0
+}
+VisionGuide {
+	bOpened=True
+	Window {
+		nLeft=-8
+		nTop=-47
+		nWidth=1453
+		nHeight=856
+	}
+	nWinState=0
+	bShowFlowChart=True
+	nSplitterDistance1=1111
+	nSplitterDistance2=920
+	nSplitterDistance3=378
+	nSplitterDistance4=193
+	nSplitterDistance5=560
+}
+ForceGuide {
+	bOpened=False
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=0
+		nHeight=0
+	}
+	nWinState=0
+	bShowFlowChart=True
+	nSplitterDistance1=0
+	nSplitterDistance2=0
+	nSplitterDistance3=0
+	nSplitterDistance4=0
+	nSplitterDistance5=0
+	nSelectedTab=0
+}
+GUIBuilder {
+	bOpened=False
+	Window {
+		nLeft=0
+		nTop=0
+		nWidth=0
+		nHeight=0
+	}
+	nWinState=0
+	nSplitterDistance1=0
+	nSplitterDistance2=0
+	nSplitterDistance3=0
+	nSplitterDistance4=0
+}
+ProjectExplorer {
+	bProgramsOpened=True
+	bIncludesOpened=True
+	bLabelsOpened=True
+	bMacrosOpened=True
+	bFunctionsOpened=False
+	bVisionOpened=True
+	bVisionSequencesOpened=True
+	bVisionCalibsOpened=False
+	bGUIBOpened=True
+	bGUIBFormsOpened=False
+	bRobotPointsOpened=True
+	bCommonPointsOpened=False
+	bForcesOpened=True
+	bCommonForcesOpened=False
+	bRobotsOpened1=True
+	bForceGuideOpened=True
+	bForceSequencesOpened=False
+}
