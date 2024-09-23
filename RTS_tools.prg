@@ -1,4 +1,4 @@
-#include "RTS_tools.inc"
+#include "RTS_tools.inc"A
 
 Function PumpOn
     VacuumValveOpen
@@ -169,12 +169,12 @@ Fend
 
 Function JumpToSocket(DAT_nr As Integer, socket_nr As Integer)
 	If DAT_nr = 2 Then
-		Jump P(20 + socket_nr) :Z(-132.5)
-		Print P(20 + socket_nr)
+		Jump P(200 + socket_nr) :Z(-132.5)
+		Print P(200 + socket_nr)
 	ElseIf DAT_nr = 1 Then
-		Jump P(10 + socket_nr) -X(DF_CAMERA_OFFSET) :Z(-134.682)
-		'Jump P(10 + socket_nr) -X(DF_CAMERA_OFFSET) -U(135) :Z(-100.682)
-		Print P(10 + socket_nr)
+		Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) :Z(-134.682)
+		'Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) -U(135) :Z(-100.682)
+		Print P(100 + socket_nr)
 	EndIf
 	
 Fend
@@ -258,9 +258,9 @@ Fend
 
 Function JumpToSocket_camera(DAT_nr As Integer, socket_nr As Integer)
 	If DAT_nr = 2 Then
-		Jump P(20 + socket_nr) :Z(-97.60) +X(DF_CAMERA_OFFSET) -U(45)
+		Jump P(200 + socket_nr) :Z(-97.60) +X(DF_CAMERA_OFFSET) -U(45)
 	ElseIf DAT_nr = 1 Then
-		Jump P(10 + socket_nr) +U(135)
+		Jump P(100 + socket_nr) +U(135)
 	EndIf
 Fend
 
@@ -388,7 +388,7 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 		tgt_x0 = DAT_X(tgt_DAT_nr, tgt_socket_nr)
 		tgt_y0 = DAT_Y(tgt_DAT_nr, tgt_socket_nr)
 		tgt_u0 = DAT_U(tgt_DAT_nr, tgt_socket_nr)
-		dst_U = CU(P(10 * tgt_DAT_nr + tgt_socket_nr))
+		dst_U = CU(P(100 * tgt_DAT_nr + tgt_socket_nr))
 	Else
 		ChipBottomAnaly = 100
 		Exit Function
@@ -907,6 +907,43 @@ Fend
 '        > 0 - job_id (timestamp)
 '        < 0 - Error id
 
+
+' Function MoveLArASICChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, larasic_socket_nr As Integer) As Int64
+' 	 'Wraps generic function and restricts to LArASICs only
+' 	 'larasic_socket_nr
+' 	 MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, larasic_socket_nr)
+' Fend
+
+' Function MoveColdADCChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, coldadc_socket_nr As Integer) As Int64
+' 	 'Wraps generic function and restricts to Coldadcs only
+' 	 'coldadc_socket_nr
+' 	 MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, (coldadc_socket_nr+10))
+' Fend
+
+' Function MoveColDATAChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, coldata_socket_nr As Integer) As Int64
+' 	 'Wraps generic function and restricts to Coldatas only
+' 	 'coldata_socket_nr
+' 	 MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, (coldata_socket_nr+20))
+' Fend
+
+' Function MoveChipFromTrayToChipSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, ChipType As String, socket_nr As Integer) As Int64
+' 	 Inetger soc_nr
+' 	 Select
+' 		Case "LArASIC"
+' 		     soc_nr=socket_nr
+' 		Case "ColdADC"
+' 		     soc_nr=socket_nr+10
+' 		Case "ColDATA"
+' 		     soc_nr=socket_nr+20
+' 	Send
+' 	MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, soc_nr)
+' Fend
+
+Function MoveChipFromTrayToTypeSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, chip_type As Integer, socket_nr As Integer) As Int64
+	 Integer soc_nr = socket_nr + 10* chip_type
+	 MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, socc_nr)
+Fend
+
 Function MoveChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, socket_nr As Integer) As Int64
 	
 	String ts$
@@ -1051,7 +1088,44 @@ Fend
 '
 ' GLOBAL:
 
-Function MoveChipFromSocketToTray(DAT_nr As Integer, socket_nr As Integer, pallet_nr As Integer, col_nr As Integer, row_nr As Integer) As Int64
+' Function MoveLArASICChipFromSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, larasic_socket_nr As Integer) As Int64
+' 	 'Wraps generic function and restricts to LArASICs only
+' 	 'larasic_socket_nr
+' 	 MoveChipFromSocketToTray(pallet_nr, col_nr, row_nr, DAT_nr, larasic_socket_nr)
+' Fend
+
+' Function MoveColdADCChipFromSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, coldadc_socket_nr As Integer) As Int64
+' 	 'Wraps generic function and restricts to Coldadcs only
+' 	 'coldadc_socket_nr
+' 	 MoveChipFromSocketToTray(pallet_nr, col_nr, row_nr, DAT_nr, (coldadc_socket_nr+10))
+' Fend
+
+' Function MoveColDATAChipFromSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, coldata_socket_nr As Integer) As Int64
+' 	 'Wraps generic function and restricts to Coldatas only
+' 	 'coldata_socket_nr
+' 	 MoveChipFromSocketToTray(pallet_nr, col_nr, row_nr, DAT_nr, (coldata_socket_nr+20))
+' Fend
+
+' Function MoveChipFromChipSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, ChipType As String, socket_nr As Integer) As Int64
+' 	 Inetger soc_nr
+' 	 Select
+' 		Case "LArASIC"
+' 		     soc_nr=socket_nr
+' 		Case "ColdADC"
+' 		     soc_nr=socket_nr+10
+' 		Case "ColDATA"
+' 		     soc_nr=socket_nr+20
+' 	Send
+' 	MoveChipFromSocketToTray(pallet_nr, col_nr, row_nr, DAT_nr, soc_nr)
+' Fend
+
+Function MoveChipFromTypeSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, chip_type As Integer, socket_nr As Integer) As Int64
+	 Integer soc_nr = socket_nr + 10* chip_type
+	 MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, socc_nr)
+Fend
+
+
+Function MoveChipFromTrayToSocket(DAT_nr As Integer, socket_nr As Integer, pallet_nr As Integer, col_nr As Integer, row_nr As Integer) As Int64
 	
 	String ts$
 	ts$ = FmtStr$(Date$ + " " + Time$, "yyyymmddhhnnss")

@@ -4,7 +4,10 @@
 #define NTRAYS 2
 #define TRAY_NCOLS 15
 #define TRAY_NROWS 6
-#define NSOCKETS 8
+#define N_LARASIC_SOC 8
+#define N_COLDADC_SOC 8
+#define N_COLDATA_SOC 2
+#define NSOCKETS 18
 #define DF_CAMERA_OFFSET 58
 #define DF_CAMERA_FOCUS -18.045
 
