@@ -1,4 +1,4 @@
-#include "RTS_tools.inc"A
+#include "RTS_tools.inc"
 
 Function PumpOn
     VacuumValveOpen
@@ -1121,11 +1121,11 @@ Fend
 
 Function MoveChipFromTypeSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, chip_type As Integer, socket_nr As Integer) As Int64
 	 Integer soc_nr = socket_nr + 10* chip_type
-	 MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, socc_nr)
+	 MoveChipFromSocketToTray(pallet_nr, col_nr, row_nr, DAT_nr, socc_nr)
 Fend
 
 
-Function MoveChipFromTrayToSocket(DAT_nr As Integer, socket_nr As Integer, pallet_nr As Integer, col_nr As Integer, row_nr As Integer) As Int64
+Function MoveChipFromSocketToTray(DAT_nr As Integer, socket_nr As Integer, pallet_nr As Integer, col_nr As Integer, row_nr As Integer) As Int64
 	
 	String ts$
 	ts$ = FmtStr$(Date$ + " " + Time$, "yyyymmddhhnnss")
