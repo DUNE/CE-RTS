@@ -940,8 +940,9 @@ Fend
 ' Fend
 
 Function MoveChipFromTrayToTypeSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, chip_type As Integer, socket_nr As Integer) As Int64
-	 Integer soc_nr = socket_nr + 10* chip_type
-	 MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, socc_nr)
+	 Integer soc_nr
+	 soc_nr = socket_nr + 10* chip_type
+	 MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, soc_nr)
 Fend
 
 Function MoveChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, socket_nr As Integer) As Int64
@@ -1120,8 +1121,9 @@ Fend
 ' Fend
 
 Function MoveChipFromTypeSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, chip_type As Integer, socket_nr As Integer) As Int64
-	 Integer soc_nr = socket_nr + 10* chip_type
-	 MoveChipFromSocketToTray(pallet_nr, col_nr, row_nr, DAT_nr, socc_nr)
+	 Integer soc_nr
+	 soc_nr = socket_nr + 10* chip_type
+	 MoveChipFromSocketToTray(pallet_nr, col_nr, row_nr, DAT_nr, soc_nr)
 Fend
 
 
