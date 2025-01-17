@@ -1,0 +1,5 @@
+RTS_robot/RTS_robot.dat
+RTS_robot/*.obj
+RTS_robot/*.bak
+RTS_robot/*.wsp
+RTS_robot/*.prgfg
