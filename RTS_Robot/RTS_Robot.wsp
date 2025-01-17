@@ -1,4 +1,4 @@
-ENVT0100,LM:2024/08/16 14:35:14:469,DS:0000004485,CS:18213,MA:D0-AD-08-5A-A1-24,EI:           
+ENVT0100,LM:2025/01/17 20:34:52:465,DS:0000004484,CS:16974,MA:B8-85-84-9F-6A-05,EI:           
 sActiveChild="RTS_tools.prg"
 bMdiMaximized=False
 nProgramFileCount=4
@@ -261,7 +261,7 @@ UserErrorEditor {
 	nWinState=0
 }
 VisionGuide {
-	bOpened=True
+	bOpened=False
 	Window {
 		nLeft=-17
 		nTop=-17
@@ -270,11 +270,11 @@ VisionGuide {
 	}
 	nWinState=0
 	bShowFlowChart=True
-	nSplitterDistance1=1325
-	nSplitterDistance2=1257
-	nSplitterDistance3=626
-	nSplitterDistance4=502
-	nSplitterDistance5=704
+	nSplitterDistance1=962
+	nSplitterDistance2=689
+	nSplitterDistance3=595
+	nSplitterDistance4=554
+	nSplitterDistance5=624
 }
 ForceGuide {
 	bOpened=False

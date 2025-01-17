@@ -1,12 +1,12 @@
-ENVT0100,LM:2024/08/16 14:35:01:212,DS:0000008415,CS:13593,MA:D0-AD-08-5A-A1-24,EI:           
+ENVT0100,LM:2025/01/17 20:34:41:434,DS:0000008435,CS:00045,MA:B8-85-84-9F-6A-05,EI:           
 SystemProperties {
-	sRCVersion="7.5.4"
+	sRCVersion="7.5.3"
 	sRCRevision="R1"
-	sGUID="59474a2c-2c1d-4ec1-a49e-5cb23a283f14"
-	sPath="C:\\EpsonRC70\\Projects\\RTSatBNL\\"
+	sGUID="f965e132-c841-42ba-bafd-fbf5d79f2655"
+	sPath="C:\\EpsonRC70\\Projects\\TestGit\\CE-RTS\\RTS_Robot\\"
 	sCreated="1/31/2024 12:44:32 PM"
 	sLastModified="8/15/2024 3:55:14 PM"
-	bBuildComplete=False
+	bBuildComplete=True
 	bFirstBuildComplete=True
 	bRebuildRequired=False
 	bClearControllerProject=False
@@ -23,9 +23,9 @@ UserProperties {
 ControllerConnection {
 	sName="Ethernet 1"
 	sType="Ethernet"
-	sIPAddress="192.168.0.2"
+	sIPAddress="192.168.0.1"
 	nPort=-1
-	sControllerName="R7D2010495"
+	sControllerName="R7D2010497"
 	nControllerType=393232
 	sControllerTypeName="RC700D"
 }
@@ -41,27 +41,27 @@ nRobotCount=1
 nProgramFileCount=4
 ProgramFile1 {
 	sName="Main.prg"
-	bCompiled=False
+	bCompiled=True
 	bStoreInController=True
-	sTimeSavedInController="8/15/2024 4:09:28 PM"
+	sTimeSavedInController="1/17/2025 7:32:16 PM"
 }
 ProgramFile2 {
 	sName="RTS_server.prg"
-	bCompiled=False
+	bCompiled=True
 	bStoreInController=True
-	sTimeSavedInController="6/25/2024 8:09:36 PM"
+	sTimeSavedInController="1/17/2025 7:32:16 PM"
 }
 ProgramFile3 {
 	sName="Calib_tools.prg"
-	bCompiled=False
+	bCompiled=True
 	bStoreInController=True
-	sTimeSavedInController="6/3/2024 2:12:00 PM"
+	sTimeSavedInController="1/17/2025 7:32:16 PM"
 }
 ProgramFile4 {
 	sName="RTS_tools.prg"
-	bCompiled=False
+	bCompiled=True
 	bStoreInController=True
-	sTimeSavedInController="8/13/2024 8:56:41 PM"
+	sTimeSavedInController="1/17/2025 7:32:16 PM"
 }
 nIncludeFileCount=2
 IncludeFile1 {
@@ -72,44 +72,44 @@ IncludeFile1 {
 IncludeFile2 {
 	sName="RTS_tools.inc"
 	bStoreInController=True
-	sTimeSavedInController="6/18/2024 3:45:12 PM"
+	sTimeSavedInController="1/17/2025 7:32:16 PM"
 }
 nPointFileCount=7
 PointFile1 {
 	sName="robot1.pts"
 	nRobot=1
 	bDefault=True
-	sTimeSavedInController="8/8/2024 9:55:03 PM"
+	sTimeSavedInController="8/26/2024 4:36:19 PM"
 }
 PointFile2 {
 	sName="Calib_Stinger.pts"
 	nRobot=1
-	sTimeSavedInController="5/3/2024 11:58:24 PM"
+	sTimeSavedInController="1/17/2025 7:32:16 PM"
 }
 PointFile3 {
 	sName="Calib_UF_Stinger.pts"
 	nRobot=1
-	sTimeSavedInController="5/9/2024 2:54:38 PM"
+	sTimeSavedInController="1/17/2025 7:32:16 PM"
 }
 PointFile4 {
 	sName="Calib_DF_mark.pts"
 	nRobot=1
-	sTimeSavedInController="5/7/2024 9:35:54 PM"
+	sTimeSavedInController="1/17/2025 7:32:16 PM"
 }
 PointFile5 {
 	sName="Calib_DF_Socket.pts"
 	nRobot=1
-	sTimeSavedInController="5/8/2024 9:27:02 PM"
+	sTimeSavedInController="1/17/2025 7:32:16 PM"
 }
 PointFile6 {
 	sName="xy_test2.pts"
 	nRobot=1
-	sTimeSavedInController="7/26/2024 4:36:37 PM"
+	sTimeSavedInController="8/26/2024 4:36:19 PM"
 }
 PointFile7 {
 	sName="points_BNL.pts"
 	nRobot=1
-	sTimeSavedInController="8/15/2024 7:57:24 PM"
+	sTimeSavedInController="8/26/2024 4:36:19 PM"
 }
 nForceFileCount=0
 OperatorSettings {
@@ -475,13 +475,13 @@ NetworkCameras {
 }
 nVisFileCount=1
 VisFile1 {
-	sName="RTSatBNL.vis"
+	sName="RTS_Robot.vis"
 }
 nGuiBuilderFileCount=0
 nExProgramFileCount=0
 nFGFileCount=1
 FGFile1 {
-	sName="RTSatBNL.fg"
+	sName="RTS_Robot.fg"
 }
 bFGCompiled=False
 Simulator {
