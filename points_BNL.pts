@@ -267,7 +267,7 @@ Point10 {
 	bSimVisible=False
 }
 Point11 {
-	nNumber=101
+	nNumber=11
 	sLabel="Socket_L_01"
 	sDescription="First LArASIC socket on L DAT board (At back of RTS)"
 	nUndefined=0
@@ -293,7 +293,7 @@ Point11 {
 	bSimVisible=False
 }
 Point12 {
-	nNumber=102
+	nNumber=12
 	sLabel="Socket_L_02"
 	sDescription=""
 	nUndefined=0
@@ -319,7 +319,7 @@ Point12 {
 	bSimVisible=False
 }
 Point13 {
-	nNumber=103
+	nNumber=13
 	sLabel="Socket_L_03"
 	sDescription=""
 	nUndefined=0
@@ -345,7 +345,7 @@ Point13 {
 	bSimVisible=False
 }
 Point14 {
-	nNumber=104
+	nNumber=14
 	sLabel="Socket_L_04"
 	sDescription=""
 	nUndefined=0
@@ -371,7 +371,7 @@ Point14 {
 	bSimVisible=False
 }
 Point15 {
-	nNumber=105
+	nNumber=15
 	sLabel="Socket_L_05"
 	sDescription=""
 	nUndefined=0
@@ -397,7 +397,7 @@ Point15 {
 	bSimVisible=False
 }
 Point16 {
-	nNumber=106
+	nNumber=16
 	sLabel="Socket_L_06"
 	sDescription=""
 	nUndefined=0
@@ -423,7 +423,7 @@ Point16 {
 	bSimVisible=False
 }
 Point17 {
-	nNumber=107
+	nNumber=17
 	sLabel="Socket_L_07"
 	sDescription=""
 	nUndefined=0
@@ -449,7 +449,7 @@ Point17 {
 	bSimVisible=False
 }
 Point18 {
-	nNumber=108
+	nNumber=18
 	sLabel="Socket_L_08"
 	sDescription=""
 	nUndefined=0
@@ -475,7 +475,7 @@ Point18 {
 	bSimVisible=False
 }
 Point19 {
-	nNumber=111
+	nNumber=21
 	sLabel="Socket_L_11"
 	sDescription="First ColdADC socket on L DAT board"
 	nUndefined=0
@@ -501,7 +501,7 @@ Point19 {
 	bSimVisible=False
 }
 Point20 {
-	nNumber=112
+	nNumber=22
 	sLabel="Socket_L_12"
 	sDescription=""
 	nUndefined=0
@@ -527,7 +527,7 @@ Point20 {
 	bSimVisible=False
 }
 Point21 {
-	nNumber=113
+	nNumber=23
 	sLabel="Socket_L_13"
 	sDescription=""
 	nUndefined=0
@@ -553,7 +553,7 @@ Point21 {
 	bSimVisible=False
 }
 Point22 {
-	nNumber=114
+	nNumber=24
 	sLabel="Socket_L_14"
 	sDescription=""
 	nUndefined=0
@@ -579,7 +579,7 @@ Point22 {
 	bSimVisible=False
 }
 Point23 {
-	nNumber=115
+	nNumber=25
 	sLabel="Socket_L_15"
 	sDescription=""
 	nUndefined=0
@@ -605,7 +605,7 @@ Point23 {
 	bSimVisible=False
 }
 Point24 {
-	nNumber=116
+	nNumber=26
 	sLabel="Socket_L_16"
 	sDescription=""
 	nUndefined=0
@@ -631,7 +631,7 @@ Point24 {
 	bSimVisible=False
 }
 Point25 {
-	nNumber=117
+	nNumber=27
 	sLabel="Socket_L_17"
 	sDescription=""
 	nUndefined=0
@@ -657,7 +657,7 @@ Point25 {
 	bSimVisible=False
 }
 Point26 {
-	nNumber=118
+	nNumber=28
 	sLabel="Socket_L_18"
 	sDescription=""
 	nUndefined=0
@@ -683,7 +683,7 @@ Point26 {
 	bSimVisible=False
 }
 Point27 {
-	nNumber=121
+	nNumber=31
 	sLabel="Socket_L_21"
 	sDescription="First ColdDATA socket on L DAT board"
 	nUndefined=0
@@ -709,7 +709,7 @@ Point27 {
 	bSimVisible=False
 }
 Point28 {
-	nNumber=122
+	nNumber=32
 	sLabel="Socket_L_22"
 	sDescription=""
 	nUndefined=0
@@ -735,7 +735,7 @@ Point28 {
 	bSimVisible=False
 }
 Point29 {
-	nNumber=201
+	nNumber=41
 	sLabel="Socket_R_01"
 	sDescription="First LArASIC socket on R DAT board"
 	nUndefined=448
@@ -761,7 +761,7 @@ Point29 {
 	bSimVisible=False
 }
 Point30 {
-	nNumber=202
+	nNumber=42
 	sLabel="Socket_R_02"
 	sDescription=""
 	nUndefined=448
@@ -787,7 +787,7 @@ Point30 {
 	bSimVisible=False
 }
 Point31 {
-	nNumber=203
+	nNumber=43
 	sLabel="Socket_R_03"
 	sDescription=""
 	nUndefined=448
@@ -813,7 +813,7 @@ Point31 {
 	bSimVisible=False
 }
 Point32 {
-	nNumber=204
+	nNumber=44
 	sLabel="Socket_R_04"
 	sDescription=""
 	nUndefined=448
@@ -839,7 +839,7 @@ Point32 {
 	bSimVisible=False
 }
 Point33 {
-	nNumber=205
+	nNumber=45
 	sLabel="Socket_R_05"
 	sDescription=""
 	nUndefined=448
@@ -865,7 +865,7 @@ Point33 {
 	bSimVisible=False
 }
 Point34 {
-	nNumber=206
+	nNumber=46
 	sLabel="Socket_R_06"
 	sDescription=""
 	nUndefined=448
@@ -891,7 +891,7 @@ Point34 {
 	bSimVisible=False
 }
 Point35 {
-	nNumber=207
+	nNumber=47
 	sLabel="Socket_R_07"
 	sDescription=""
 	nUndefined=448
@@ -917,7 +917,7 @@ Point35 {
 	bSimVisible=False
 }
 Point36 {
-	nNumber=208
+	nNumber=48
 	sLabel="Socket_R_08"
 	sDescription=""
 	nUndefined=448
@@ -943,7 +943,7 @@ Point36 {
 	bSimVisible=False
 }
 Point37 {
-	nNumber=211
+	nNumber=51
 	sLabel="Socket_R_11"
 	sDescription="First ColdADC socket on R DAT board"
 	nUndefined=448
@@ -969,7 +969,7 @@ Point37 {
 	bSimVisible=False
 }
 Point38 {
-	nNumber=212
+	nNumber=52
 	sLabel="Socket_R_12"
 	sDescription=""
 	nUndefined=448
@@ -995,7 +995,7 @@ Point38 {
 	bSimVisible=False
 }
 Point39 {
-	nNumber=213
+	nNumber=53
 	sLabel="Socket_R_13"
 	sDescription=""
 	nUndefined=448
@@ -1021,7 +1021,7 @@ Point39 {
 	bSimVisible=False
 }
 Point40 {
-	nNumber=214
+	nNumber=54
 	sLabel="Socket_R_14"
 	sDescription=""
 	nUndefined=448
@@ -1047,7 +1047,7 @@ Point40 {
 	bSimVisible=False
 }
 Point41 {
-	nNumber=215
+	nNumber=55
 	sLabel="Socket_R_15"
 	sDescription=""
 	nUndefined=448
@@ -1073,7 +1073,7 @@ Point41 {
 	bSimVisible=False
 }
 Point42 {
-	nNumber=216
+	nNumber=56
 	sLabel="Socket_R_16"
 	sDescription=""
 	nUndefined=448
@@ -1099,7 +1099,7 @@ Point42 {
 	bSimVisible=False
 }
 Point43 {
-	nNumber=217
+	nNumber=57
 	sLabel="Socket_R_17"
 	sDescription=""
 	nUndefined=448
@@ -1125,7 +1125,7 @@ Point43 {
 	bSimVisible=False
 }
 Point44 {
-	nNumber=218
+	nNumber=58
 	sLabel="Socket_R_18"
 	sDescription=""
 	nUndefined=448
@@ -1151,7 +1151,7 @@ Point44 {
 	bSimVisible=False
 }
 Point45 {
-	nNumber=221
+	nNumber=61
 	sLabel="Socket_R_21"
 	sDescription="First ColdDATA socket on R DAT board"
 	nUndefined=448
@@ -1177,7 +1177,7 @@ Point45 {
 	bSimVisible=False
 }
 Point46 {
-	nNumber=222
+	nNumber=62
 	sLabel="Socket_R_22"
 	sDescription=""
 	nUndefined=448
