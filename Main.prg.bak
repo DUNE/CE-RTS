@@ -150,10 +150,10 @@ Function main
 	'JumpToSocket_cor(2, 1)
 	'Print Here
 
-	'MoveChipFromTrayToSocket(2, 2, 1, 2, 2)
-	'MoveChipFromSocketToTray(2, 2, 2, 2, 1)
-	'MoveChipFromTrayToSocket(2, 3, 1, 2, 3)
-	'MoveChipFromSocketToTray(2, 3, 2, 3, 1)
+	MoveChipFromTrayToSocket(2, 2, 1, 2, 2)
+	MoveChipFromSocketToTray(2, 2, 2, 2, 1)
+	MoveChipFromTrayToSocket(2, 3, 1, 2, 3)
+	MoveChipFromSocketToTray(2, 3, 2, 3, 1)
 	MoveChipFromTrayToSocket(2, 4, 1, 2, 4)
 	MoveChipFromSocketToTray(2, 4, 2, 4, 1)
 	MoveChipFromTrayToSocket(2, 5, 1, 2, 5)

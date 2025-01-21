@@ -1,6 +1,5 @@
 #define RTS_DATA "C:\Users\coldelec\RTS\"
-'#define HAND_U0 7.075
-#define HAND_U0 4.174
+#define HAND_U0 7.075
 #define NTRAYS 2
 #define TRAY_NCOLS 15
 #define TRAY_NROWS 6

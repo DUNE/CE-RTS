@@ -1,4 +1,4 @@
-ENVT0100,LM:2024/11/21 22:17:40:373,DS:0000009470,CS:09749,MA:D0-AD-08-5A-A1-24,EI:           
+ENVT0100,LM:2024/11/21 22:15:45:431,DS:0000009470,CS:09749,MA:D0-AD-08-5A-A1-24,EI:           
 sVersion="2.0.0"
 bDisplayR=False
 bDisplayS=False
@@ -634,7 +634,7 @@ Point25 {
 	sLabel="Socket_R_5"
 	sDescription=""
 	nUndefined=448
-	rX=330.501
+	rX=331.501
 	rY=-96.82
 	rZ=-10
 	rU=49.174
@@ -660,7 +660,7 @@ Point26 {
 	sLabel="Socket_R_6"
 	sDescription=""
 	nUndefined=448
-	rX=330.661
+	rX=331.661
 	rY=-172.805
 	rZ=-10
 	rU=49.174
@@ -686,7 +686,7 @@ Point27 {
 	sLabel="Socket_R_7"
 	sDescription=""
 	nUndefined=448
-	rX=330.448
+	rX=331.448
 	rY=-249.253
 	rZ=-10
 	rU=49.174
@@ -712,7 +712,7 @@ Point28 {
 	sLabel="Socket_R_8"
 	sDescription=""
 	nUndefined=448
-	rX=330.732
+	rX=331.732
 	rY=-325.49
 	rZ=-10
 	rU=49.174

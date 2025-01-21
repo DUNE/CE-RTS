@@ -87,16 +87,25 @@ Function RTS_server
 		    	JumpToCamera
 		    	Motor Off
 		    	Print #portNr, "RTS Quiet"
-		    	'CloseNet #portNr
-		    	'Wait 1
-	    		'OpenNet #portNr As Server
-				'Print "Waiting connection to port ", portNr
-				'WaitNet #portNr
- 				''Print #portNr, "Data from host 1"
- 				'Print "Connection established"
-				'Print "Sending data to client"
-    			'Print #portNr, "RTS ready"
+		    	CloseNet #portNr
+		    	Wait 1
+	    		OpenNet #portNr As Server
+				Print "Waiting connection to port ", portNr
+				WaitNet #portNr
+ 				'Print #portNr, "Data from host 1"
+ 				Print "Connection established"
+				Print "Sending data to client"
+    			Print #portNr, "RTS ready"
     			
+    		Case "Reconnect"
+	    		OpenNet #portNr As Server
+				Print "Waiting connection to port ", portNr
+				WaitNet #portNr
+ 				'Print #portNr, "Data from host 1"
+ 				Print "Connection established"
+				Print "Sending data to client"
+    			Print #portNr, "RTS ready"
+
     		Case "Shutdown"
 		    	CloseNet #portNr
 		    	PumpOff
