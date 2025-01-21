@@ -137,8 +137,10 @@ Function main
 	'JumpToCamera
 
 	
-	MoveChipFromTrayToSocket(2, 1, 1, 2, 1)
-	MoveChipFromSocketToTray(2, 1, 2, 1, 1)
+
+
+	'MoveChipFromTrayToSocket(2, 1, 1, 2, 1)
+	'MoveChipFromSocketToTray(2, 1, 2, 1, 1)
 	
 	
 	' load chips from tray 2 row 1 to DAT board 2
@@ -147,7 +149,35 @@ Function main
 	'Next j
 	
 	
+	'MoveChipFromSocketToTray(2, 1, 2, 1, 1)
+	'MoveChipFromSocketToTray(2, 2, 2, 2, 1)
+	'MoveChipFromSocketToTray(2, 3, 2, 3, 1)
+	'MoveChipFromSocketToTray(2, 4, 2, 4, 1)
+	'MoveChipFromSocketToTray(2, 5, 2, 5, 1)
+	'MoveChipFromSocketToTray(2, 6, 2, 6, 1)
+	'MoveChipFromSocketToTray(2, 7, 2, 7, 1)
+	'MoveChipFromSocketToTray(2, 2, 2, 9, 6)
+	'MoveChipFromSocketToTray(2, 3, 2, 10, 6)
+	'MoveChipFromSocketToTray(2, 4, 2, 11, 6)
+	'MoveChipFromSocketToTray(2, 5, 2, 12, 6)
+	'MoveChipFromSocketToTray(2, 6, 2, 13, 6)
+	'MoveChipFromSocketToTray(2, 7, 2, 14, 6)
+	'MoveChipFromSocketToTray(2, 8, 2, 15, 6)
+	'MoveChipFromTrayToTray(2, 1, 2, 1, 1, 2, 0)
+	'MoveChipFromTrayToTray(1, 1, 2, 2, 1, 2, 0)
+    'MoveChipFromTrayToTray(1, 15, 6, 1, 15, 6, 0)
+    'MoveChipFromTrayToTray(1, 15, 6, 2, 15, 6, 0)
+    'MoveChipFromTrayToTray(2, 15, 6, 1, 15, 6, 0)
+    'MoveChipFromTrayToTray(1, 1, 5, 1, 1, 5, 0)
 	
+	'MoveChipFromTrayToSocket(2, 15, 6, 2, 1)
+	'MoveChipFromSocketToTray(2, 1, 2, 15, 6)
+	'MoveChipFromSocketToTray(2, 1, 1, 15, 6)
+	'MoveChipFromTrayToSocket(1, 15, 6, 2, 1)
+	'MoveChipFromSocketToTray(2, 3, 2, 3, 1)
+	'MoveChipFromTrayToSocket(2, 3, 1, 2, 3)
+
+	'MoveChipFromTrayToSocket(2, 1, 1, 2, 1)
 
 	PumpOff
 		
