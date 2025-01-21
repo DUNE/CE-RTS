@@ -170,12 +170,12 @@ Fend
 
 Function JumpToSocket(DAT_nr As Integer, socket_nr As Integer)
 	If DAT_nr = 2 Then
-		Jump P(20 + socket_nr) :Z(-132.5)
-		Print P(20 + socket_nr)
+		Jump P(200 + socket_nr) :Z(-132.5)
+		Print P(200 + socket_nr)
 	ElseIf DAT_nr = 1 Then
-		Jump P(10 + socket_nr) -X(DF_CAMERA_OFFSET) :Z(-134.682)
-		'Jump P(10 + socket_nr) -X(DF_CAMERA_OFFSET) -U(135) :Z(-100.682)
-		Print P(10 + socket_nr)
+		Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) :Z(-134.682)
+		'Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) -U(135) :Z(-100.682)
+		Print P(100 + socket_nr)
 	EndIf
 	
 Fend
@@ -261,9 +261,9 @@ Fend
 
 Function JumpToSocket_camera(DAT_nr As Integer, socket_nr As Integer)
 	If DAT_nr = 2 Then
-		Jump P(20 + socket_nr) :Z(-97.60) +X(DF_CAMERA_OFFSET) -U(45)
+		Jump P(200 + socket_nr) :Z(-97.60) +X(DF_CAMERA_OFFSET) -U(45)
 	ElseIf DAT_nr = 1 Then
-		Jump P(10 + socket_nr) +U(135)
+		Jump P(100 + socket_nr) +U(135)
 	EndIf
 Fend
 
@@ -398,7 +398,7 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 		tgt_x0 = DAT_X(tgt_DAT_nr, tgt_socket_nr)
 		tgt_y0 = DAT_Y(tgt_DAT_nr, tgt_socket_nr)
 		tgt_u0 = DAT_U(tgt_DAT_nr, tgt_socket_nr)
-		dst_U = CU(P(10 * tgt_DAT_nr + tgt_socket_nr))
+		dst_U = CU(P(100 * tgt_DAT_nr + tgt_socket_nr))
 	Else
 		ChipBottomAnaly = 100
 		Exit Function

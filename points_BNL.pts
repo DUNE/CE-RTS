@@ -1,11 +1,11 @@
-ENVT0100,LM:2024/08/15 19:57:24:692,DS:0000014526,CS:27768,MA:D0-AD-08-5A-A1-24,EI:           
+ENVT0100,LM:2025/01/16 18:52:23:703,DS:0000014804,CS:29708,MA:D0-AD-08-5A-A1-24,EI:           
 sVersion="2.0.0"
 nDisplayMode=2
 bDisplayR=False
 bDisplayS=False
 bDisplayT=False
 nNumberOfJoints=4
-nNumberOfPoints=46
+nNumberOfPoints=47
 Point1 {
 	nNumber=0
 	sLabel="P_camera"
@@ -1192,6 +1192,32 @@ Point46 {
 	rT=0
 	nLocal=0
 	nHand=2
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point47 {
+	nNumber=101
+	sLabel=""
+	sDescription=""
+	nUndefined=262143
+	rX=0
+	rY=0
+	rZ=0
+	rU=0
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=1
 	nElbow=1
 	nWrist=1
 	nJ1Flag=0

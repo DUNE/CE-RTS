@@ -1356,6 +1356,12 @@ Bad vacuum
 > 
 > 
 > 
+> Print P(19)
+ X:  330.345 Y:  221.330 Z:  -10.000 U:   52.075 V:    0.000 W:    0.000 /L /0
+> 
+!!Error: 7007, Specified point number was not defined. Specify a teach point number.
+> 
+ X:  330.345 Y:  221.330 Z:  -10.000 U:   52.075 V:    0.000 W:    0.000 /L /0
 > 
 > 
 > 
@@ -1370,4 +1376,7 @@ Bad vacuum
 > JumpToTray(2,1,1)
 >JumpToTray_camera(2,1,1) 
 > 
+> JumpToCamera
+>Print P_Stinger_Calib_DF
+!!Error: 2513, Specified point label is not defined.
 > 

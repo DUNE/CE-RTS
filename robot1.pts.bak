@@ -1,10 +1,11 @@
-ENVT0100,LM:2024/11/21 22:15:45:431,DS:0000009470,CS:09749,MA:D0-AD-08-5A-A1-24,EI:           
+ENVT0100,LM:2025/01/16 20:19:59:822,DS:0000014463,CS:16411,MA:D0-AD-08-5A-A1-24,EI:           
 sVersion="2.0.0"
+nDisplayMode=2
 bDisplayR=False
 bDisplayS=False
 bDisplayT=False
 nNumberOfJoints=4
-nNumberOfPoints=30
+nNumberOfPoints=46
 Point1 {
 	nNumber=0
 	sLabel="P_camera"
@@ -34,7 +35,7 @@ Point1 {
 Point2 {
 	nNumber=1
 	sLabel="P_Home"
-	sDescription="Test"
+	sDescription=""
 	nUndefined=0
 	rX=16.326
 	rY=560.965
@@ -266,33 +267,7 @@ Point10 {
 	bSimVisible=False
 }
 Point11 {
-	nNumber=10
-	sLabel=""
-	sDescription=""
-	nUndefined=262143
-	rX=0
-	rY=0
-	rZ=0
-	rU=0
-	rV=0
-	rW=0
-	rR=0
-	rS=0
-	rT=0
-	nLocal=0
-	nHand=1
-	nElbow=1
-	nWrist=1
-	nJ1Flag=0
-	nJ2Flag=0
-	nJ4Flag=0
-	nJ6Flag=0
-	rJ1Angle=0
-	rJ4Angle=0
-	bSimVisible=False
-}
-Point12 {
-	nNumber=11
+	nNumber=101
 	sLabel="Socket_L_1"
 	sDescription=""
 	nUndefined=0
@@ -317,8 +292,8 @@ Point12 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point13 {
-	nNumber=12
+Point12 {
+	nNumber=102
 	sLabel="Socket_L_2"
 	sDescription=""
 	nUndefined=0
@@ -343,8 +318,8 @@ Point13 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point14 {
-	nNumber=13
+Point13 {
+	nNumber=103
 	sLabel="Socket_L_3"
 	sDescription=""
 	nUndefined=0
@@ -369,8 +344,8 @@ Point14 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point15 {
-	nNumber=14
+Point14 {
+	nNumber=104
 	sLabel="Socket_L_4"
 	sDescription=""
 	nUndefined=0
@@ -395,8 +370,8 @@ Point15 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point16 {
-	nNumber=15
+Point15 {
+	nNumber=105
 	sLabel="Socket_L_5"
 	sDescription=""
 	nUndefined=0
@@ -421,8 +396,8 @@ Point16 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point17 {
-	nNumber=16
+Point16 {
+	nNumber=106
 	sLabel="Socket_L_6"
 	sDescription=""
 	nUndefined=0
@@ -447,8 +422,8 @@ Point17 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point18 {
-	nNumber=17
+Point17 {
+	nNumber=107
 	sLabel="Socket_L_7"
 	sDescription=""
 	nUndefined=0
@@ -473,8 +448,8 @@ Point18 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point19 {
-	nNumber=18
+Point18 {
+	nNumber=108
 	sLabel="Socket_L_8"
 	sDescription=""
 	nUndefined=0
@@ -499,22 +474,48 @@ Point19 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point20 {
-	nNumber=19
-	sLabel="Socket_L_1a"
-	sDescription=""
-	nUndefined=448
-	rX=330.345
-	rY=221.33
-	rZ=-10
-	rU=52.075
+Point19 {
+	nNumber=111
+	sLabel="Socket_L_11"
+	sDescription="First ColdADC socket on L DAT board"
+	nUndefined=0
+	rX=-354.96
+	rY=-324.178
+	rZ=-101.082
+	rU=229.826
 	rV=0
 	rW=0
 	rR=0
 	rS=0
 	rT=0
 	nLocal=0
-	nHand=2
+	nHand=1
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point20 {
+	nNumber=112
+	sLabel="Socket_L_12"
+	sDescription=""
+	nUndefined=0
+	rX=-355.073
+	rY=-248.136
+	rZ=-100.282
+	rU=229.626
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=1
 	nElbow=1
 	nWrist=1
 	nJ1Flag=0
@@ -526,7 +527,215 @@ Point20 {
 	bSimVisible=False
 }
 Point21 {
-	nNumber=21
+	nNumber=113
+	sLabel="Socket_L_13"
+	sDescription=""
+	nUndefined=0
+	rX=-355.073
+	rY=-171.595
+	rZ=-100.682
+	rU=229.826
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=1
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point22 {
+	nNumber=114
+	sLabel="Socket_L_14"
+	sDescription=""
+	nUndefined=0
+	rX=-355.037
+	rY=-95.309
+	rZ=-100.882
+	rU=229.826
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=1
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point23 {
+	nNumber=115
+	sLabel="Socket_L_15"
+	sDescription=""
+	nUndefined=0
+	rX=-355.298
+	rY=-6.52
+	rZ=-100.282
+	rU=229.826
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=1
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point24 {
+	nNumber=116
+	sLabel="Socket_L_16"
+	sDescription=""
+	nUndefined=0
+	rX=-355.261
+	rY=69.646
+	rZ=-100.282
+	rU=229.173
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=1
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point25 {
+	nNumber=117
+	sLabel="Socket_L_17"
+	sDescription=""
+	nUndefined=0
+	rX=-355.22
+	rY=145.307
+	rZ=-100.282
+	rU=229.206
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=1
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point26 {
+	nNumber=118
+	sLabel="Socket_L_18"
+	sDescription=""
+	nUndefined=0
+	rX=-355.559
+	rY=221.644
+	rZ=-100.882
+	rU=229.824
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=1
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point27 {
+	nNumber=121
+	sLabel="Socket_L_21"
+	sDescription="First ColdDATA socket on L DAT board"
+	nUndefined=0
+	rX=-456.582
+	rY=-209.802
+	rZ=-100.882
+	rU=229.824
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=1
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point28 {
+	nNumber=122
+	sLabel="Socket_L_22"
+	sDescription=""
+	nUndefined=0
+	rX=-456.822
+	rY=107.607
+	rZ=-100.882
+	rU=229.724
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=1
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point29 {
+	nNumber=201
 	sLabel="Socket_R_1"
 	sDescription=""
 	nUndefined=448
@@ -551,8 +760,8 @@ Point21 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point22 {
-	nNumber=22
+Point30 {
+	nNumber=202
 	sLabel="Socket_R_2"
 	sDescription=""
 	nUndefined=448
@@ -577,8 +786,8 @@ Point22 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point23 {
-	nNumber=23
+Point31 {
+	nNumber=203
 	sLabel="Socket_R_3"
 	sDescription=""
 	nUndefined=448
@@ -603,8 +812,8 @@ Point23 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point24 {
-	nNumber=24
+Point32 {
+	nNumber=204
 	sLabel="Socket_R_4"
 	sDescription=""
 	nUndefined=448
@@ -629,12 +838,12 @@ Point24 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point25 {
-	nNumber=25
+Point33 {
+	nNumber=205
 	sLabel="Socket_R_5"
 	sDescription=""
 	nUndefined=448
-	rX=331.501
+	rX=330.501
 	rY=-96.82
 	rZ=-10
 	rU=49.174
@@ -655,12 +864,12 @@ Point25 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point26 {
-	nNumber=26
+Point34 {
+	nNumber=206
 	sLabel="Socket_R_6"
 	sDescription=""
 	nUndefined=448
-	rX=331.661
+	rX=330.661
 	rY=-172.805
 	rZ=-10
 	rU=49.174
@@ -681,12 +890,12 @@ Point26 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point27 {
-	nNumber=27
+Point35 {
+	nNumber=207
 	sLabel="Socket_R_7"
 	sDescription=""
 	nUndefined=448
-	rX=331.448
+	rX=330.448
 	rY=-249.253
 	rZ=-10
 	rU=49.174
@@ -707,12 +916,12 @@ Point27 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point28 {
-	nNumber=28
+Point36 {
+	nNumber=208
 	sLabel="Socket_R_8"
 	sDescription=""
 	nUndefined=448
-	rX=331.732
+	rX=330.732
 	rY=-325.49
 	rZ=-10
 	rU=49.174
@@ -733,15 +942,15 @@ Point28 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point29 {
-	nNumber=500
-	sLabel="P_Stinger_Calib"
-	sDescription="Stinger calibration mark on the chip tray"
-	nUndefined=0
-	rX=-2.861
-	rY=561.624
-	rZ=-68.001
-	rU=7.075
+Point37 {
+	nNumber=211
+	sLabel="Socket_R_11"
+	sDescription="First ColdADC socket on R DAT board"
+	nUndefined=448
+	rX=400
+	rY=221.21
+	rZ=-10
+	rU=49.174
 	rV=0
 	rW=0
 	rR=0
@@ -759,15 +968,223 @@ Point29 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point30 {
-	nNumber=501
-	sLabel="P_Stinger_Calib_DF"
-	sDescription="Calibration of downfacing camera"
-	nUndefined=0
-	rX=55.13
-	rY=561.644
-	rZ=-25
-	rU=7.075
+Point38 {
+	nNumber=212
+	sLabel="Socket_R_12"
+	sDescription=""
+	nUndefined=448
+	rX=400
+	rY=144.925
+	rZ=-10
+	rU=49.174
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=2
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point39 {
+	nNumber=213
+	sLabel="Socket_R_13"
+	sDescription=""
+	nUndefined=448
+	rX=400
+	rY=68.7
+	rZ=-10
+	rU=49.174
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=2
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point40 {
+	nNumber=214
+	sLabel="Socket_R_14"
+	sDescription=""
+	nUndefined=448
+	rX=400
+	rY=-7.645
+	rZ=-10
+	rU=49.174
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=2
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point41 {
+	nNumber=215
+	sLabel="Socket_R_15"
+	sDescription=""
+	nUndefined=448
+	rX=400
+	rY=-96.43
+	rZ=-10
+	rU=49.174
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=2
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point42 {
+	nNumber=216
+	sLabel="Socket_R_16"
+	sDescription=""
+	nUndefined=448
+	rX=400
+	rY=-172.575
+	rZ=-10
+	rU=49.174
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=2
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point43 {
+	nNumber=217
+	sLabel="Socket_R_17"
+	sDescription=""
+	nUndefined=448
+	rX=400
+	rY=-248.783
+	rZ=-10
+	rU=49.174
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=2
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point44 {
+	nNumber=218
+	sLabel="Socket_R_18"
+	sDescription=""
+	nUndefined=448
+	rX=400
+	rY=-325.2
+	rZ=-10
+	rU=49.174
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=2
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point45 {
+	nNumber=221
+	sLabel="Socket_R_21"
+	sDescription="First ColdDATA socket on R DAT board"
+	nUndefined=448
+	rX=400
+	rY=0
+	rZ=-10
+	rU=49.174
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=2
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point46 {
+	nNumber=222
+	sLabel="Socket_R_22"
+	sDescription=""
+	nUndefined=448
+	rX=400
+	rY=0
+	rZ=-10
+	rU=49.174
 	rV=0
 	rW=0
 	rR=0

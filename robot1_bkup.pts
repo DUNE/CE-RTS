@@ -1,16 +1,16 @@
-ENVT0100,LM:2025/01/16 20:40:18:096,DS:0000015081,CS:32077,MA:D0-AD-08-5A-A1-24,EI:           
+ENVT0100,LM:2025/01/16 20:07:03:142,DS:0000014477,CS:31791,MA:D0-AD-08-5A-A1-24,EI:           
 sVersion="2.0.0"
 nDisplayMode=2
 bDisplayR=False
 bDisplayS=False
 bDisplayT=False
 nNumberOfJoints=4
-nNumberOfPoints=48
+nNumberOfPoints=46
 Point1 {
 	nNumber=0
 	sLabel="P_camera"
 	sDescription="Up facing camera"
-	nUndefined=0
+	nUndefined=448
 	rX=1.579
 	rY=307.82
 	rZ=-79.229
@@ -36,7 +36,7 @@ Point2 {
 	nNumber=1
 	sLabel="P_Home"
 	sDescription=""
-	nUndefined=0
+	nUndefined=448
 	rX=16.326
 	rY=560.965
 	rZ=-15.085
@@ -140,7 +140,7 @@ Point6 {
 	nNumber=5
 	sLabel="Tray_Left_P4"
 	sDescription="Upper Right Point"
-	nUndefined=0
+	nUndefined=448
 	rX=-29.155
 	rY=548.55
 	rZ=-63.8
@@ -166,7 +166,7 @@ Point7 {
 	nNumber=6
 	sLabel="Tray_Right_P1"
 	sDescription=""
-	nUndefined=0
+	nUndefined=448
 	rX=25.901
 	rY=443.433
 	rZ=-64
@@ -192,7 +192,7 @@ Point8 {
 	nNumber=7
 	sLabel="Tray_Right_P2"
 	sDescription=""
-	nUndefined=0
+	nUndefined=448
 	rX=310.119
 	rY=443.892
 	rZ=-64.2
@@ -218,7 +218,7 @@ Point9 {
 	nNumber=8
 	sLabel="Tray_Right_P3"
 	sDescription=""
-	nUndefined=0
+	nUndefined=448
 	rX=25.699
 	rY=548.433
 	rZ=-63.6
@@ -244,7 +244,7 @@ Point10 {
 	nNumber=9
 	sLabel="Tray_Right_P4"
 	sDescription=""
-	nUndefined=0
+	nUndefined=448
 	rX=309.939
 	rY=548.91
 	rZ=-64
@@ -267,58 +267,6 @@ Point10 {
 	bSimVisible=False
 }
 Point11 {
-	nNumber=11
-	sLabel="P_Stinger_Calib"
-	sDescription=""
-	nUndefined=448
-	rX=-2.861
-	rY=561.624
-	rZ=-68.001
-	rU=7.075
-	rV=0
-	rW=0
-	rR=0
-	rS=0
-	rT=0
-	nLocal=0
-	nHand=2
-	nElbow=1
-	nWrist=1
-	nJ1Flag=0
-	nJ2Flag=0
-	nJ4Flag=0
-	nJ6Flag=0
-	rJ1Angle=0
-	rJ4Angle=0
-	bSimVisible=False
-}
-Point12 {
-	nNumber=12
-	sLabel="P_Stinger_Calib_DF"
-	sDescription=""
-	nUndefined=448
-	rX=55.13
-	rY=561.624
-	rZ=-25
-	rU=7.075
-	rV=0
-	rW=0
-	rR=0
-	rS=0
-	rT=0
-	nLocal=0
-	nHand=2
-	nElbow=1
-	nWrist=1
-	nJ1Flag=0
-	nJ2Flag=0
-	nJ4Flag=0
-	nJ6Flag=0
-	rJ1Angle=0
-	rJ4Angle=0
-	bSimVisible=False
-}
-Point13 {
 	nNumber=101
 	sLabel="Socket_L_1"
 	sDescription=""
@@ -344,7 +292,7 @@ Point13 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point14 {
+Point12 {
 	nNumber=102
 	sLabel="Socket_L_2"
 	sDescription=""
@@ -370,7 +318,7 @@ Point14 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point15 {
+Point13 {
 	nNumber=103
 	sLabel="Socket_L_3"
 	sDescription=""
@@ -396,7 +344,7 @@ Point15 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point16 {
+Point14 {
 	nNumber=104
 	sLabel="Socket_L_4"
 	sDescription=""
@@ -422,7 +370,7 @@ Point16 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point17 {
+Point15 {
 	nNumber=105
 	sLabel="Socket_L_5"
 	sDescription=""
@@ -448,7 +396,7 @@ Point17 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point18 {
+Point16 {
 	nNumber=106
 	sLabel="Socket_L_6"
 	sDescription=""
@@ -474,7 +422,7 @@ Point18 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point19 {
+Point17 {
 	nNumber=107
 	sLabel="Socket_L_7"
 	sDescription=""
@@ -500,7 +448,7 @@ Point19 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point20 {
+Point18 {
 	nNumber=108
 	sLabel="Socket_L_8"
 	sDescription=""
@@ -526,7 +474,7 @@ Point20 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point21 {
+Point19 {
 	nNumber=111
 	sLabel="Socket_L_11"
 	sDescription="First ColdADC socket on L DAT board"
@@ -552,7 +500,7 @@ Point21 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point22 {
+Point20 {
 	nNumber=112
 	sLabel="Socket_L_12"
 	sDescription=""
@@ -578,7 +526,7 @@ Point22 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point23 {
+Point21 {
 	nNumber=113
 	sLabel="Socket_L_13"
 	sDescription=""
@@ -604,7 +552,7 @@ Point23 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point24 {
+Point22 {
 	nNumber=114
 	sLabel="Socket_L_14"
 	sDescription=""
@@ -630,7 +578,7 @@ Point24 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point25 {
+Point23 {
 	nNumber=115
 	sLabel="Socket_L_15"
 	sDescription=""
@@ -656,7 +604,7 @@ Point25 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point26 {
+Point24 {
 	nNumber=116
 	sLabel="Socket_L_16"
 	sDescription=""
@@ -682,7 +630,7 @@ Point26 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point27 {
+Point25 {
 	nNumber=117
 	sLabel="Socket_L_17"
 	sDescription=""
@@ -708,7 +656,7 @@ Point27 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point28 {
+Point26 {
 	nNumber=118
 	sLabel="Socket_L_18"
 	sDescription=""
@@ -734,7 +682,7 @@ Point28 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point29 {
+Point27 {
 	nNumber=121
 	sLabel="Socket_L_21"
 	sDescription="First ColdDATA socket on L DAT board"
@@ -760,7 +708,7 @@ Point29 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point30 {
+Point28 {
 	nNumber=122
 	sLabel="Socket_L_22"
 	sDescription=""
@@ -786,7 +734,7 @@ Point30 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point31 {
+Point29 {
 	nNumber=201
 	sLabel="Socket_R_1"
 	sDescription=""
@@ -812,7 +760,7 @@ Point31 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point32 {
+Point30 {
 	nNumber=202
 	sLabel="Socket_R_2"
 	sDescription=""
@@ -838,7 +786,7 @@ Point32 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point33 {
+Point31 {
 	nNumber=203
 	sLabel="Socket_R_3"
 	sDescription=""
@@ -864,7 +812,7 @@ Point33 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point34 {
+Point32 {
 	nNumber=204
 	sLabel="Socket_R_4"
 	sDescription=""
@@ -890,7 +838,7 @@ Point34 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point35 {
+Point33 {
 	nNumber=205
 	sLabel="Socket_R_5"
 	sDescription=""
@@ -916,7 +864,7 @@ Point35 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point36 {
+Point34 {
 	nNumber=206
 	sLabel="Socket_R_6"
 	sDescription=""
@@ -942,7 +890,7 @@ Point36 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point37 {
+Point35 {
 	nNumber=207
 	sLabel="Socket_R_7"
 	sDescription=""
@@ -968,7 +916,7 @@ Point37 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point38 {
+Point36 {
 	nNumber=208
 	sLabel="Socket_R_8"
 	sDescription=""
@@ -994,7 +942,7 @@ Point38 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point39 {
+Point37 {
 	nNumber=211
 	sLabel="Socket_R_11"
 	sDescription="First ColdADC socket on R DAT board"
@@ -1020,7 +968,7 @@ Point39 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point40 {
+Point38 {
 	nNumber=212
 	sLabel="Socket_R_12"
 	sDescription=""
@@ -1046,7 +994,7 @@ Point40 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point41 {
+Point39 {
 	nNumber=213
 	sLabel="Socket_R_13"
 	sDescription=""
@@ -1072,7 +1020,7 @@ Point41 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point42 {
+Point40 {
 	nNumber=214
 	sLabel="Socket_R_14"
 	sDescription=""
@@ -1098,7 +1046,7 @@ Point42 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point43 {
+Point41 {
 	nNumber=215
 	sLabel="Socket_R_15"
 	sDescription=""
@@ -1124,7 +1072,7 @@ Point43 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point44 {
+Point42 {
 	nNumber=216
 	sLabel="Socket_R_16"
 	sDescription=""
@@ -1150,7 +1098,7 @@ Point44 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point45 {
+Point43 {
 	nNumber=217
 	sLabel="Socket_R_17"
 	sDescription=""
@@ -1176,7 +1124,7 @@ Point45 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point46 {
+Point44 {
 	nNumber=218
 	sLabel="Socket_R_18"
 	sDescription=""
@@ -1202,7 +1150,7 @@ Point46 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point47 {
+Point45 {
 	nNumber=221
 	sLabel="Socket_R_21"
 	sDescription="First ColdDATA socket on R DAT board"
@@ -1228,7 +1176,7 @@ Point47 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point48 {
+Point46 {
 	nNumber=222
 	sLabel="Socket_R_22"
 	sDescription=""

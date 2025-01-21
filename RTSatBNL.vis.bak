@@ -1,4 +1,4 @@
-ENVT0100,LM:2025/01/16 16:37:11:034,DS:0000157328,CS:03340,MA:D0-AD-08-5A-A1-24,EI:           
+ENVT0100,LM:2025/01/16 16:51:36:490,DS:0000157328,CS:01036,MA:D0-AD-08-5A-A1-24,EI:           
 sRCVersion="7.5.4"
 sGUID="f6b86944-bb0f-47a8-88ef-95a7109d2a63"
 nCameraNumber=1
@@ -4768,7 +4768,7 @@ Sequence15 {
 		rFrameVectorAngle1=0
 		rFrameVectorAngle2=0
 		nSearchWinPolygonPointXRot=1271
-		nSearchWinPolygonPointYRot=720
+		nSearchWinPolygonPointYRot=660
 		rSearchWinPolygonPointFX1=0
 		rSearchWinPolygonPointFY1=0
 		rSearchWinPolygonPointFX2=0
@@ -5498,8 +5498,8 @@ Sequence17 {
 		rFrameVectorLength1=0
 		rFrameVectorAngle1=0
 		rFrameVectorAngle2=0
-		nSearchWinPolygonPointXRot=1422
-		nSearchWinPolygonPointYRot=1105
+		nSearchWinPolygonPointXRot=1380
+		nSearchWinPolygonPointYRot=1062
 		rSearchWinPolygonPointFX1=0
 		rSearchWinPolygonPointFY1=0
 		rSearchWinPolygonPointFX2=0
@@ -5581,8 +5581,8 @@ Sequence17 {
 		rFrameVectorLength1=0
 		rFrameVectorAngle1=0
 		rFrameVectorAngle2=0
-		nSearchWinPolygonPointXRot=1072
-		nSearchWinPolygonPointYRot=1107
+		nSearchWinPolygonPointXRot=1030
+		nSearchWinPolygonPointYRot=1064
 		rSearchWinPolygonPointFX1=0
 		rSearchWinPolygonPointFY1=0
 		rSearchWinPolygonPointFX2=0
@@ -5645,13 +5645,13 @@ Sequence17 {
 		nPolarity=1
 		bRejectOnEdge=False
 		rSearchWinAngle=45
-		nSearchWinCenterX=1099
-		nSearchWinCenterY=780
-		nSearchWinHeight=21
-		nSearchWinLeft=1082
+		nSearchWinCenterX=1100
+		nSearchWinCenterY=781
+		nSearchWinHeight=24
+		nSearchWinLeft=1083
 		nSearchWinTop=781
 		nSearchWinType=2
-		nSearchWinWidth=25
+		nSearchWinWidth=23
 		nSizeToFind=1
 		nSort=0
 		bThresholdAuto=False
@@ -5665,7 +5665,7 @@ Sequence17 {
 		rFrameVectorAngle1=0
 		rFrameVectorAngle2=0
 		nSearchWinPolygonPointXRot=1035
-		nSearchWinPolygonPointYRot=715
+		nSearchWinPolygonPointYRot=716
 		rSearchWinPolygonPointFX1=0
 		rSearchWinPolygonPointFY1=0
 		rSearchWinPolygonPointFX2=0

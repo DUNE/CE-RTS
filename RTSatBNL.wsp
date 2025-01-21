@@ -1,5 +1,5 @@
-ENVT0100,LM:2025/01/16 17:11:47:945,DS:0000004740,CS:06011,MA:D0-AD-08-5A-A1-24,EI:           
-sActiveChild="Run"
+ENVT0100,LM:2025/01/16 20:46:36:044,DS:0000004633,CS:27774,MA:D0-AD-08-5A-A1-24,EI:           
+sActiveChild="Main.prg"
 bMdiMaximized=False
 nProgramFileCount=5
 ProgramFile1 {
@@ -7,10 +7,10 @@ ProgramFile1 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=80
-		nTop=87
-		nWidth=1176
-		nHeight=638
+		nLeft=48
+		nTop=53
+		nWidth=1175
+		nHeight=635
 	}
 }
 ProgramFile2 {
@@ -18,21 +18,21 @@ ProgramFile2 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=132
+		nLeft=-540
 		nTop=52
-		nWidth=1177
-		nHeight=534
+		nWidth=1175
+		nHeight=610
 	}
 }
 ProgramFile3 {
 	sName="Calib_tools.prg"
-	bOpened=False
+	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=0
+		nLeft=-672
 		nTop=0
-		nWidth=1176
-		nHeight=773
+		nWidth=1175
+		nHeight=770
 	}
 }
 ProgramFile4 {
@@ -40,10 +40,10 @@ ProgramFile4 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=134
+		nLeft=-538
 		nTop=23
-		nWidth=1024
-		nHeight=687
+		nWidth=1023
+		nHeight=684
 	}
 }
 ProgramFile5 {
@@ -51,10 +51,10 @@ ProgramFile5 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=211
+		nLeft=-461
 		nTop=82
-		nWidth=1079
-		nHeight=682
+		nWidth=1077
+		nHeight=678
 	}
 }
 nIncludeFileCount=2
@@ -63,15 +63,15 @@ IncludeFile1 {
 	bOpened=False
 	nWinState=0
 	Window {
-		nLeft=617
-		nTop=79
-		nWidth=722
-		nHeight=474
+		nLeft=380
+		nTop=81
+		nWidth=721
+		nHeight=470
 	}
 }
 IncludeFile2 {
 	sName="RTS_tools.inc"
-	bOpened=True
+	bOpened=False
 	nWinState=0
 	Window {
 		nLeft=102
@@ -80,16 +80,16 @@ IncludeFile2 {
 		nHeight=530
 	}
 }
-nPointFileCount=8
+nPointFileCount=7
 PointFile1 {
 	sName="robot1.pts"
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=427
-		nTop=-20
-		nWidth=984
-		nHeight=743
+		nLeft=354
+		nTop=16
+		nWidth=794
+		nHeight=734
 	}
 }
 PointFile2 {
@@ -97,7 +97,7 @@ PointFile2 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=24
+		nLeft=-672
 		nTop=0
 		nWidth=0
 		nHeight=0
@@ -108,7 +108,7 @@ PointFile3 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=24
+		nLeft=-672
 		nTop=0
 		nWidth=0
 		nHeight=0
@@ -119,7 +119,7 @@ PointFile4 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=24
+		nLeft=-672
 		nTop=0
 		nWidth=0
 		nHeight=0
@@ -130,40 +130,29 @@ PointFile5 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=24
+		nLeft=-672
 		nTop=0
 		nWidth=0
 		nHeight=0
 	}
 }
 PointFile6 {
-	sName="xy_test2.pts"
-	bOpened=False
-	nWinState=0
-	Window {
-		nLeft=0
-		nTop=0
-		nWidth=0
-		nHeight=0
-	}
-}
-PointFile7 {
 	sName="points_BNL.pts"
 	bOpened=False
 	nWinState=0
 	Window {
-		nLeft=156
-		nTop=14
-		nWidth=915
-		nHeight=757
+		nLeft=592
+		nTop=20
+		nWidth=1170
+		nHeight=754
 	}
 }
-PointFile8 {
+PointFile7 {
 	sName="skt_cal.pts"
-	bOpened=False
+	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=0
+		nLeft=-672
 		nTop=0
 		nWidth=0
 		nHeight=0
@@ -172,7 +161,7 @@ PointFile8 {
 nForceFileCount=0
 sActiveWindow="main.prg"
 CmdWindow {
-	bOpened=True
+	bOpened=False
 	Window {
 		nLeft=260
 		nTop=107
@@ -182,12 +171,12 @@ CmdWindow {
 	nWinState=0
 }
 RunWindow {
-	bOpened=True
+	bOpened=False
 	Window {
-		nLeft=451
-		nTop=30
-		nWidth=1010
-		nHeight=629
+		nLeft=255
+		nTop=59
+		nWidth=1009
+		nHeight=626
 	}
 	nWinState=0
 	nNumOfDisplays=1
@@ -266,10 +255,10 @@ Macros {
 RobotMgr {
 	bOpened=False
 	Window {
-		nLeft=52
-		nTop=52
-		nWidth=764
-		nHeight=527
+		nLeft=84
+		nTop=71
+		nWidth=766
+		nHeight=530
 	}
 }
 UserErrorEditor {
@@ -283,7 +272,7 @@ UserErrorEditor {
 	nWinState=0
 }
 VisionGuide {
-	bOpened=True
+	bOpened=False
 	Window {
 		nLeft=6
 		nTop=85
@@ -295,7 +284,7 @@ VisionGuide {
 	nSplitterDistance1=758
 	nSplitterDistance2=588
 	nSplitterDistance3=463
-	nSplitterDistance4=280
+	nSplitterDistance4=252
 	nSplitterDistance5=531
 }
 ForceGuide {

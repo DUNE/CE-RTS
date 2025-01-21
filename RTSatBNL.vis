@@ -1,4 +1,4 @@
-ENVT0100,LM:2025/01/16 16:51:36:490,DS:0000157328,CS:01036,MA:D0-AD-08-5A-A1-24,EI:           
+ENVT0100,LM:2025/01/16 20:08:48:402,DS:0000156502,CS:12814,MA:D0-AD-08-5A-A1-24,EI:           
 sRCVersion="7.5.4"
 sGUID="f6b86944-bb0f-47a8-88ef-95a7109d2a63"
 nCameraNumber=1
@@ -4768,7 +4768,7 @@ Sequence15 {
 		rFrameVectorAngle1=0
 		rFrameVectorAngle2=0
 		nSearchWinPolygonPointXRot=1271
-		nSearchWinPolygonPointYRot=660
+		nSearchWinPolygonPointYRot=720
 		rSearchWinPolygonPointFX1=0
 		rSearchWinPolygonPointFY1=0
 		rSearchWinPolygonPointFX2=0
@@ -5498,8 +5498,8 @@ Sequence17 {
 		rFrameVectorLength1=0
 		rFrameVectorAngle1=0
 		rFrameVectorAngle2=0
-		nSearchWinPolygonPointXRot=1380
-		nSearchWinPolygonPointYRot=1062
+		nSearchWinPolygonPointXRot=1422
+		nSearchWinPolygonPointYRot=1105
 		rSearchWinPolygonPointFX1=0
 		rSearchWinPolygonPointFY1=0
 		rSearchWinPolygonPointFX2=0
@@ -5581,8 +5581,8 @@ Sequence17 {
 		rFrameVectorLength1=0
 		rFrameVectorAngle1=0
 		rFrameVectorAngle2=0
-		nSearchWinPolygonPointXRot=1030
-		nSearchWinPolygonPointYRot=1064
+		nSearchWinPolygonPointXRot=1072
+		nSearchWinPolygonPointYRot=1107
 		rSearchWinPolygonPointFX1=0
 		rSearchWinPolygonPointFY1=0
 		rSearchWinPolygonPointFX2=0
@@ -5664,8 +5664,8 @@ Sequence17 {
 		rFrameVectorLength1=0
 		rFrameVectorAngle1=0
 		rFrameVectorAngle2=0
-		nSearchWinPolygonPointXRot=1035
-		nSearchWinPolygonPointYRot=716
+		nSearchWinPolygonPointXRot=1077
+		nSearchWinPolygonPointYRot=758
 		rSearchWinPolygonPointFX1=0
 		rSearchWinPolygonPointFY1=0
 		rSearchWinPolygonPointFX2=0
@@ -5747,8 +5747,8 @@ Sequence17 {
 		rFrameVectorLength1=0
 		rFrameVectorAngle1=0
 		rFrameVectorAngle2=0
-		nSearchWinPolygonPointXRot=1392
-		nSearchWinPolygonPointYRot=714
+		nSearchWinPolygonPointXRot=1434
+		nSearchWinPolygonPointYRot=757
 		rSearchWinPolygonPointFX1=0
 		rSearchWinPolygonPointFY1=0
 		rSearchWinPolygonPointFX2=0
@@ -5779,7 +5779,7 @@ Sequence17 {
 }
 Sequence18 {
 	bAsyncMode=True
-	nCalibration=5
+	nCalibration=4
 	nCamera=2
 	nCameraBrightness=250
 	nCameraContrast=250
@@ -6911,7 +6911,7 @@ Sequence19 {
 		rSearchWinPolygonPointFYRot=0
 	}
 }
-nCalibCount=5
+nCalibCount=4
 Calib1 {
 	sApproachPoint=""
 	bAutoCamPoints=True
@@ -7047,49 +7047,6 @@ Calib3 {
 	nMobileCalVersion=1
 }
 Calib4 {
-	sApproachPoint=""
-	bAutoCamPoints=True
-	bAutoReference=True
-	nAutoRefMode=1
-	rAutoRefInitRotation=5
-	rAutoRefTolerance=1
-	nAutoRefMoveMode=1
-	nCamera=2
-	nCameraOrientation=4
-	sDescription=""
-	bDistCorrectEnabled=False
-	nDistCorrectTargetSeq=7
-	nDistCorrectType=5
-	nLamp=-1
-	nLampDelay=0
-	nLJMMode=0
-	rMaxMoveDist=200
-	nMotionDelay=500
-	sName="xy_test2"
-	nReferenceType=1
-	nRobotAccel=10
-	rRobotLimZ=0
-	nRobotLocal=0
-	nRobotNumber=1
-	rRobotXOffset=0
-	rRobotYOffset=0
-	bRobotXYRotateOffset=False
-	rRobotUOffset=0
-	nRobotSpeed=10
-	bShowConfirmation=True
-	nTargetSequence=0
-	bTwoRefPoints=False
-	nUpwardLamp=-1
-	nUpwardSequence=0
-	bCalComplete=False
-	bPointsTaught=True
-	nCalVideoWidth=0
-	nCalVideoHeight=0
-	bReverseCameraZ=False
-	bUseRobotUOffset2=True
-	nMobileCalVersion=1
-}
-Calib5 {
 	sApproachPoint=""
 	bAutoCamPoints=True
 	bAutoReference=True

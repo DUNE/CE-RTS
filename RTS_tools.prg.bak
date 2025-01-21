@@ -731,7 +731,7 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 	' Remeasure X and Y with correct rotation
 	Wait 0.2
 	'XN: Add angle test
-	Go Here +U(2)
+	'Go Here +U(2)
 	'UF_take_picture(ByRef pict_fname$)
 	pict_fname$ = UF_take_picture$(id$ + "_04")
 	Print #fileNum, ",", pict_fname$,
