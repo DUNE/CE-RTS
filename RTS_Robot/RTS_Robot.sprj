@@ -1,12 +1,12 @@
-ENVT0100,LM:2025/01/17 20:53:37:985,DS:0000008432,CS:21258,MA:B8-85-84-9F-6A-05,EI:           
+ENVT0100,LM:2025/01/23 18:01:29:466,DS:0000008433,CS:06185,MA:B8-85-84-9F-6A-05,EI:           
 SystemProperties {
 	sRCVersion="7.5.3"
 	sRCRevision="R1"
 	sGUID="f965e132-c841-42ba-bafd-fbf5d79f2655"
 	sPath="C:\\EpsonRC70\\Projects\\DUNE\\CE-RTS\\RTS_Robot\\"
 	sCreated="1/31/2024 12:44:32 PM"
-	sLastModified="8/15/2024 3:55:14 PM"
-	bBuildComplete=True
+	sLastModified="1/23/2025 1:01:19 PM"
+	bBuildComplete=False
 	bFirstBuildComplete=True
 	bRebuildRequired=False
 	bClearControllerProject=False
