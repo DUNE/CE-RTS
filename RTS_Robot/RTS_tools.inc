@@ -1,6 +1,7 @@
+#define PROJ_DIR "C:\EpsonRC70\Projects\DUNE\CE-RTS"
 #define RTS_DATA "C:\Users\coldelec\RTS\"
 '#define HAND_U0 7.075
-#define HAND_U0 4.174
+'#define HAND_U0 4.174
 #define NTRAYS 2
 #define TRAY_NCOLS 15
 #define TRAY_NROWS 6
@@ -8,8 +9,15 @@
 #define N_COLDADC_SOC 8
 #define N_COLDATA_SOC 2
 #define NSOCKETS 18
-#define DF_CAMERA_OFFSET 58
-#define DF_CAMERA_FOCUS -18.045
+'#define DF_CAMERA_OFFSET 58
+'#define DF_CAMERA_FOCUS -18.045
+
+Global String POINTS_FILE$
+Global String SITE$
+Global String CHIPTYPE$
+Global Double HAND_U0
+Global Double DF_CAMERA_OFFSET
+Global Double DF_CAMERA_FOCUS
 
 ' corrections for the trays
 Global Double tray_X(NTRAYS, TRAY_NCOLS, TRAY_NROWS)
