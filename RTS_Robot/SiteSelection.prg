@@ -3,7 +3,7 @@
 Function SelectSite
 	Integer fileNum
 	String SITE_FILE$
-	SITE_FILE$ = PROJ_DIR + "site.csv"
+	SITE_FILE$ = PROJ_DIR + "\site.csv"
 	
 	If Not FileExists(SITE_FILE$) Then
 		Print "***ERROR NO SITE SELECTION FILE"
@@ -11,8 +11,10 @@ Function SelectSite
 	EndIf
 	fileNum = FreeFile
 	ROpen SITE_FILE$ As #fileNum
-	Input SITE$, CHIPTYPE$
-	POINTS_FILE$ = PROJ_DIR + "\RTS_Robot\points_" + SITE$ + ".pts"
+	Input #fileNum, SITE$, CHIPTYPE$
+	POINTS_FILE$ = "points_" + SITE$ + ".pts"
+	Print "Site selected is " + SITE$
+	Print "Chip type to be tested is" + CHIPTYPE$
 	LoadPoints POINTS_FILE$
 	Select SITE$
 		Case "BNL"
@@ -20,21 +22,11 @@ Function SelectSite
 			DF_CAMERA_OFFSET = 58.
 			DF_CAMERA_FOCUS = -18.045
 		Case "MSU"
-			HAND_U0 = 4.00
-			DF_CAMERA_OFFSET = 60.
-			DF_CAMERA_FOCUS = -20.
+			HAND_U0 = -0.947
+			DF_CAMERA_OFFSET = 57.961
+			DF_CAMERA_FOCUS = -19.616
 	Send
 	
-'	Select CHIPTYPE
-'		Case "LArASIC"
-'			
-'		Case "ColdADC"
-'			
-'		Case "ColDATA"
-'			
-'		Case "All"
-'			
-'	Send
 	Close #fileNum
 Fend
 

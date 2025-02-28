@@ -4,6 +4,8 @@
 
 Function main
 	
+	SelectSite
+	
 	If Not FolderExists(RTS_DATA) Then
   		MkDir RTS_DATA
 	EndIf
