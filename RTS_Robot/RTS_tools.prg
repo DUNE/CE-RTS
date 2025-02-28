@@ -98,14 +98,49 @@ Function JumpToTray_camera(pallet_nr As Integer, col_nr As Integer, row_nr As In
 	EndIf
 Fend
 
-Function isChipInTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer) As Boolean
-	JumpToTray(pallet_nr, col_nr, row_nr)
+Function TouchChip As Byte
+	' Will put the stinger in contact with a chip		
+	' This does several safety checks	
+	' Returns code:
+	' 0  - Success
+	' -1 - No contact after travelling 2mm below expected position 
+	' -2 - No contact but still stopped within +/- 2mm for some reason
+	' +1 - Made contact 2mm above expected chip position	
 	Speed 1
 	Accel 1, 1
-    Go Here -Z(10)
+	Double Zexpect, Znow, Zdiff
+	Zexpect = CZ(Here) - 10.
+    Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off
     Wait 0.5
-	isChipInTray = isContactSensorTouches
+    Znow = CZ(Here)
+    Zdiff = Znow - Zexpect
+    If Zdiff > 1. Then
+    	Print "***ERROR: Contact too early - Check for obstruction"
+    	TouchChip = 1
+    ElseIf Zdiff < -1. Then
+    	Print "***ERROR: No contact - chip missing?"
+    	TouchChip = -1
+    ElseIf (Not isContactSensorTouches) Then
+    	Print "***ERROR: Contact not made but stopped in +/- 2mm of expected"
+    	TouchChip = -2
+    Else
+    	TouchChip = 0
+	EndIf
 	SetSpeed
+Fend
+
+Function isChipInTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer) As Boolean
+	JumpToTray(pallet_nr, col_nr, row_nr)
+'	Speed 1
+'	Accel 1, 1
+'    Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off
+'    Wait 0.5
+'	Boolean TouchStatus
+'	TouchStatus = TouchChip
+	Boolean TouchSuccess ' Can't just directly use Not Byte for converting 0 to success
+	TouchSuccess = Not TouchChip ' Should be 0 for touch, non zero error code
+	isChipInTray = TouchSuccess
+'	SetSpeed
 Fend
 
 Function PickupFromTray As Boolean
@@ -121,11 +156,18 @@ Function PickupFromTray As Boolean
 	If Not isVacuumOk Then
 		Exit Function
 	EndIf
-    Go Here -Z(10)
-	If Not isContactSensorTouches Then
-		Print "ERROR! Contact sensor does not detect a chip in the tray"
+'    Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off
+'	If Not isContactSensorTouches Then
+'		Print "ERROR! Contact sensor does not detect a chip in the tray"
+'		Exit Function
+'	EndIf
+	Boolean TouchSuccess ' Can't just directly use Not Byte for converting 0 to success
+	TouchSuccess = Not TouchChip ' Should be 0 for touch, non zero error code
+	If Not TouchSuccess Then
+		Print "ERROR! Cannot pick up from tray"
 		Exit Function
 	EndIf
+	
 	VacuumValveOpen
 	Go Here +Z(10)
     SetSpeed
@@ -137,7 +179,7 @@ Function DropToTray As Boolean
 	DropToTray = False
 	Speed 1
 	Accel 1, 1
-    Go Here -Z(9)
+    Go Here -Z(9) Till Sw(8) = On Or Sw(9) = Off
 	If isContactSensorTouches Then
 	' XN			
 		'Go Here +Z(9) +Y(0.1)
@@ -233,11 +275,14 @@ Fend
 
 Function isChipInSocket(DAT_nr As Integer, socket_nr As Integer) As Boolean
 	JumpToSocket(DAT_nr, socket_nr)
-	Speed 1
-	Accel 1, 1
-    Go Here -Z(10)
-    Wait 0.5
-	isChipInSocket = isContactSensorTouches
+'	Speed 1
+'	Accel 1, 1
+'    Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off
+'    Wait 0.5
+'	isChipInSocket = isContactSensorTouches
+	Boolean TouchSuccess ' Can't just directly use Not Byte for converting 0 to success
+	TouchSuccess = Not TouchChip ' Should be 0 for touch, non zero error code
+	isChipInSocket = TouchSuccess
     SetSpeed
 Fend
 
@@ -253,14 +298,20 @@ Function InsertIntoSocket As Boolean
 	Speed 1
 	Accel 1, 1
 	PlungerOn
-	Go Here -Z(10)
+'	Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off	
+	Boolean TouchSuccess ' Can't just directly use Not Byte for converting 0 to success
+	TouchSuccess = Not TouchChip ' Should be 0 for touch, non zero error code
+	If Not TouchSuccess Then
+		Print "ERROR! Cannot insert in socket"
+		Exit Function
+	EndIf
+	
 	VacuumValveClose
 	Wait 2
 	InsertIntoSocket = isContactSensorTouches
 	Go Here +Z(20)
 	PlungerOff
 	SetSpeed
-
 	
 Fend
 
@@ -280,13 +331,21 @@ Function PickupFromSocket As Boolean
 
 	Speed 1
 	Accel 1, 1
-	'Go Here +U(45)
-	Go Here -Z(10)
-	Wait 0.5
-	If Not isContactSensorTouches Then
-		Print "***ERROR! Do not detect chip in the socket"
+
+	Boolean TouchSuccess ' Can't just directly use Not Byte for converting 0 to success
+	TouchSuccess = Not TouchChip ' Should be 0 for touch, non zero error code
+	If Not TouchSuccess Then
+		Print "ERROR! Cannot pick up from socket"
 		Exit Function
 	EndIf
+	
+	'Go Here +U(45)
+'	Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off
+	Wait 0.5
+'	If Not isContactSensorTouches Then
+'		Print "***ERROR! Do not detect chip in the socket"
+'		Exit Function
+'	EndIf
 	Wait 1
 	VacuumValveOpen
 	Wait 1
@@ -447,6 +506,20 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 	EndIf
 	
 	
+	       'JW:
+       If Agl(4) < -45. Then
+               Go Here +U(180)
+'      ElseIf Agl(4) < 0. Then
+'              Go Here +U(135)
+'              Go Here -U(180)
+'              Go Here +U(45)
+       ElseIf Agl(4) <= 45. Then
+               Go Here +U(90)
+       Else
+               Go Here -U(180)
+       EndIf
+	
+	
 	UF_camera_light_ON
 	Wait 0.2
 	String pict_fname$
@@ -494,11 +567,19 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 	EndIf
 
 	' Repeat measurement for 180 deg. rotation
-	If CU(Here) < 235 Then
-		Go Here +U(180)
-	Else
-		Go Here -U(180)
-	EndIf
+'	If CU(Here) < 235 Then
+'		Go Here +U(180)
+'	Else
+'		Go Here -U(180)
+'	EndIf
+
+'      JW:
+	If Agl(4) <= 45. Then
+	    Go Here -U(180)
+    Else
+        Go Here +U(180)
+    EndIf
+
 	Wait 0.2
 	'UF_take_picture(chip_SN$ + "-180", ByRef pict_fname_180$)
 	'UF_take_picture(ByRef pict_fname$)
@@ -575,8 +656,14 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 		ChipBottomAnaly = 2
 		Print "***Error ", 2
         Exit Function
-			
 	EndIf
+	
+    ' JW: need to correct the cases where you do +90, then -180 then +90
+         ' Other angles just do +180, then -180 or vice versa
+	If Agl(4) > -45. And Agl(4) <= 45. Then
+		Go Here +U(90)
+	EndIf
+
 
 	' Change handeness to the target 
 	If tgt_pallet_nr = 1 Or tgt_DAT_nr = 1 Then
