@@ -66,6 +66,39 @@ Function SetSpeed
 	Accel 1, 1
 Fend
 
+
+Function MoveFromPointToImage(dU As Double, RotateFirst As Boolean)
+	' Move arm from stinger at point, to chip in focus with some rotation in degrees
+	' Remember point is defined as some offset (10mm from contact)
+	' RotateFirst decides if rotation comes before or after translation in XY
+	' Which may be important to avoid collision
+	Move Here +Z(DF_CAM_Z_OFF)
+	If RotateFirst Then
+		Go Here +U(dU)
+		Move Here +X(XOffset(CU(Here))) +Y(YOffset(CU(Here)))
+	Else
+		Move Here +X(XOffset(CU(Here) + dU)) +Y(YOffset(CU(Here) + dU))
+		Go Here +U(dU)
+	EndIf
+	
+Fend
+
+Function MoveFromImageToPoint(dU As Double, RotateFirst As Boolean)
+	' Inverse of above function, note rotation is not inverted like other offsets
+	' And order of operations may need to be reversed if this matters for collisions
+	' (Rotations should happen in same XY position)
+	' e.g. MoveFromImageToPoint(-45,1) is inverse of MoveFromPointToImage(45,0)
+	If RotateFirst Then
+		Go Here +U(dU)
+		Move Here -X(XOffset(CU(Here) - dU)) -Y(YOffset(CU(Here) - dU))
+	Else
+		Move Here -X(XOffset(CU(Here))) -Y(YOffset(CU(Here)))
+		Go Here +U(dU)
+	EndIf
+	Move Here -Z(DF_CAM_Z_OFF)
+	
+Fend
+
 ' Jump to camera
 ' Preserve U rotation
 Function JumpToCamera
@@ -84,7 +117,7 @@ Fend
 ' row_nr = 1..6
 ' col_nr = 1..15
 Function JumpToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer)
-	Jump Pallet(pallet_nr, col_nr, row_nr) +Z(10)
+	Jump Pallet(pallet_nr, col_nr, row_nr) ' +Z(10)
 Fend
 
 ' pallet_nr 1..2 (1-left, 2-right)
@@ -92,9 +125,11 @@ Fend
 ' col_nr = 1..15
 Function JumpToTray_camera(pallet_nr As Integer, col_nr As Integer, row_nr As Integer)
 	If pallet_nr = 1 Then
-		Jump Pallet(pallet_nr, col_nr, row_nr) +X(DF_CAMERA_OFFSET) :Z(DF_CAMERA_FOCUS) :U(HAND_U0 + 360)
+'		Jump Pallet(pallet_nr, col_nr, row_nr) +X(DF_CAMERA_OFFSET) :Z(DF_CAMERA_FOCUS) :U(HAND_U0 + 360)
+		Jump Pallet(pallet_nr, col_nr, row_nr) +X(XOffset(HAND_U0 + 360)) +Y(YOffset(HAND_U0 + 360)) +Z(DF_CAM_Z_OFF) :U(HAND_U0 + 360)
 	ElseIf pallet_nr = 2 Then
-		Jump Pallet(pallet_nr, col_nr, row_nr) -X(DF_CAMERA_OFFSET) :Z(DF_CAMERA_FOCUS) :U(HAND_U0 + 180)
+'		Jump Pallet(pallet_nr, col_nr, row_nr) -X(DF_CAMERA_OFFSET) :Z(DF_CAMERA_FOCUS) :U(HAND_U0 + 180)
+		Jump Pallet(pallet_nr, col_nr, row_nr) +X(XOffset(HAND_U0 + 180)) +Y(YOffset(HAND_U0 + 180)) +Z(DF_CAM_Z_OFF) :U(HAND_U0 + 180)
 	EndIf
 Fend
 
@@ -211,10 +246,12 @@ Fend
 
 Function JumpToSocket(DAT_nr As Integer, socket_nr As Integer)
 	If DAT_nr = 2 Then
-		Jump P(200 + socket_nr) :Z(-132.5)
+        'Jump P(200 + socket_nr) :Z(-132.5)
+        Jump P(200 + socket_nr)
 		Print P(200 + socket_nr)
 	ElseIf DAT_nr = 1 Then
-		Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) :Z(-134.682)
+		'Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) :Z(-134.682)
+		Jump P(100 + socket_nr)
 		'Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) -U(135) :Z(-100.682)
 		Print P(100 + socket_nr)
 	EndIf
@@ -369,14 +406,16 @@ Fend
 
 Function JumpToSocket_camera(DAT_nr As Integer, socket_nr As Integer)
 	If DAT_nr = 2 Then
-		Jump P(200 + socket_nr) :Z(-97.60) +X(DF_CAMERA_OFFSET) -U(45)
+'		Jump P(200 + socket_nr) :Z(-97.60) +X(DF_CAMERA_OFFSET) -U(45)
+		Jump P(200 + socket_nr) +Z(DF_CAM_Z_OFF) +X(XOffset(CU(Here) - 45)) +Y(YOffset(CU(Here) - 45)) -U(45)
 	ElseIf DAT_nr = 1 Then
-		Jump P(100 + socket_nr) +U(135)
+		'Jump P(100 + socket_nr) +U(135)
+		Jump P(100 + socket_nr) +Z(DF_CAM_Z_OFF) +X(XOffset(CU(Here) + 135)) +Y(YOffset(CU(Here) + 135)) +U(135)
 	EndIf
 Fend
 
 Function UF_take_picture$(basename$ As String) As String
- 	UF_take_picture$ = RTS_DATA + "images\UF_" + basename$ + ".bmp"
+ 	UF_take_picture$ = RTS_DATA$ + "\images\UF_" + basename$ + ".bmp"
  	Print UF_take_picture$
  	VRun UF
     Wait 0.3
@@ -385,7 +424,7 @@ Fend
 
 
 Function DF_take_picture$(basename$ As String) As String
-	DF_take_picture$ = RTS_DATA + "images\" + basename$ + ".bmp"
+	DF_take_picture$ = RTS_DATA$ + "\images\" + basename$ + ".bmp"
 	Print DF_take_picture$
  	VRun DF
     Wait 0.3
@@ -994,7 +1033,7 @@ Function PinsAnaly(id$ As String) As Integer
 	
 	Integer fileNum
 	fileNum = FreeFile
-	AOpen RTS_DATA + "pins\" + id$ + "_pins.csv" As #fileNum
+	AOpen RTS_DATA$ + "\pins\" + id$ + "_pins.csv" As #fileNum
 		
 	
 	VRun pins_analy
@@ -1098,7 +1137,7 @@ Function MoveChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_n
 	
 	Integer fileNum
 	fileNum = FreeFile
-	AOpen RTS_DATA + fname$ As #fileNum
+	AOpen RTS_DATA$ + "\" + fname$ As #fileNum
 	
 	Integer i
 	Integer idx(20)
@@ -1280,7 +1319,7 @@ Function MoveChipFromSocketToTray(DAT_nr As Integer, socket_nr As Integer, palle
 		
 	Integer fileNum
 	fileNum = FreeFile
-	AOpen RTS_DATA + fname$ As #fileNum
+	AOpen RTS_DATA$ + "\" + fname$ As #fileNum
 		
 	Integer i
 	Integer idx(20)
@@ -1484,7 +1523,7 @@ Function MoveChipFromTrayToTray(src_pallet_nr As Integer, src_col_nr As Integer,
 		
 	Integer fileNum
 	fileNum = FreeFile
-	AOpen RTS_DATA + fname$ As #fileNum
+	AOpen RTS_DATA$ + "\" + fname$ As #fileNum
 		
 	Integer i
 	Integer idx(20)
@@ -1724,6 +1763,14 @@ Function calibrate_socket(DAT_nr As Integer, socket_nr As Integer)
 	'Print A_line
 	
 	
+Fend
+
+Function XOffset(UValue As Double) As Double
+	XOffset = DF_CAM_X_OFF_U0 * Cos(DegToRad(UValue - HAND_U0)) - DF_CAM_Y_OFF_U0 * Sin(DegToRad(UValue - HAND_U0))
+Fend
+
+Function YOffset(UValue As Double) As Double
+	YOffset = DF_CAM_X_OFF_U0 * Sin(DegToRad(UValue - HAND_U0)) + DF_CAM_Y_OFF_U0 * Cos(DegToRad(UValue - HAND_U0))
 Fend
 
 
