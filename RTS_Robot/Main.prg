@@ -4,17 +4,19 @@
 
 Function main
 	
-	If Not FolderExists(RTS_DATA) Then
-  		MkDir RTS_DATA
+	SelectSite
+	
+	If Not FolderExists(RTS_DATA$) Then
+  		MkDir RTS_DATA$
 	EndIf
 
-	If Not FolderExists(RTS_DATA) Then
-  		Print "***ERROR Can't create directory [" + RTS_DATA + "]"
+	If Not FolderExists(RTS_DATA$) Then
+  		Print "***ERROR Can't create directory [" + RTS_DATA$ + "]"
   		Exit Function
 	EndIf
 	
 	String dir_images$
-	dir_images$ = RTS_DATA + "images"
+	dir_images$ = RTS_DATA$ + "\images"
 
 	If Not FolderExists(dir_images$) Then
   		MkDir dir_images$
@@ -26,7 +28,7 @@ Function main
 	EndIf
 	
 	String dir_pins$
-	dir_pins$ = RTS_DATA + "pins"
+	dir_pins$ = RTS_DATA$ + "pins"
 
 	If Not FolderExists(dir_pins$) Then
   		MkDir dir_pins$
@@ -38,7 +40,7 @@ Function main
 	EndIf
 	
 	
-	' reset arrays	
+	' reset arrays	JW: Use TRAY_NCOLS and TRAY_NROWS as these are maximum array sizes, even if we only fill trayNCols x trayNRows
 	Integer i, j, k
 	For i = 1 To NTRAYS
 		For j = 1 To TRAY_NCOLS
@@ -58,6 +60,9 @@ Function main
 		Next j
 	Next i
 	
+		
+		
+	
 	' Initialize positions	
 	'tray_X(1, 15, 6) = -0.300
 	'tray_Y(1, 15, 6) = -0.300
@@ -69,7 +74,7 @@ Function main
     Double x, y, u
     Double ii, jj, kk
 	fileNum = FreeFile
-	fileName$ = RTS_DATA + "tray_xyu.csv"
+	fileName$ = RTS_DATA$ + "\tray_xyu.csv"
 	If FileExists(fileName$) Then
 		Print "Reading file ", fileName$
 		ROpen fileName$ As #fileNum
@@ -94,7 +99,7 @@ Function main
 	
 	' load positions at camera of chips coming from sockets
 	fileNum = FreeFile
-	fileName$ = RTS_DATA + "socket_xyu.csv"
+	fileName$ = RTS_DATA$ + "\socket_xyu.csv"
 	If FileExists(fileName$) Then
 		Print "Reading file ", fileName$
 		ROpen fileName$ As #fileNum
@@ -124,10 +129,10 @@ Function main
 	SetSpeed
 	
 	' left tray
-	Pallet 1, Tray_Left_P1, Tray_Left_P2, Tray_Left_P3, Tray_Left_P4, TRAY_NCOLS, TRAY_NROWS
+	Pallet 1, Tray_Left_P1, Tray_Left_P2, Tray_Left_P3, Tray_Left_P4, trayNCols, trayNRows
 
 	' right tray
-	Pallet 2, Tray_Right_P1, Tray_Right_P2, Tray_Right_P3, Tray_Right_P4, TRAY_NCOLS, TRAY_NROWS
+	Pallet 2, Tray_Right_P1, Tray_Right_P2, Tray_Right_P3, Tray_Right_P4, trayNCols, trayNRows
 
     'JumpToCamera
 	'Call RTS_server
@@ -136,7 +141,10 @@ Function main
 	'PickupFromTray
 	'JumpToCamera
 
-
+	'MoveChipFromSocketToTray(1, 1, 1, 15, 2)
+	MoveChipFromTrayToSocket(1, 15, 2, 1, 1)
+	
+	
 	'MoveChipFromTrayToSocket(2, 5, 1, 2, 2)
 	
 	'MoveChipFromTrayToSocket(2, 1, 1, 1, 8)
@@ -209,7 +217,7 @@ Function main
     
 	' save positions at camera of chips coming from trays
 	fileNum = FreeFile
-	fileName$ = RTS_DATA + "tray_xyu.csv"
+	fileName$ = RTS_DATA$ + "\tray_xyu.csv"
 	WOpen fileName$ As #fileNum
 	For i = 1 To NTRAYS
 		For j = 1 To TRAY_NCOLS
@@ -223,7 +231,7 @@ Function main
     
 	' save positions at camera of chips coming from sockets
 	fileNum = FreeFile
-	fileName$ = RTS_DATA + "socket_xyu.csv"
+	fileName$ = RTS_DATA$ + "\socket_xyu.csv"
 	WOpen fileName$ As #fileNum
 	For i = 1 To 2
 		For j = 1 To NSOCKETS
@@ -283,7 +291,7 @@ Function SocketTakePlaceRepeat(DAT_nr As Integer, socket_nr As Integer, ncycles 
 	
 	Integer fileNum
 	fileNum = FreeFile
-	AOpen RTS_DATA + fname$ As #fileNum
+	AOpen RTS_DATA$ + "\" + fname$ As #fileNum
 		
 	Integer i
 	For i = 1 To ncycles

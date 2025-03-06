@@ -68,6 +68,32 @@ Function RTS_server
     			status = MoveChipFromTrayToTray(src_pallet_nr, src_pallet_col, src_pallet_row, tgt_pallet_nr, tgt_pallet_col, tgt_pallet_row, 0)
     			Print #portNr, Str$(status)
     			
+     		Case "JumpToTray"
+    			PumpOn
+    			' Receive source and destination parameters"
+    			Input #portNr, pallet_nr
+    			Input #portNr, pallet_col
+    			Input #portNr, pallet_row
+    			Print "Move chip to Tray(", pallet_nr, ",", pallet_col, ",", pallet_row, ")",
+    			status = JumpToTray(pallet_nr, pallet_col, pallet_row)
+    			Print #portNr, "JumpToTray(", pallet_nr, ",", pallet_col, ",", pallet_row, ")"
+
+     		Case "PickupFromTray"
+                PickupFromTray
+    			Print #portNr, "PickupFromTray"
+
+     		Case "DropToTray"
+                DropToTray
+    			Print #portNr, "DropToTray"
+
+     		Case "PickupFromSocket"
+                PickupFromSocket
+    			Print #portNr, "PickupFromSocket"
+
+     		Case "InsertIntoSocket"
+                InsertIntoSocket
+    			Print #portNr, "InsertIntoSocket"
+    			
     		Case "JumpToCamera"
     			JumpToCamera
     			Print #portNr, "JumpToCamera"

@@ -66,6 +66,39 @@ Function SetSpeed
 	Accel 1, 1
 Fend
 
+
+Function MoveFromPointToImage(dU As Double, RotateFirst As Boolean)
+	' Move arm from stinger at point, to chip in focus with some rotation in degrees
+	' Remember point is defined as some offset (10mm from contact)
+	' RotateFirst decides if rotation comes before or after translation in XY
+	' Which may be important to avoid collision
+	Move Here +Z(DF_CAM_Z_OFF)
+	If RotateFirst Then
+		Go Here +U(dU)
+		Move Here +X(XOffset(CU(Here))) +Y(YOffset(CU(Here)))
+	Else
+		Move Here +X(XOffset(CU(Here) + dU)) +Y(YOffset(CU(Here) + dU))
+		Go Here +U(dU)
+	EndIf
+	
+Fend
+
+Function MoveFromImageToPoint(dU As Double, RotateFirst As Boolean)
+	' Inverse of above function, note rotation is not inverted like other offsets
+	' And order of operations may need to be reversed if this matters for collisions
+	' (Rotations should happen in same XY position)
+	' e.g. MoveFromImageToPoint(-45,1) is inverse of MoveFromPointToImage(45,0)
+	If RotateFirst Then
+		Go Here +U(dU)
+		Move Here -X(XOffset(CU(Here) - dU)) -Y(YOffset(CU(Here) - dU))
+	Else
+		Move Here -X(XOffset(CU(Here))) -Y(YOffset(CU(Here)))
+		Go Here +U(dU)
+	EndIf
+	Move Here -Z(DF_CAM_Z_OFF)
+	
+Fend
+
 ' Jump to camera
 ' Preserve U rotation
 Function JumpToCamera
@@ -84,7 +117,7 @@ Fend
 ' row_nr = 1..6
 ' col_nr = 1..15
 Function JumpToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer)
-	Jump Pallet(pallet_nr, col_nr, row_nr) +Z(10)
+	Jump Pallet(pallet_nr, col_nr, row_nr) ' +Z(10)
 Fend
 
 ' pallet_nr 1..2 (1-left, 2-right)
@@ -92,20 +125,57 @@ Fend
 ' col_nr = 1..15
 Function JumpToTray_camera(pallet_nr As Integer, col_nr As Integer, row_nr As Integer)
 	If pallet_nr = 1 Then
-		Jump Pallet(pallet_nr, col_nr, row_nr) +X(DF_CAMERA_OFFSET) :Z(DF_CAMERA_FOCUS) :U(HAND_U0 + 360)
+'		Jump Pallet(pallet_nr, col_nr, row_nr) +X(DF_CAMERA_OFFSET) :Z(DF_CAMERA_FOCUS) :U(HAND_U0 + 360)
+		Jump Pallet(pallet_nr, col_nr, row_nr) +X(XOffset(HAND_U0 + 360)) +Y(YOffset(HAND_U0 + 360)) +Z(DF_CAM_Z_OFF) :U(HAND_U0 + 360)
 	ElseIf pallet_nr = 2 Then
-		Jump Pallet(pallet_nr, col_nr, row_nr) -X(DF_CAMERA_OFFSET) :Z(DF_CAMERA_FOCUS) :U(HAND_U0 + 180)
+'		Jump Pallet(pallet_nr, col_nr, row_nr) -X(DF_CAMERA_OFFSET) :Z(DF_CAMERA_FOCUS) :U(HAND_U0 + 180)
+		Jump Pallet(pallet_nr, col_nr, row_nr) +X(XOffset(HAND_U0 + 180)) +Y(YOffset(HAND_U0 + 180)) +Z(DF_CAM_Z_OFF) :U(HAND_U0 + 180)
 	EndIf
+Fend
+
+Function TouchChip As Byte
+	' Will put the stinger in contact with a chip		
+	' This does several safety checks	
+	' Returns code:
+	' 0  - Success
+	' -1 - No contact after travelling 2mm below expected position 
+	' -2 - No contact but still stopped within +/- 2mm for some reason
+	' +1 - Made contact 2mm above expected chip position	
+	Speed 1
+	Accel 1, 1
+	Double Zexpect, Znow, Zdiff
+	Zexpect = CZ(Here) - 10.
+    Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off
+    Wait 0.5
+    Znow = CZ(Here)
+    Zdiff = Znow - Zexpect
+    If Zdiff > 1. Then
+    	Print "***ERROR: Contact too early - Check for obstruction"
+    	TouchChip = 1
+    ElseIf Zdiff < -1. Then
+    	Print "***ERROR: No contact - chip missing?"
+    	TouchChip = -1
+    ElseIf (Not isContactSensorTouches) Then
+    	Print "***ERROR: Contact not made but stopped in +/- 2mm of expected"
+    	TouchChip = -2
+    Else
+    	TouchChip = 0
+	EndIf
+	SetSpeed
 Fend
 
 Function isChipInTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer) As Boolean
 	JumpToTray(pallet_nr, col_nr, row_nr)
-	Speed 1
-	Accel 1, 1
-    Go Here -Z(10)
-    Wait 0.5
-	isChipInTray = isContactSensorTouches
-	SetSpeed
+'	Speed 1
+'	Accel 1, 1
+'    Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off
+'    Wait 0.5
+'	Boolean TouchStatus
+'	TouchStatus = TouchChip
+	Boolean TouchSuccess ' Can't just directly use Not Byte for converting 0 to success
+	TouchSuccess = Not TouchChip ' Should be 0 for touch, non zero error code
+	isChipInTray = TouchSuccess
+'	SetSpeed
 Fend
 
 Function PickupFromTray As Boolean
@@ -121,11 +191,18 @@ Function PickupFromTray As Boolean
 	If Not isVacuumOk Then
 		Exit Function
 	EndIf
-    Go Here -Z(10)
-	If Not isContactSensorTouches Then
-		Print "ERROR! Contact sensor does not detect a chip in the tray"
+'    Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off
+'	If Not isContactSensorTouches Then
+'		Print "ERROR! Contact sensor does not detect a chip in the tray"
+'		Exit Function
+'	EndIf
+	Boolean TouchSuccess ' Can't just directly use Not Byte for converting 0 to success
+	TouchSuccess = Not TouchChip ' Should be 0 for touch, non zero error code
+	If Not TouchSuccess Then
+		Print "ERROR! Cannot pick up from tray"
 		Exit Function
 	EndIf
+	
 	VacuumValveOpen
 	Go Here +Z(10)
     SetSpeed
@@ -137,7 +214,7 @@ Function DropToTray As Boolean
 	DropToTray = False
 	Speed 1
 	Accel 1, 1
-    Go Here -Z(9)
+    Go Here -Z(9) Till Sw(8) = On Or Sw(9) = Off
 	If isContactSensorTouches Then
 	' XN			
 		'Go Here +Z(9) +Y(0.1)
@@ -169,23 +246,80 @@ Fend
 
 Function JumpToSocket(DAT_nr As Integer, socket_nr As Integer)
 	If DAT_nr = 2 Then
-		Jump P(200 + socket_nr) :Z(-132.5)
+        'Jump P(200 + socket_nr) :Z(-132.5)
+        Jump P(200 + socket_nr)
 		Print P(200 + socket_nr)
 	ElseIf DAT_nr = 1 Then
-		Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) :Z(-134.682)
+		'Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) :Z(-134.682)
+		Jump P(100 + socket_nr)
 		'Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) -U(135) :Z(-100.682)
 		Print P(100 + socket_nr)
 	EndIf
 	
 Fend
 
+Function JumpToSocket_cor(DAT_nr As Integer, socket_nr As Integer)
+	'Print
+	'Print socket_nr, "**********************************************"
+	
+	JumpToSocket_camera(DAT_nr, socket_nr)
+	
+	VRun skt_cali_test
+	
+	Boolean Isfound1, Isfound2, Isfound3
+	Boolean found
+	
+	Double x_p1, y_p1, a_p1, x_p2, y_p2, a_p2, x_p3, y_p3, a_p3
+	Double x_ori, y_ori, a_ori
+	
+	'VGet skt_cali_test.CameraCenter.RobotXYU, found, x_ori, y_ori, a_ori
+	Double check
+	check = 100
+	Integer N_round
+	N_round = 0
+	
+	Do Until check < 20 And check > -20 Or N_round > 10
+		VRun skt_cali_test
+		VGet skt_cali_test.Geom01.RobotXYU, Isfound1, x_p1, y_p1, a_p1
+		'Print "P1 xyu: ", x_p1, y_p1, a_p1
+		VGet skt_cali_test.Geom02.RobotXYU, Isfound2, x_p2, y_p2, a_p2
+		'Print "P2 xyu: ", x_p2, y_p2, a_p2
+		VGet skt_cali_test.Geom03.RobotXYU, Isfound3, x_p3, y_p3, a_p3
+		'Print "P3 xyu: ", x_p3, y_p3, a_p3
+	
+		check = (x_p1 - x_p2) * (x_p3 - x_p2) - (y_p1 - y_p2) * (y_p3 - y_p2)
+		N_round = N_round + 1
+		'Print "perpendicular check: ", check, " Loop: ", N_round
+	
+	Loop
+	
+	
+	If check < 20 And check > -20 Then
+		Print "Correctly found"
+		Double x_c, y_c
+		x_c = (x_p1 + x_p3) /2
+		y_c = (y_p1 + y_p3) /2
+
+		Print "corr_center: ", x_c, y_c
+		JumpToSocket(DAT_nr, socket_nr)
+		Jump Here :X(x_c) :Y(y_c)
+		
+	EndIf
+	
+	
+	
+Fend
+
 Function isChipInSocket(DAT_nr As Integer, socket_nr As Integer) As Boolean
 	JumpToSocket(DAT_nr, socket_nr)
-	Speed 1
-	Accel 1, 1
-    Go Here -Z(10)
-    Wait 0.5
-	isChipInSocket = isContactSensorTouches
+'	Speed 1
+'	Accel 1, 1
+'    Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off
+'    Wait 0.5
+'	isChipInSocket = isContactSensorTouches
+	Boolean TouchSuccess ' Can't just directly use Not Byte for converting 0 to success
+	TouchSuccess = Not TouchChip ' Should be 0 for touch, non zero error code
+	isChipInSocket = TouchSuccess
     SetSpeed
 Fend
 
@@ -201,14 +335,20 @@ Function InsertIntoSocket As Boolean
 	Speed 1
 	Accel 1, 1
 	PlungerOn
-	Go Here -Z(10)
+'	Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off	
+	Boolean TouchSuccess ' Can't just directly use Not Byte for converting 0 to success
+	TouchSuccess = Not TouchChip ' Should be 0 for touch, non zero error code
+	If Not TouchSuccess Then
+		Print "ERROR! Cannot insert in socket"
+		Exit Function
+	EndIf
+	
 	VacuumValveClose
 	Wait 2
 	InsertIntoSocket = isContactSensorTouches
 	Go Here +Z(20)
 	PlungerOff
 	SetSpeed
-
 	
 Fend
 
@@ -228,13 +368,21 @@ Function PickupFromSocket As Boolean
 
 	Speed 1
 	Accel 1, 1
-	'Go Here +U(45)
-	Go Here -Z(10)
-	Wait 0.5
-	If Not isContactSensorTouches Then
-		Print "***ERROR! Do not detect chip in the socket"
+
+	Boolean TouchSuccess ' Can't just directly use Not Byte for converting 0 to success
+	TouchSuccess = Not TouchChip ' Should be 0 for touch, non zero error code
+	If Not TouchSuccess Then
+		Print "ERROR! Cannot pick up from socket"
 		Exit Function
 	EndIf
+	
+	'Go Here +U(45)
+'	Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off
+	Wait 0.5
+'	If Not isContactSensorTouches Then
+'		Print "***ERROR! Do not detect chip in the socket"
+'		Exit Function
+'	EndIf
 	Wait 1
 	VacuumValveOpen
 	Wait 1
@@ -258,14 +406,16 @@ Fend
 
 Function JumpToSocket_camera(DAT_nr As Integer, socket_nr As Integer)
 	If DAT_nr = 2 Then
-		Jump P(200 + socket_nr) :Z(-97.60) +X(DF_CAMERA_OFFSET) -U(45)
+'		Jump P(200 + socket_nr) :Z(-97.60) +X(DF_CAMERA_OFFSET) -U(45)
+		Jump P(200 + socket_nr) +Z(DF_CAM_Z_OFF) +X(XOffset(CU(Here) - 45)) +Y(YOffset(CU(Here) - 45)) -U(45)
 	ElseIf DAT_nr = 1 Then
-		Jump P(100 + socket_nr) +U(135)
+		'Jump P(100 + socket_nr) +U(135)
+		Jump P(100 + socket_nr) +Z(DF_CAM_Z_OFF) +X(XOffset(CU(Here) + 135)) +Y(YOffset(CU(Here) + 135)) +U(135)
 	EndIf
 Fend
 
 Function UF_take_picture$(basename$ As String) As String
- 	UF_take_picture$ = RTS_DATA + "images\UF_" + basename$ + ".bmp"
+ 	UF_take_picture$ = RTS_DATA$ + "\images\UF_" + basename$ + ".bmp"
  	Print UF_take_picture$
  	VRun UF
     Wait 0.3
@@ -274,7 +424,7 @@ Fend
 
 
 Function DF_take_picture$(basename$ As String) As String
-	DF_take_picture$ = RTS_DATA + "images\" + basename$ + ".bmp"
+	DF_take_picture$ = RTS_DATA$ + "\images\" + basename$ + ".bmp"
 	Print DF_take_picture$
  	VRun DF
     Wait 0.3
@@ -395,6 +545,20 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 	EndIf
 	
 	
+	       'JW:
+       If Agl(4) < -45. Then
+               Go Here +U(180)
+'      ElseIf Agl(4) < 0. Then
+'              Go Here +U(135)
+'              Go Here -U(180)
+'              Go Here +U(45)
+       ElseIf Agl(4) <= 45. Then
+               Go Here +U(90)
+       Else
+               Go Here -U(180)
+       EndIf
+	
+	
 	UF_camera_light_ON
 	Wait 0.2
 	String pict_fname$
@@ -442,11 +606,19 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 	EndIf
 
 	' Repeat measurement for 180 deg. rotation
-	If CU(Here) < 235 Then
-		Go Here +U(180)
-	Else
-		Go Here -U(180)
-	EndIf
+'	If CU(Here) < 235 Then
+'		Go Here +U(180)
+'	Else
+'		Go Here -U(180)
+'	EndIf
+
+'      JW:
+	If Agl(4) <= 45. Then
+	    Go Here -U(180)
+    Else
+        Go Here +U(180)
+    EndIf
+
 	Wait 0.2
 	'UF_take_picture(chip_SN$ + "-180", ByRef pict_fname_180$)
 	'UF_take_picture(ByRef pict_fname$)
@@ -523,8 +695,14 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 		ChipBottomAnaly = 2
 		Print "***Error ", 2
         Exit Function
-			
 	EndIf
+	
+    ' JW: need to correct the cases where you do +90, then -180 then +90
+         ' Other angles just do +180, then -180 or vice versa
+	If Agl(4) > -45. And Agl(4) <= 45. Then
+		Go Here +U(90)
+	EndIf
+
 
 	' Change handeness to the target 
 	If tgt_pallet_nr = 1 Or tgt_DAT_nr = 1 Then
@@ -855,7 +1033,7 @@ Function PinsAnaly(id$ As String) As Integer
 	
 	Integer fileNum
 	fileNum = FreeFile
-	AOpen RTS_DATA + "pins\" + id$ + "_pins.csv" As #fileNum
+	AOpen RTS_DATA$ + "\pins\" + id$ + "_pins.csv" As #fileNum
 		
 	
 	VRun pins_analy
@@ -941,7 +1119,7 @@ Fend
 
 Function MoveChipFromTrayToTypeSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, chip_type As Integer, socket_nr As Integer) As Int64
 	 Integer soc_nr
-	 soc_nr = socket_nr + 10* chip_type
+	 soc_nr = socket_nr + 10 * chip_type
 	 MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, soc_nr)
 Fend
 
@@ -959,7 +1137,7 @@ Function MoveChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_n
 	
 	Integer fileNum
 	fileNum = FreeFile
-	AOpen RTS_DATA + fname$ As #fileNum
+	AOpen RTS_DATA$ + "\" + fname$ As #fileNum
 	
 	Integer i
 	Integer idx(20)
@@ -1122,7 +1300,7 @@ Fend
 
 Function MoveChipFromTypeSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, chip_type As Integer, socket_nr As Integer) As Int64
 	 Integer soc_nr
-	 soc_nr = socket_nr + 10* chip_type
+	 soc_nr = socket_nr + 10 * chip_type
 	 MoveChipFromSocketToTray(pallet_nr, col_nr, row_nr, DAT_nr, soc_nr)
 Fend
 
@@ -1141,7 +1319,7 @@ Function MoveChipFromSocketToTray(DAT_nr As Integer, socket_nr As Integer, palle
 		
 	Integer fileNum
 	fileNum = FreeFile
-	AOpen RTS_DATA + fname$ As #fileNum
+	AOpen RTS_DATA$ + "\" + fname$ As #fileNum
 		
 	Integer i
 	Integer idx(20)
@@ -1345,7 +1523,7 @@ Function MoveChipFromTrayToTray(src_pallet_nr As Integer, src_col_nr As Integer,
 		
 	Integer fileNum
 	fileNum = FreeFile
-	AOpen RTS_DATA + fname$ As #fileNum
+	AOpen RTS_DATA$ + "\" + fname$ As #fileNum
 		
 	Integer i
 	Integer idx(20)
@@ -1500,4 +1678,99 @@ Function MoveChipFromTrayToTray(src_pallet_nr As Integer, src_col_nr As Integer,
 
 Fend
 	
+Function calibrate_socket(DAT_nr As Integer, socket_nr As Integer)
+	Print
+	Print socket_nr, "**********************************************"
+	
+	
+	JumpToSocket_camera(DAT_nr, socket_nr)
+	
+	'Add error: x:  0.888672y:  -0.798645
+	'Go Here +X(0.888672)
+	'Go Here +Y(-0.798645)
+	
+	'Add a position fluctuation for test, only for test!!!	
+	
+	'Real r_x
+  	'Randomize
+  	'r_x = Rnd(2) - 1
+  	
+  	'Real r_y
+    'Randomize
+    'r_y = Rnd(2) - 1
+  	
+  	'Go Here +X(r_x)
+  	'Go Here +Y(r_x)
+  	'Print "Add error: x: ", r_x, "y: ", r_y
+  	
+  	'random end ********************************************************
+
+	
+	VRun skt_cali_test
+	'Integer nP
+	'VGet skt_cali_test.Geom01.NumberFound, nP
+	'Print "number of point found: ", nP
+	
+	Boolean Isfound1, Isfound2, Isfound3
+	Boolean found
+	'VGet skt_cali_test.Geom01.Found, Isfound1
+	'VGet skt_cali_test.Geom02.Found, Isfound2
+	'VGet skt_cali_test.Geom03.Found, Isfound3
+	
+	Double x_p1, y_p1, a_p1, x_p2, y_p2, a_p2, x_p3, y_p3, a_p3
+	Double x_ori, y_ori, a_ori
+	
+	'VGet skt_cali_test.CameraCenter.RobotXYU, found, x_ori, y_ori, a_ori
+	Double check
+	check = 100
+	Integer N_round
+	N_round = 0
+	
+	Do Until check < 20 And check > -20 Or N_round > 10
+		VRun skt_cali_test
+		VGet skt_cali_test.Geom01.RobotXYU, Isfound1, x_p1, y_p1, a_p1
+		'Print "P1 xyu: ", x_p1, y_p1, a_p1
+		VGet skt_cali_test.Geom02.RobotXYU, Isfound2, x_p2, y_p2, a_p2
+		'Print "P2 xyu: ", x_p2, y_p2, a_p2
+		VGet skt_cali_test.Geom03.RobotXYU, Isfound3, x_p3, y_p3, a_p3
+		'Print "P3 xyu: ", x_p3, y_p3, a_p3
+	
+
+		check = (x_p1 - x_p2) * (x_p3 - x_p2) - (y_p1 - y_p2) * (y_p3 - y_p2)
+		N_round = N_round + 1
+		'Print "perpendicular check: ", check, " Loop: ", N_round
+	
+	Loop
+	
+	
+	If check < 20 And check > -20 Then
+		Print "Correctly found"
+	EndIf
+	
+	
+	Double x_c, y_c
+	
+	x_c = (x_p1 + x_p3) /2
+	y_c = (y_p1 + y_p3) /2
+	'Print "HERE: ", Here
+	'Print "ori_center: ", x_ori, y_ori
+	Print "corr_center: ", x_c, y_c
+	'Print P(20 + socket_nr) :Z(-132.5)
+	
+	'Double A_line
+	
+	'VGet skt_cali_test.LineFind01.Angle, A_line
+	'Print A_line
+	
+	
+Fend
+
+Function XOffset(UValue As Double) As Double
+	XOffset = DF_CAM_X_OFF_U0 * Cos(DegToRad(UValue - HAND_U0)) - DF_CAM_Y_OFF_U0 * Sin(DegToRad(UValue - HAND_U0))
+Fend
+
+Function YOffset(UValue As Double) As Double
+	YOffset = DF_CAM_X_OFF_U0 * Sin(DegToRad(UValue - HAND_U0)) + DF_CAM_Y_OFF_U0 * Cos(DegToRad(UValue - HAND_U0))
+Fend
+
 
