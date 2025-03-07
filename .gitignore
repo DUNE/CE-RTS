@@ -3,3 +3,6 @@ RTS_robot/*.obj
 RTS_robot/*.bak
 RTS_robot/*.wsp
 RTS_robot/*.prgfg
+RTS_robot/command.txt
+RTS_robot/SiteSelection.inc
+site.csv

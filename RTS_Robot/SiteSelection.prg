@@ -96,51 +96,10 @@ Function SelectSite
 
 Fend
 
-'Function SelectSite
-'	Integer fileNum
-'	String SITE_FILE
-'	SITE_FILE = REPO_DIR + "\site.csv"
-'	
-'	If Not FileExists(SITE_FILE) Then
-'		Print "***ERROR NO SITE SELECTION FILE"
-'		Exit Function
-'	EndIf
-'	fileNum = FreeFile
-'	ROpen SITE_FILE As #fileNum
-'	Input #fileNum, SITE$, CHIPTYPE$, HAND_U0, DF_CAM_X_OFF_U0, DF_CAM_Y_OFF_U0, DF_CAM_FOCUS
-'	DF_CAM_Z_OFF = DF_CAM_FOCUS - CONTACT_DIST
-'	POINTS_FILE$ = "points_" + SITE$ + ".pts"
-'	Print "Site selected is " + SITE$
-'	Print "Chip type to be tested is" + CHIPTYPE$
-'	LoadPoints POINTS_FILE$
-'	
-''	Select SITE$
-''		Case "BNL"
-''			HAND_U0 = 4.174
-''			DF_CAMERA_OFFSET = 58.
-''			DF_CAMERA_FOCUS = -18.045
-''		Case "MSU"
-''			HAND_U0 = 88.953 '-0.947
-''			DF_CAMERA_OFFSET = 57.961
-''			DF_CAMERA_FOCUS = -19.616
-''			DF_CAM_X_OFF_U0 = -0.91
-''			DF_CAM_Y_OFF_U0 = 57.58
-''			DF_CAM_FOCUS = 45
-''		Case "FNAL"
-''		Case "LBNL"
-''		Case "UCI"
-''		Case "LSU"
-''		Default
-''			Print "***ERROR Site not set or recognised in site.csv - cannot set offsets"
-''	Send
-'	
-'	Close #fileNum
-'Fend
-
 Function SetSiteValues()
 	OnErr GoTo eHandler
 	' Function to create and write values of camera offsets and chip type etc to file
-	' Requires Points PScrewDFBack and PScrewDFFront to be defined in site points file
+	' Requires Points PScrewDFLeft and PScrewDFRight to be defined in site points file
 	
 '	If Not FolderExists(REPO_DIR) Then
 '		Print "ERROR: REPO_DIR is does not exist and must not be correctly set"
@@ -162,8 +121,8 @@ Function SetSiteValues()
 	' JW Need some error handling here
 	
 	' After teaching
-	' PScrewDFBack: Camera over screw in between chip trays, Camera back toward robot
-	' PScrewDFFront: Camera forward toward user
+	' PScrewDFLeft: Camera over screw in between chip trays, Camera toward Left tray
+	' PScrewDFRight: Camera toward right tray (from robot's perspective)
 	' Using the DF_TrayScrew vision sequence as a template to help align the camera
 	' This function will calculate any offset between the center of the image and the
 	' axis of rotation of J4 (The U or EOAT direction)
@@ -173,16 +132,16 @@ Function SetSiteValues()
 	' The XOffset and YOffset functions will then rotate these appropriately for a given U value
 
 	Double DeltaX, DeltaY, DeltaZ, U0
-	DeltaX = (CX(PScrewDFBack) - CX(PScrewDFFront)) / 2
-	DeltaY = (CY(PScrewDFBack) - CY(PScrewDFFront)) / 2
-	U0 = CU(PScrewDFBack)
+	DeltaX = (CX(PScrewDFLeft) - CX(PScrewDFRight)) / 2
+	DeltaY = (CY(PScrewDFLeft) - CY(PScrewDFRight)) / 2
+	U0 = CU(PScrewDFLeft)
 	Print "Go to your site case in SiteSelection.prg"
 	Print "Set HAND_U0 to ", U0
 	
 	Print "Set DF_CAM_X_OFF_U0 to ", DeltaX
 	Print "Set DF_CAM_Y_OFF_U0 to ", DeltaY
 	
-	Jump PScrewDFBack -X(DeltaX) -Y(DeltaY) LimZ -10
+	Jump PScrewDFLeft -X(DeltaX) -Y(DeltaY) LimZ -10
 	Accel 1, 1
 	Speed 1
 	Go Here -Z(60) Till Sw(8) = On Or Sw(9) = Off
@@ -191,7 +150,7 @@ Function SetSiteValues()
 		Exit Function
 	EndIf
 	' Store the focal distance, from which the Z offset is defined by suntracting contact offset)
-	DeltaZ = (CZ(PScrewDFBack) - CZ(Here))
+	DeltaZ = (CZ(PScrewDFLeft) - CZ(Here))
 	Move Here +Z(10)
 	Print "Check if stinger is in contact with screw, if O.K. "
 	Print "Set DF_CAM_FOCUS to ", DeltaZ
@@ -213,7 +172,7 @@ Function SetSiteValues()
 	Print REPO_DIR$
 	Print "Check points file exists at"
 	Print REPO_DIR$ + "\RTS_Robot\" + POINTS_FILE$
-	Print "Check PScrewDFBack and PScrewDFFront are defined"
+	Print "Check PScrewDFLeft and PScrewDFRight are defined"
 	If Era(errorTask) > 0 Then
 		Print "Error with joint ", Era(errorTask)
 	EndIf
