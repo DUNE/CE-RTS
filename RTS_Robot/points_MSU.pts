@@ -1,6 +1,5 @@
-ENVT0100,LM:2025/03/04 22:05:53:198,DS:0000005182,CS:06760,MA:B8-85-84-9F-6A-05,EI:           
+ENVT0100,LM:2025/03/07 21:39:41:366,DS:0000005167,CS:30253,MA:B8-85-84-9F-6A-05,EI:           
 sVersion="2.0.0"
-nDisplayMode=1
 bDisplayR=False
 bDisplayS=False
 bDisplayT=False
@@ -268,13 +267,13 @@ Point10 {
 }
 Point11 {
 	nNumber=10
-	sLabel="PScrewDFFront"
+	sLabel="PScrewDFLeft"
 	sDescription=""
 	nUndefined=0
-	rX=1.324
-	rY=436.924
+	rX=57.931
+	rY=495.572
 	rZ=-18.915
-	rU=268.953
+	rU=-0.889
 	rV=0
 	rW=0
 	rR=0
@@ -294,13 +293,13 @@ Point11 {
 }
 Point12 {
 	nNumber=11
-	sLabel="PScrewDFBack"
+	sLabel="PScrewDFRight"
 	sDescription=""
 	nUndefined=0
-	rX=-0.496
-	rY=552.093
+	rX=-57.231
+	rY=493.53
 	rZ=-18.915
-	rU=88.953
+	rU=179.111
 	rV=0
 	rW=0
 	rR=0
