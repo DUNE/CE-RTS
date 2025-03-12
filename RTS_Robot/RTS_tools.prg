@@ -1100,19 +1100,19 @@ Fend
 '        < 0 - Error id
 
 
-' Function MoveLArASICChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, larasic_socket_nr As Integer) As Int64
-' 	 'Wraps generic function and restricts to LArASICs only
+' Function MoveLARASICChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, larasic_socket_nr As Integer) As Int64
+' 	 'Wraps generic function and restricts to LARASICs only
 ' 	 'larasic_socket_nr
 ' 	 MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, larasic_socket_nr)
 ' Fend
 
-' Function MoveColdADCChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, coldadc_socket_nr As Integer) As Int64
+' Function MoveCOLDADCChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, coldadc_socket_nr As Integer) As Int64
 ' 	 'Wraps generic function and restricts to Coldadcs only
 ' 	 'coldadc_socket_nr
 ' 	 MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, (coldadc_socket_nr+10))
 ' Fend
 
-' Function MoveColDATAChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, coldata_socket_nr As Integer) As Int64
+' Function MoveCOLDATAChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, coldata_socket_nr As Integer) As Int64
 ' 	 'Wraps generic function and restricts to Coldatas only
 ' 	 'coldata_socket_nr
 ' 	 MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, (coldata_socket_nr+20))
@@ -1121,11 +1121,11 @@ Fend
 ' Function MoveChipFromTrayToChipSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, ChipType As String, socket_nr As Integer) As Int64
 ' 	 Inetger soc_nr
 ' 	 Select
-' 		Case "LArASIC"
+' 		Case "LARASIC"
 ' 		     soc_nr=socket_nr
-' 		Case "ColdADC"
+' 		Case "COLDADC"
 ' 		     soc_nr=socket_nr+10
-' 		Case "ColDATA"
+' 		Case "COLDATA"
 ' 		     soc_nr=socket_nr+20
 ' 	Send
 ' 	MoveChipFromTrayToSocket(pallet_nr, col_nr, row_nr, DAT_nr, soc_nr)
@@ -1281,19 +1281,19 @@ Fend
 '
 ' GLOBAL:
 
-' Function MoveLArASICChipFromSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, larasic_socket_nr As Integer) As Int64
-' 	 'Wraps generic function and restricts to LArASICs only
+' Function MoveLARASICChipFromSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, larasic_socket_nr As Integer) As Int64
+' 	 'Wraps generic function and restricts to LARASICs only
 ' 	 'larasic_socket_nr
 ' 	 MoveChipFromSocketToTray(pallet_nr, col_nr, row_nr, DAT_nr, larasic_socket_nr)
 ' Fend
 
-' Function MoveColdADCChipFromSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, coldadc_socket_nr As Integer) As Int64
+' Function MoveCOLDADCChipFromSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, coldadc_socket_nr As Integer) As Int64
 ' 	 'Wraps generic function and restricts to Coldadcs only
 ' 	 'coldadc_socket_nr
 ' 	 MoveChipFromSocketToTray(pallet_nr, col_nr, row_nr, DAT_nr, (coldadc_socket_nr+10))
 ' Fend
 
-' Function MoveColDATAChipFromSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, coldata_socket_nr As Integer) As Int64
+' Function MoveCOLDATAChipFromSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, coldata_socket_nr As Integer) As Int64
 ' 	 'Wraps generic function and restricts to Coldatas only
 ' 	 'coldata_socket_nr
 ' 	 MoveChipFromSocketToTray(pallet_nr, col_nr, row_nr, DAT_nr, (coldata_socket_nr+20))
@@ -1302,11 +1302,11 @@ Fend
 ' Function MoveChipFromChipSocketToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, ChipType As String, socket_nr As Integer) As Int64
 ' 	 Inetger soc_nr
 ' 	 Select
-' 		Case "LArASIC"
+' 		Case "LARASIC"
 ' 		     soc_nr=socket_nr
-' 		Case "ColdADC"
+' 		Case "COLDADC"
 ' 		     soc_nr=socket_nr+10
-' 		Case "ColDATA"
+' 		Case "COLDATA"
 ' 		     soc_nr=socket_nr+20
 ' 	Send
 ' 	MoveChipFromSocketToTray(pallet_nr, col_nr, row_nr, DAT_nr, soc_nr)
