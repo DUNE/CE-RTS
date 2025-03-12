@@ -1773,4 +1773,61 @@ Function YOffset(UValue As Double) As Double
 	YOffset = DF_CAM_X_OFF_U0 * Sin(DegToRad(UValue - HAND_U0)) + DF_CAM_Y_OFF_U0 * Cos(DegToRad(UValue - HAND_U0))
 Fend
 
+Function FindChipDirectionWithDF As Double '(UseCoordinates As Boolean) As Double
+	
+	Double m, UChip
+	
+	Print "EOAT is at (", CX(Here), ",", CY(Here), ",Z,", CU(Here), ")"
+	
+	Boolean isFoundL, isFoundS
+	
+	VRun GetChipDir
+	
+	' Get positions of Large and Small circular markers on chip
+	Double xL, yL, uL, xS, yS, uS
+	
+'	If UseCoordinates Then
+		Print "Using robot coordinates, will need DF cam calibration"
+		VGet GetChipDir.Geom01.RobotXYU, isFoundL, xL, yL, uL
+		VGet GetChipDir.Geom02.RobotXYU, isFoundS, xS, yS, uS
+'	Else
+'		VGet GetChipDir.Geom01.PixelXYU, isFoundL, xL, yL, uL
+'		VGet GetChipDir.Geom02.PixelXYU, isFoundS, xS, yS, uS
+'	EndIf
+
+	If (Not isFoundL) Or (Not isFoundS) Then
+		Print "ERROR: Cannot find chip fiducial marks"
+		FindChipDirectionWithDF = -999.
+		Exit Function
+	EndIf
+	
+	Print "Large fiducial marker found at: x=", xL, "; y=", yL ', "; u=", uL
+	Print "Small fiducial marker found at: x=", xS, "; y=", yS ', "; u=", uS
+	
+	Double AvX, AvY
+	AvX = (xL + xS) /2
+	AvY = (yL + yS) /2
+	Print "Average X and Y: ( ", AvX, ",", AvY, " )"
+	
+	
+	Double DelX, DelY, Hyp, SPolar
+	DelX = xS - xL
+	DelY = yS - yL
+	Hyp = Sqr((DelX * DelX) + (DelY * DelY))
+	SPolar = RadToDeg(Acos(DelY / Hyp))
+	Print "DelX = xL - xS = ", DelX
+	Print "DelX = yL - yS = ", DelY
+	Print "Hypotenuse = ", Hyp
+	Print "Polar angle of small mark from large marg ", SPolar
+		
+		
+'		m = DelY / DelX
+'		Print "DelY/DelX = ", m
+'		
+'		' Remember pixels are upside down	
+'		
+'	EndIf
+	FindChipDirectionWithDF = SPolar - 45.
+	
+Fend
 
