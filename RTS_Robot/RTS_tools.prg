@@ -72,6 +72,12 @@ Function MoveFromPointToImage(dU As Double, RotateFirst As Boolean)
 	' Remember point is defined as some offset (10mm from contact)
 	' RotateFirst decides if rotation comes before or after translation in XY
 	' Which may be important to avoid collision
+	
+	If (DF_CAM_Z_OFF < 0) Then
+		Print "ERROR - Z OFFSET IS NEGATIVE OR NOT SET - SET CAMERA OFFSETS USING DEFINED PROCEDURE ON GIT WIKI"
+		Exit Function
+	EndIf
+	
 	Move Here +Z(DF_CAM_Z_OFF)
 	If RotateFirst Then
 		Go Here +U(dU)
@@ -88,6 +94,11 @@ Function MoveFromImageToPoint(dU As Double, RotateFirst As Boolean)
 	' And order of operations may need to be reversed if this matters for collisions
 	' (Rotations should happen in same XY position)
 	' e.g. MoveFromImageToPoint(-45,1) is inverse of MoveFromPointToImage(45,0)
+	If (DF_CAM_Z_OFF < 0) Then
+		Print "ERROR - Z OFFSET IS NEGATIVE OR NOT SET - SET CAMERA OFFSETS USING DEFINED PROCEDURE ON GIT WIKI"
+		Exit Function
+	EndIf
+	
 	If RotateFirst Then
 		Go Here +U(dU)
 		Move Here -X(XOffset(CU(Here) - dU)) -Y(YOffset(CU(Here) - dU))
@@ -95,7 +106,10 @@ Function MoveFromImageToPoint(dU As Double, RotateFirst As Boolean)
 		Move Here -X(XOffset(CU(Here))) -Y(YOffset(CU(Here)))
 		Go Here +U(dU)
 	EndIf
-	Move Here -Z(DF_CAM_Z_OFF)
+	Move Here -Z(DF_CAM_Z_OFF) Till Sw(8) = On Or Sw(9) = Off
+	If Sw(8) = On Or Sw(9) = Off Then
+		Print "ERROR: Contact was made. point should be defined above the chip! Check for obstructions"
+	EndIf
 	
 Fend
 
@@ -1773,4 +1787,61 @@ Function YOffset(UValue As Double) As Double
 	YOffset = DF_CAM_X_OFF_U0 * Sin(DegToRad(UValue - HAND_U0)) + DF_CAM_Y_OFF_U0 * Cos(DegToRad(UValue - HAND_U0))
 Fend
 
+Function FindChipDirectionWithDF As Double '(UseCoordinates As Boolean) As Double
+	
+	Double m, UChip
+	
+	Print "EOAT is at (", CX(Here), ",", CY(Here), ",Z,", CU(Here), ")"
+	
+	Boolean isFoundL, isFoundS
+	
+	VRun GetChipDir
+	
+	' Get positions of Large and Small circular markers on chip
+	Double xL, yL, uL, xS, yS, uS
+	
+'	If UseCoordinates Then
+		Print "Using robot coordinates, will need DF cam calibration"
+		VGet GetChipDir.Geom01.RobotXYU, isFoundL, xL, yL, uL
+		VGet GetChipDir.Geom02.RobotXYU, isFoundS, xS, yS, uS
+'	Else
+'		VGet GetChipDir.Geom01.PixelXYU, isFoundL, xL, yL, uL
+'		VGet GetChipDir.Geom02.PixelXYU, isFoundS, xS, yS, uS
+'	EndIf
+
+	If (Not isFoundL) Or (Not isFoundS) Then
+		Print "ERROR: Cannot find chip fiducial marks"
+		FindChipDirectionWithDF = -999.
+		Exit Function
+	EndIf
+	
+	Print "Large fiducial marker found at: x=", xL, "; y=", yL ', "; u=", uL
+	Print "Small fiducial marker found at: x=", xS, "; y=", yS ', "; u=", uS
+	
+	Double AvX, AvY
+	AvX = (xL + xS) /2
+	AvY = (yL + yS) /2
+	Print "Average X and Y: ( ", AvX, ",", AvY, " )"
+	
+	
+	Double DelX, DelY, Hyp, SPolar
+	DelX = xS - xL
+	DelY = yS - yL
+	Hyp = Sqr((DelX * DelX) + (DelY * DelY))
+	SPolar = RadToDeg(Acos(DelY / Hyp))
+	Print "DelX = xL - xS = ", DelX
+	Print "DelX = yL - yS = ", DelY
+	Print "Hypotenuse = ", Hyp
+	Print "Polar angle of small mark from large marg ", SPolar
+		
+		
+'		m = DelY / DelX
+'		Print "DelY/DelX = ", m
+'		
+'		' Remember pixels are upside down	
+'		
+'	EndIf
+	FindChipDirectionWithDF = SPolar - 45.
+	
+Fend
 
