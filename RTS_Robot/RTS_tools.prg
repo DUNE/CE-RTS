@@ -72,6 +72,12 @@ Function MoveFromPointToImage(dU As Double, RotateFirst As Boolean)
 	' Remember point is defined as some offset (10mm from contact)
 	' RotateFirst decides if rotation comes before or after translation in XY
 	' Which may be important to avoid collision
+	
+	If (DF_CAM_Z_OFF < 0) Then
+		Print "ERROR - Z OFFSET IS NEGATIVE OR NOT SET - SET CAMERA OFFSETS USING DEFINED PROCEDURE ON GIT WIKI"
+		Exit Function
+	EndIf
+	
 	Move Here +Z(DF_CAM_Z_OFF)
 	If RotateFirst Then
 		Go Here +U(dU)
@@ -88,6 +94,11 @@ Function MoveFromImageToPoint(dU As Double, RotateFirst As Boolean)
 	' And order of operations may need to be reversed if this matters for collisions
 	' (Rotations should happen in same XY position)
 	' e.g. MoveFromImageToPoint(-45,1) is inverse of MoveFromPointToImage(45,0)
+	If (DF_CAM_Z_OFF < 0) Then
+		Print "ERROR - Z OFFSET IS NEGATIVE OR NOT SET - SET CAMERA OFFSETS USING DEFINED PROCEDURE ON GIT WIKI"
+		Exit Function
+	EndIf
+	
 	If RotateFirst Then
 		Go Here +U(dU)
 		Move Here -X(XOffset(CU(Here) - dU)) -Y(YOffset(CU(Here) - dU))
@@ -95,7 +106,10 @@ Function MoveFromImageToPoint(dU As Double, RotateFirst As Boolean)
 		Move Here -X(XOffset(CU(Here))) -Y(YOffset(CU(Here)))
 		Go Here +U(dU)
 	EndIf
-	Move Here -Z(DF_CAM_Z_OFF)
+	Move Here -Z(DF_CAM_Z_OFF) Till Sw(8) = On Or Sw(9) = Off
+	If Sw(8) = On Or Sw(9) = Off Then
+		Print "ERROR: Contact was made. point should be defined above the chip! Check for obstructions"
+	EndIf
 	
 Fend
 
