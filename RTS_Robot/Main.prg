@@ -140,13 +140,35 @@ Function main
 	'JumpToTray(2, 15, 6)
 	'PickupFromTray
 	'JumpToCamera
-
+	
+'	FindSocketDirectionWithDF
+'	PumpOff
+'	
 	'MoveChipFromSocketToTray(1, 1, 1, 15, 2)
-	MoveChipFromTrayToSocket(1, 15, 2, 1, 1)
-	
-	
+	'MoveChipFromTrayToSocket(1, 15, 2, 1, 1)
+'	TestMoveChipT2S(2, 15, 1, 1, 1)
+
+
+'	RunMoveChipTrayToSocket(2, 15, 1, 1, 8)
+	'PumpOff
 	'MoveChipFromTrayToSocket(2, 5, 1, 2, 2)
 	
+	TrayChipOrientation(1) = 0
+	TrayChipOrientation(2) = 0
+	SocketChipOrientation(1) = -90
+	SocketChipOrientation(2) = -90
+	SocketChipOrientation(3) = -90
+'	SocketChipOrientation(2, 1) = -90
+'	SocketChipOrientation(2, 2) = -90
+'	SocketChipOrientation(2, 3) = -90
+	
+'	RunMoveChipTrayToSocket(2, 15, 1, 1, 8)
+'	Wait 10
+'	RunMoveChipSocketToTray(1, 8, 2, 15, 1)
+
+
+
+	'PumpOff
 	'MoveChipFromTrayToSocket(2, 1, 1, 1, 8)
 	'MoveChipFromTrayToSocket(2, 2, 1, 1, 7)
 	'MoveChipFromTrayToSocket(2, 3, 1, 1, 6)

@@ -44,4 +44,15 @@ Global Double DAT_U(2, NSOCKETS)
 '
 '' chip SN
 ''Global String chip_SN$
+Global Double CornerVar(3)
+Global Double ChipPos(3)
+Global Double UFChipPos(3)
+Global Double SockPos(3)
+
+' In increments of 90 degrees from X axis, U0 offsets and socket find should
+' account for sub-90 degree variations between sockets and different RTS robots
+Global Double TrayChipOrientation(2) ' Default direction for chips in tray - in world coordinates
+Global Double SocketChipOrientation(3) ' Default direction for chips in sockets - relative to socket Mezzanine direction
+
+
 
