@@ -6,8 +6,9 @@ Function main
 	
 	SelectSite
 	
+	' Make sure RTS_DATA folder exists, create if not
 	If Not FolderExists(RTS_DATA$) Then
-  		MkDir RTS_DATA$
+  		SetupDirectories
 	EndIf
 
 	If Not FolderExists(RTS_DATA$) Then
@@ -15,109 +16,7 @@ Function main
   		Exit Function
 	EndIf
 	
-	String dir_images$
-	dir_images$ = RTS_DATA$ + "\images"
-
-	If Not FolderExists(dir_images$) Then
-  		MkDir dir_images$
-	EndIf
-	
-	If Not FolderExists(dir_images$) Then
-  		Print "***ERROR Can't create directory [" + dir_images$ + "]"
-  		Exit Function
-	EndIf
-	
-	String dir_pins$
-	dir_pins$ = RTS_DATA$ + "pins"
-
-	If Not FolderExists(dir_pins$) Then
-  		MkDir dir_pins$
-	EndIf
-	
-	If Not FolderExists(dir_pins$) Then
-  		Print "***ERROR Can't create directory [" + dir_pins$ + "]"
-  		Exit Function
-	EndIf
-	
-	
-	' reset arrays	JW: Use TRAY_NCOLS and TRAY_NROWS as these are maximum array sizes, even if we only fill trayNCols x trayNRows
-	Integer i, j, k
-	For i = 1 To NTRAYS
-		For j = 1 To TRAY_NCOLS
-			For k = 1 To TRAY_NROWS
-				tray_X(i, j, k) = 0
-				tray_Y(i, j, k) = 0
-				tray_U(i, j, k) = 0
-			Next k
-		Next j
-	Next i
-	
-	For i = 1 To 2
-		For j = 1 To NSOCKETS
-			DAT_X(i, j) = 0
-			DAT_Y(i, j) = 0
-			DAT_U(i, j) = 0
-		Next j
-	Next i
-	
-		
-		
-	
-	' Initialize positions	
-	'tray_X(1, 15, 6) = -0.300
-	'tray_Y(1, 15, 6) = -0.300
-	'tray_U(1, 15, 6) = -0.2
-	
-	' load positions at camera of chips coming from trays
-    Integer fileNum
-    String fileName$
-    Double x, y, u
-    Double ii, jj, kk
-	fileNum = FreeFile
-	fileName$ = RTS_DATA$ + "\tray_xyu.csv"
-	If FileExists(fileName$) Then
-		Print "Reading file ", fileName$
-		ROpen fileName$ As #fileNum
-		For i = 1 To NTRAYS
-			For j = 1 To TRAY_NCOLS
-				For k = 1 To TRAY_NROWS
-					Input #fileNum, ii, jj, kk, x, y, u
-					If ii = i And jj = j And kk = k Then
-						'Input #fileNum, tray_X(i, j, k), tray_Y(i, j, k), tray_U(i, j, k)
-						tray_X(i, j, k) = x
-						tray_Y(i, j, k) = y
-						tray_U(i, j, k) = u
-					Else
-						Print "Error reading file ", fileName$, " ijk=", i, " ", j, " ", k
-						Exit Function
-					EndIf
-				Next k
-			Next j
-		Next i
-	EndIf
-	Close #fileNum
-	
-	' load positions at camera of chips coming from sockets
-	fileNum = FreeFile
-	fileName$ = RTS_DATA$ + "\socket_xyu.csv"
-	If FileExists(fileName$) Then
-		Print "Reading file ", fileName$
-		ROpen fileName$ As #fileNum
-		For i = 1 To 2
-			For j = 1 To NSOCKETS
-				Input #fileNum, ii, jj, x, y, u
-				If ii = i And jj = j Then
-					DAT_X(i, j) = x
-					DAT_Y(i, j) = y
-					DAT_U(i, j) = u
-				Else
-					Print "Error reading file ", fileName$
-					Exit Function
-				EndIf
-			Next j
-		Next i
-	EndIf
-	Close #fileNum
+	LoadPositionFiles
 		
 	VacuumValveClose
 	PumpOn
@@ -134,112 +33,13 @@ Function main
 	' right tray
 	Pallet 2, Tray_Right_P1, Tray_Right_P2, Tray_Right_P3, Tray_Right_P4, trayNCols, trayNRows
 
-    'JumpToCamera
-	'Call RTS_server
+	MoveChipFromTrayToSocket(2, 21, 2, 1, 3)
 
-	'JumpToTray(2, 15, 6)
-	'PickupFromTray
-	'JumpToCamera
-
-	'MoveChipFromSocketToTray(1, 1, 1, 15, 2)
-	MoveChipFromTrayToSocket(1, 15, 2, 1, 1)
+	UpdatePositionFiles
 	
-	
-	'MoveChipFromTrayToSocket(2, 5, 1, 2, 2)
-	
-	'MoveChipFromTrayToSocket(2, 1, 1, 1, 8)
-	'MoveChipFromTrayToSocket(2, 2, 1, 1, 7)
-	'MoveChipFromTrayToSocket(2, 3, 1, 1, 6)
-	'MoveChipFromTrayToSocket(2, 4, 1, 1, 5)
-	'MoveChipFromTrayToSocket(2, 5, 1, 1, 4)
-	'MoveChipFromTrayToSocket(2, 6, 1, 1, 3)
-	'MoveChipFromTrayToSocket(2, 7, 1, 1, 2)
-	'MoveChipFromTrayToSocket(2, 8, 1, 1, 1)
-
-	'MoveChipFromTrayToSocket(2, 11, 6, 2, 2)
-	'MoveChipFromSocketToTray(2, 2, 2, 5, 1)
-	'MoveChipFromSocketToTray(1, 2, 2, 4, 1)
-	'MoveChipFromTrayToSocket(1, 1, 1, 1, 1)
-	'MoveChipFromSocketToTray(1, 1, 1, 1, 1)
-	'MoveChipFromTrayToSocket(1, 1, 1, 2, 2)
-	'MoveChipFromSocketToTray(2, 2, 1, 1, 1)
-	'MoveChipFromSocketToTray(2, 2, 2, 5, 1)
-	'MoveChipFromSocketToTray(1, 6, 2, 2, 1)
-	'MoveChipFromSocketToTray(1, 5, 2, 3, 1)
-	'MoveChipFromSocketToTray(1, 4, 2, 4, 1)
-	'MoveChipFromSocketToTray(1, 3, 2, 5, 1)
-	'MoveChipFromSocketToTray(1, 2, 2, 6, 1)
-	'MoveChipFromSocketToTray(1, 1, 2, 7, 1)
-	'MoveChipFromSocketToTray(2, 6, 2, 3, 6)
-	'MoveChipFromSocketToTray(2, 5, 2, 2, 6)
-	'MoveChipFromSocketToTray(2, 4, 2, 1, 6)
-	'MoveChipFromSocketToTray(2, 3, 2, 15, 5)
-	'MoveChipFromSocketToTray(2, 2, 2, 14, 5)
-	'MoveChipFromSocketToTray(2, 1, 2, 13, 5)
-	'MoveChipFromSocketToTray(2, 1, 2, 15, 6)
-	'MoveChipFromTrayToTray(2, 15, 6, 2, 15, 6, 0)
-	'MoveChipFromTrayToTray(2, 15, 1, 2, 15, 1, 0)
-	'MoveChipFromTrayToTray(2, 15, 6, 2, 15, 6, -270)
-	'MoveChipFromSocketToTray(2, 1, 2, 8, 6)
-	'MoveChipFromSocketToTray(2, 2, 2, 9, 6)
-	'MoveChipFromSocketToTray(2, 3, 2, 10, 6)
-	'MoveChipFromSocketToTray(2, 4, 2, 11, 6)
-	'MoveChipFromSocketToTray(2, 5, 2, 12, 6)
-	'MoveChipFromSocketToTray(2, 6, 2, 13, 6)
-	'MoveChipFromSocketToTray(2, 7, 2, 14, 6)
-	'MoveChipFromSocketToTray(2, 8, 2, 15, 6)
-	'MoveChipFromTrayToTray(2, 1, 2, 1, 1, 2, 0)
-	'MoveChipFromTrayToTray(1, 1, 2, 2, 1, 2, 0)
-    'MoveChipFromTrayToTray(1, 15, 6, 1, 15, 6, 0)
-    'MoveChipFromTrayToTray(1, 15, 6, 2, 15, 6, 0)
-    'MoveChipFromTrayToTray(2, 15, 6, 1, 15, 6, 0)
-    'MoveChipFromTrayToTray(1, 1, 5, 1, 1, 5, 0)
-	
-	'MoveChipFromTrayToSocket(2, 15, 6, 2, 1)
-	'MoveChipFromSocketToTray(2, 1, 2, 15, 6)
-	'MoveChipFromSocketToTray(2, 1, 1, 15, 6)
-	'MoveChipFromTrayToSocket(1, 15, 6, 2, 1)
-	'MoveChipFromSocketToTray(2, 3, 2, 3, 1)
-	'MoveChipFromTrayToSocket(2, 3, 1, 2, 3)
-
-	'MoveChipFromTrayToSocket(2, 1, 1, 2, 1)
-
-	'PumpOff
-		
-	'UF_Calib_Stinger
-	'UF_Calib_Stinger_vs_U
-	'DF_Calib_Mark
-	'Find_Socket(7)
-	'View_Socket_R(1)
-	
-    
-    'Motor Off
-    
-	' save positions at camera of chips coming from trays
-	fileNum = FreeFile
-	fileName$ = RTS_DATA$ + "\tray_xyu.csv"
-	WOpen fileName$ As #fileNum
-	For i = 1 To NTRAYS
-		For j = 1 To TRAY_NCOLS
-			For k = 1 To TRAY_NROWS
-				Print #fileNum, i, ",", j, ",", k, ",",
-				Print #fileNum, tray_X(i, j, k), ",", tray_Y(i, j, k), ",", tray_U(i, j, k)
-			Next k
-		Next j
-	Next i
-	Close #fileNum
-    
-	' save positions at camera of chips coming from sockets
-	fileNum = FreeFile
-	fileName$ = RTS_DATA$ + "\socket_xyu.csv"
-	WOpen fileName$ As #fileNum
-	For i = 1 To 2
-		For j = 1 To NSOCKETS
-			Print #fileNum, i, ",", j, ",",
-			Print #fileNum, DAT_X(i, j), ",", DAT_Y(i, j), ",", DAT_U(i, j)
-		Next j
-	Next i
-	Close #fileNum
+	Jump P_Home
+	Motor Off
+	PumpOff
 	
 Fend
 
@@ -265,14 +65,6 @@ Function TrayTakePlaceRepeat(pallet_nr As Integer, col_nr As Integer, row_nr As 
 
 Fend
 
-
-
-
-
-
-
-
-	
 
 Function SocketTakePlaceRepeat(DAT_nr As Integer, socket_nr As Integer, ncycles As Integer)
 	
