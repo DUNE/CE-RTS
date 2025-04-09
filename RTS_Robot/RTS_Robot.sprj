@@ -1,12 +1,12 @@
-ENVT0100,LM:2025/03/12 21:35:56:779,DS:0000008993,CS:23122,MA:B8-85-84-9F-6A-05,EI:           
+ENVT0100,LM:2025/04/09 18:29:28:721,DS:0000008995,CS:00316,MA:14-B3-1F-17-20-A7,EI:           
 SystemProperties {
 	sRCVersion="7.5.3"
 	sRCRevision="R1"
 	sGUID="f965e132-c841-42ba-bafd-fbf5d79f2655"
-	sPath="C:\\EpsonRC70\\Projects\\DUNE\\CE-RTS\\RTS_Robot\\"
+	sPath="C:\\EpsonRC70\\Projects\\RTS_Robot\\"
 	sCreated="1/31/2024 12:44:32 PM"
-	sLastModified="3/12/2025 5:35:54 PM"
-	bBuildComplete=True
+	sLastModified="4/9/2025 12:00:34 PM"
+	bBuildComplete=False
 	bFirstBuildComplete=True
 	bRebuildRequired=False
 	bClearControllerProject=False
@@ -23,9 +23,9 @@ UserProperties {
 ControllerConnection {
 	sName="Ethernet 1"
 	sType="Ethernet"
-	sIPAddress="192.168.0.1"
+	sIPAddress="192.168.121.1"
 	nPort=-1
-	sControllerName="R7D2010497"
+	sControllerName="R7D2010490"
 	nControllerType=393232
 	sControllerTypeName="RC700D"
 }
@@ -41,33 +41,33 @@ nRobotCount=1
 nProgramFileCount=5
 ProgramFile1 {
 	sName="Main.prg"
-	bCompiled=True
+	bCompiled=False
 	bStoreInController=True
-	sTimeSavedInController="3/5/2025 10:50:54 PM"
+	sTimeSavedInController="4/2/2025 10:04:01 PM"
 }
 ProgramFile2 {
 	sName="RTS_server.prg"
 	bCompiled=True
 	bStoreInController=True
-	sTimeSavedInController="2/28/2025 5:01:07 PM"
+	sTimeSavedInController="3/12/2025 5:55:53 PM"
 }
 ProgramFile3 {
 	sName="Calib_tools.prg"
 	bCompiled=True
 	bStoreInController=True
-	sTimeSavedInController="1/23/2025 6:24:08 PM"
+	sTimeSavedInController="3/12/2025 5:55:53 PM"
 }
 ProgramFile4 {
 	sName="RTS_tools.prg"
-	bCompiled=True
+	bCompiled=False
 	bStoreInController=True
-	sTimeSavedInController="3/12/2025 9:35:54 PM"
+	sTimeSavedInController="4/2/2025 4:53:54 PM"
 }
 ProgramFile5 {
 	sName="SiteSelection.prg"
 	bCompiled=True
 	bStoreInController=True
-	sTimeSavedInController="3/12/2025 9:35:54 PM"
+	sTimeSavedInController="3/12/2025 6:38:14 PM"
 }
 nIncludeFileCount=3
 IncludeFile1 {
@@ -78,64 +78,64 @@ IncludeFile1 {
 IncludeFile2 {
 	sName="RTS_tools.inc"
 	bStoreInController=True
-	sTimeSavedInController="3/5/2025 10:50:54 PM"
+	sTimeSavedInController="3/26/2025 6:44:58 PM"
 }
 IncludeFile3 {
 	sName="SiteSelection.inc"
 	bStoreInController=True
-	sTimeSavedInController="3/5/2025 10:50:54 PM"
+	sTimeSavedInController="3/19/2025 2:50:42 PM"
 }
 nPointFileCount=10
 PointFile1 {
-	sName="robot1.pts"
-	nRobot=1
-	bDefault=True
-	sTimeSavedInController="1/23/2025 6:24:08 PM"
-}
-PointFile2 {
 	sName="Calib_Stinger.pts"
 	nRobot=1
-	sTimeSavedInController="1/23/2025 6:24:08 PM"
+	bDefault=True
+	sTimeSavedInController="3/12/2025 5:55:53 PM"
 }
-PointFile3 {
+PointFile2 {
 	sName="Calib_UF_Stinger.pts"
 	nRobot=1
-	sTimeSavedInController="1/23/2025 6:24:08 PM"
+	sTimeSavedInController="3/12/2025 5:55:53 PM"
 }
-PointFile4 {
+PointFile3 {
 	sName="Calib_DF_mark.pts"
 	nRobot=1
-	sTimeSavedInController="1/23/2025 6:24:08 PM"
+	sTimeSavedInController="3/12/2025 5:55:53 PM"
 }
-PointFile5 {
+PointFile4 {
 	sName="Calib_DF_Socket.pts"
 	nRobot=1
-	sTimeSavedInController="1/23/2025 6:24:08 PM"
+	sTimeSavedInController="3/12/2025 5:55:53 PM"
 }
-PointFile6 {
+PointFile5 {
 	sName="xy_test2.pts"
 	nRobot=1
-	sTimeSavedInController="1/23/2025 6:24:08 PM"
+	sTimeSavedInController="3/12/2025 5:55:53 PM"
 }
-PointFile7 {
+PointFile6 {
 	sName="points_BNL.pts"
 	nRobot=1
-	sTimeSavedInController="1/23/2025 6:24:08 PM"
+	sTimeSavedInController="3/12/2025 5:55:53 PM"
 }
-PointFile8 {
+PointFile7 {
 	sName="skt_cal.pts"
 	nRobot=1
-	sTimeSavedInController="2/28/2025 5:01:07 PM"
+	sTimeSavedInController="3/12/2025 5:55:53 PM"
+}
+PointFile8 {
+	sName="points_FNAL.pts"
+	nRobot=1
+	sTimeSavedInController="3/26/2025 4:59:09 PM"
 }
 PointFile9 {
-	sName="points_MSU.pts"
+	sName="CalibUF_CD.pts"
 	nRobot=1
-	sTimeSavedInController="3/10/2025 5:18:34 PM"
+	sTimeSavedInController="3/19/2025 9:38:10 PM"
 }
 PointFile10 {
-	sName="MSU_DF_Cal.pts"
+	sName="FNAL_CalibUFStin.pts"
 	nRobot=1
-	sTimeSavedInController="3/12/2025 6:27:46 PM"
+	sTimeSavedInController="3/19/2025 10:09:42 PM"
 }
 nForceFileCount=0
 OperatorSettings {
