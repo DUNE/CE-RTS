@@ -162,10 +162,12 @@ Function main
 '	SocketChipOrientation(2, 2) = -90
 '	SocketChipOrientation(2, 3) = -90
 	
-'	RunMoveChipTrayToSocket(2, 15, 1, 1, 8)
-'	Wait 10
+	On 12
+	RunMoveChipTrayToSocket(2, 15, 1, 1, 8)
+''	JumpToCamera
+'''	Wait 20
 '	RunMoveChipSocketToTray(1, 8, 2, 15, 1)
-
+''	Off 12
 
 
 	'PumpOff

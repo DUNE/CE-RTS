@@ -1,10 +1,10 @@
-ENVT0100,LM:2025/03/17 18:00:53:497,DS:0000005477,CS:26881,MA:B8-85-84-9F-6A-05,EI:           
+ENVT0100,LM:2025/04/11 21:09:21:534,DS:0000005787,CS:31776,MA:B8-85-84-9F-6A-05,EI:           
 sVersion="2.0.0"
 bDisplayR=False
 bDisplayS=False
 bDisplayT=False
 nNumberOfJoints=4
-nNumberOfPoints=17
+nNumberOfPoints=18
 Point1 {
 	nNumber=0
 	sLabel="P_Camera"
@@ -370,6 +370,32 @@ Point14 {
 	bSimVisible=False
 }
 Point15 {
+	nNumber=107
+	sLabel="Socket_L_07"
+	sDescription=""
+	nUndefined=0
+	rX=-329.973
+	rY=140.404
+	rZ=-129.842
+	rU=178.961
+	rV=0
+	rW=0
+	rR=0
+	rS=0
+	rT=0
+	nLocal=0
+	nHand=1
+	nElbow=1
+	nWrist=1
+	nJ1Flag=0
+	nJ2Flag=0
+	nJ4Flag=0
+	nJ6Flag=0
+	rJ1Angle=0
+	rJ4Angle=0
+	bSimVisible=False
+}
+Point16 {
 	nNumber=108
 	sLabel="Socket_L_08"
 	sDescription=""
@@ -395,7 +421,7 @@ Point15 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point16 {
+Point17 {
 	nNumber=111
 	sLabel="Socket_L_11"
 	sDescription="First ColdADC on L DAT"
@@ -421,7 +447,7 @@ Point16 {
 	rJ4Angle=0
 	bSimVisible=False
 }
-Point17 {
+Point18 {
 	nNumber=121
 	sLabel="Socket_L_21"
 	sDescription="First ColDATA chip on L DAT"
