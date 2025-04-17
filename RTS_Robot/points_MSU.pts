@@ -1,5 +1,6 @@
-ENVT0100,LM:2025/04/11 21:09:21:534,DS:0000005787,CS:31776,MA:B8-85-84-9F-6A-05,EI:           
+ENVT0100,LM:2025/04/16 18:30:32:078,DS:0000005803,CS:27950,MA:B8-85-84-9F-6A-05,EI:           
 sVersion="2.0.0"
+nDisplayMode=1
 bDisplayR=False
 bDisplayS=False
 bDisplayT=False
@@ -64,7 +65,7 @@ Point3 {
 	nUndefined=0
 	rX=-311.407
 	rY=441.919
-	rZ=-55.151
+	rZ=-45.151
 	rU=-1.048
 	rV=0
 	rW=0
@@ -90,7 +91,7 @@ Point4 {
 	nUndefined=0
 	rX=-27.239
 	rY=441.819
-	rZ=-55.706
+	rZ=-45.706
 	rU=-1.048
 	rV=0
 	rW=0
@@ -116,7 +117,7 @@ Point5 {
 	nUndefined=0
 	rX=-311.407
 	rY=546.855
-	rZ=-54.439
+	rZ=-44.439
 	rU=-1.048
 	rV=0
 	rW=0
@@ -142,7 +143,7 @@ Point6 {
 	nUndefined=0
 	rX=-27.238
 	rY=546.584
-	rZ=-55.888
+	rZ=-45.888
 	rU=-1.048
 	rV=0
 	rW=0
@@ -168,7 +169,7 @@ Point7 {
 	nUndefined=0
 	rX=28.312
 	rY=441.931
-	rZ=-55.122
+	rZ=-45.122
 	rU=178.95
 	rV=0
 	rW=0
@@ -194,7 +195,7 @@ Point8 {
 	nUndefined=0
 	rX=312.36
 	rY=441.732
-	rZ=-54.936
+	rZ=-44.936
 	rU=178.95
 	rV=0
 	rW=0
@@ -220,7 +221,7 @@ Point9 {
 	nUndefined=0
 	rX=28.411
 	rY=546.855
-	rZ=-54.879
+	rZ=-44.879
 	rU=178.95
 	rV=0
 	rW=0
@@ -246,7 +247,7 @@ Point10 {
 	nUndefined=0
 	rX=312.461
 	rY=546.557
-	rZ=-54.749
+	rZ=-44.749
 	rU=178.949
 	rV=0
 	rW=0
@@ -350,7 +351,7 @@ Point14 {
 	nUndefined=0
 	rX=-329.973
 	rY=219.567
-	rZ=-136.638
+	rZ=-126.638
 	rU=358.961
 	rV=0
 	rW=0
@@ -376,7 +377,7 @@ Point15 {
 	nUndefined=0
 	rX=-329.973
 	rY=140.404
-	rZ=-129.842
+	rZ=-119.842
 	rU=178.961
 	rV=0
 	rW=0
@@ -402,7 +403,7 @@ Point16 {
 	nUndefined=0
 	rX=-329.973
 	rY=219.567
-	rZ=-136.638
+	rZ=-126.638
 	rU=178.961
 	rV=0
 	rW=0
@@ -428,7 +429,7 @@ Point17 {
 	nUndefined=0
 	rX=-412.511
 	rY=219.568
-	rZ=-136.595
+	rZ=-126.595
 	rU=358.96
 	rV=0
 	rW=0
@@ -454,7 +455,7 @@ Point18 {
 	nUndefined=0
 	rX=-514.078
 	rY=105.16
-	rZ=-136.552
+	rZ=-126.552
 	rU=358.96
 	rV=0
 	rW=0

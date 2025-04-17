@@ -164,9 +164,9 @@ Function main
 	
 	On 12
 	RunMoveChipTrayToSocket(2, 15, 1, 1, 8)
-''	JumpToCamera
-'''	Wait 20
-'	RunMoveChipSocketToTray(1, 8, 2, 15, 1)
+	JumpToCamera
+	Wait 20
+	RunMoveChipSocketToTray(1, 8, 2, 15, 1)
 ''	Off 12
 
 

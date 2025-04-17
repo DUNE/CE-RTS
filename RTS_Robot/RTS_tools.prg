@@ -119,10 +119,10 @@ Function JumpToCamera
 	
 	If Agl(2) < 0 Then
 		' Left-handed orientation
-    	Jump P_camera :U(CU(Here)) /L
+    	Jump P_camera :U(CU(Here)) /L LimZ JUMP_LIMIT
     Else
     	' Right-handed orientation 
-    	Jump P_camera :U(CU(Here)) /R
+    	Jump P_camera :U(CU(Here)) /R LimZ JUMP_LIMIT
 	EndIf
 	
 Fend
@@ -131,7 +131,7 @@ Fend
 ' row_nr = 1..6
 ' col_nr = 1..15
 Function JumpToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer)
-	Jump Pallet(pallet_nr, col_nr, row_nr) ' +Z(10)
+	Jump Pallet(pallet_nr, col_nr, row_nr) LimZ JUMP_LIMIT ' +Z(10)
 Fend
 
 ' pallet_nr 1..2 (1-left, 2-right)
@@ -140,10 +140,10 @@ Fend
 Function JumpToTray_camera(pallet_nr As Integer, col_nr As Integer, row_nr As Integer)
 	If pallet_nr = 1 Then
 '		Jump Pallet(pallet_nr, col_nr, row_nr) +X(DF_CAMERA_OFFSET) :Z(DF_CAMERA_FOCUS) :U(HAND_U0 + 360)
-		Jump Pallet(pallet_nr, col_nr, row_nr) +X(XOffset(HAND_U0)) +Y(YOffset(HAND_U0)) +Z(DF_CAM_Z_OFF) :U(HAND_U0)
+		Jump Pallet(pallet_nr, col_nr, row_nr) +X(XOffset(HAND_U0)) +Y(YOffset(HAND_U0)) +Z(DF_CAM_Z_OFF) :U(HAND_U0) LimZ JUMP_LIMIT
 	ElseIf pallet_nr = 2 Then
 '		Jump Pallet(pallet_nr, col_nr, row_nr) -X(DF_CAMERA_OFFSET) :Z(DF_CAMERA_FOCUS) :U(HAND_U0 + 180)
-		Jump Pallet(pallet_nr, col_nr, row_nr) +X(XOffset(HAND_U0 + 180)) +Y(YOffset(HAND_U0 + 180)) +Z(DF_CAM_Z_OFF) :U(HAND_U0 + 180)
+		Jump Pallet(pallet_nr, col_nr, row_nr) +X(XOffset(HAND_U0 + 180)) +Y(YOffset(HAND_U0 + 180)) +Z(DF_CAM_Z_OFF) :U(HAND_U0 + 180) LimZ JUMP_LIMIT
 	EndIf
 Fend
 
@@ -163,8 +163,8 @@ Function TouchChip As Byte
 	Speed 1
 	Accel 1, 1
 	Double Zexpect, Znow, Zdiff
-	Zexpect = CZ(Here) - 10.
-    Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off
+	Zexpect = CZ(Here) - CONTACT_DIST
+    Go Here -Z(CONTACT_DIST + 2.) Till Sw(8) = On Or Sw(9) = Off
     Wait 0.5
     Znow = CZ(Here)
     Zdiff = Znow - Zexpect
@@ -183,17 +183,36 @@ Function TouchChip As Byte
 	SetSpeed
 Fend
 
-Function isChipInTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer) As Boolean
+
+Function isChipInTrayCamera(pallet_nr As Integer, col_nr As Integer, row_nr As Integer) As Boolean
+
+	isChipInTrayCamera = False
+	JumpToTray_camera(pallet_nr, col_nr, row_nr)
+	Integer Attempts
+	Attempts = 5
+	Boolean Success
+	Success = False
+	Do While (Attempts > 0) Or Success
+		If FindChipDirectionWithDF Then
+			isChipInTrayCamera = True
+			Exit Function
+		EndIf
+		Attempts = Attempts - 1
+	Loop
+	
+Fend
+
+Function isChipInTrayTouch(pallet_nr As Integer, col_nr As Integer, row_nr As Integer) As Boolean
 	JumpToTray(pallet_nr, col_nr, row_nr)
-'	Speed 1
-'	Accel 1, 1
+	Speed 1
+	Accel 1, 1
 '    Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off
 '    Wait 0.5
 '	Boolean TouchStatus
 '	TouchStatus = TouchChip
 	Boolean TouchSuccess ' Can't just directly use Not Byte for converting 0 to success
 	TouchSuccess = Not TouchChip ' Should be 0 for touch, non zero error code
-	isChipInTray = TouchSuccess
+	isChipInTrayTouch = TouchSuccess
 '	SetSpeed
 Fend
 
@@ -223,34 +242,27 @@ Function PickupFromTray As Boolean
 	EndIf
 	
 	VacuumValveOpen
-	Go Here +Z(10)
+	Go Here +Z(CONTACT_DIST)
     SetSpeed
     PickupFromTray = True
 Fend
 
-Function DropToTray As Boolean
+Function PlaceInTray As Boolean
 	
-	DropToTray = False
+	PlaceInTray = False
 	Speed 1
 	Accel 1, 1
-    Go Here -Z(9) Till Sw(8) = On Or Sw(9) = Off
+	' Check if there is a chip or obstruction in the tray
+    Go Here -Z(CONTACT_DIST - 1.) Till Sw(8) = On Or Sw(9) = Off
 	If isContactSensorTouches Then
-	' XN			
-		'Go Here +Z(9) +Y(0.1)
-		'Go Here -Z(9)
-		'If isContactSensorTouches Then
-			
-		'EndIf
-	' XN end
-	
 		Print "ERROR! Contact Sensor detects obstacle in the tray"
 		Exit Function
 	EndIf
 	
-	
-	
+	' Go down till contact
     Go Here -Z(1)
     Wait 0.5
+    ' Check contact is made
 	If Not isContactSensorTouches Then
 		Print "ERROR! Contact Sensor does not detect contact with the chip"
 		Exit Function
@@ -259,22 +271,39 @@ Function DropToTray As Boolean
     Wait 2
     Go Here +Z(10)
     SetSpeed
+    PlaceInTray = True
+Fend
+
+Function DropToTray As Boolean
+	
+	DropToTray = False
+	Speed 1
+	Accel 1, 1
+	' Do not check for contact but do say if contact is made when trying to drop the tray
+	' Starting from the defined point (contact distance above contact) move to drop distance
+    Go Here -Z(CONTACT_DIST - DROP_DIST) Till Sw(8) = On Or Sw(9) = Off
+	If isContactSensorTouches Then
+		Print "ERROR! Contact Sensor detects obstacle in the tray"
+		Exit Function
+	EndIf
+	
+    Wait 1
+	VacuumValveClose
+    Wait 1
+    ' Return to defined point
+    Go Here +Z(CONTACT_DIST - DROP_DIST)
+    SetSpeed
     DropToTray = True
 Fend
 
-
 Function JumpToSocket(DAT_nr As Integer, socket_nr As Integer)
-	' P(DAT_nr *100 + socket_nr)
-	If DAT_nr = 2 Then
-        'Jump P(200 + socket_nr) :Z(-132.5)
-        Jump P(200 + socket_nr)
-		Print P(200 + socket_nr)
-	ElseIf DAT_nr = 1 Then
-		'Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) :Z(-134.682)
-		Jump P(100 + socket_nr)
-		'Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) -U(135) :Z(-100.682)
-		Print P(100 + socket_nr)
+
+	If Dist(Here, P(100 * DAT_nr + socket_nr)) < 0.1 Then
+		Exit Function
 	EndIf
+	
+	Jump P(100 * DAT_nr + socket_nr) LimZ JUMP_LIMIT
+	Print P(100 * DAT_nr + socket_nr)
 	
 Fend
 
@@ -300,7 +329,7 @@ Function JumpToSocket_cor(DAT_nr As Integer, socket_nr As Integer)
 	
 	Do Until check < 20 And check > -20 Or N_round > 10
 		VRun skt_cali_test
-		VGet skt_cali_test.Geom01.RobotXYU, Isfound1, x_p1, y_p1, a_p1
+		VGet skt_cali_test.Geom01.RobotXYU, isFound1, x_p1, y_p1, a_p1
 		'Print "P1 xyu: ", x_p1, y_p1, a_p1
 		VGet skt_cali_test.Geom02.RobotXYU, Isfound2, x_p2, y_p2, a_p2
 		'Print "P2 xyu: ", x_p2, y_p2, a_p2
@@ -322,7 +351,7 @@ Function JumpToSocket_cor(DAT_nr As Integer, socket_nr As Integer)
 
 		Print "corr_center: ", x_c, y_c
 		JumpToSocket(DAT_nr, socket_nr)
-		Jump Here :X(x_c) :Y(y_c)
+		Jump Here :X(x_c) :Y(y_c) LimZ JUMP_LIMIT
 		
 	EndIf
 	
@@ -330,8 +359,30 @@ Function JumpToSocket_cor(DAT_nr As Integer, socket_nr As Integer)
 	
 Fend
 
-Function isChipInSocket(DAT_nr As Integer, socket_nr As Integer) As Boolean
-	JumpToSocket(DAT_nr, socket_nr)
+Function isChipInSocketCamera(DAT_nr As Integer, socket_nr As Integer) As Boolean
+	
+	isChipInSocketCamera = False
+	JumpToSocket_camera(DAT_nr, socket_nr)
+	Integer Attempts
+	Attempts = 5
+	Boolean Success
+	Success = False
+	Do While (Attempts > 0) Or Success
+		If FindChipDirectionWithDF Then
+			isChipInSocketCamera = True
+			Exit Function
+		EndIf
+		Attempts = Attempts - 1
+	Loop
+	
+Fend
+
+Function isChipInSocketTouch(DAT_nr As Integer, socket_nr As Integer) As Boolean
+	
+	If Dist(Here, P(DAT_nr * 100 + socket_nr)) > 1.0 Then
+		JumpToSocket(DAT_nr, socket_nr)
+	EndIf
+
 '	Speed 1
 '	Accel 1, 1
 '    Go Here -Z(12) Till Sw(8) = On Or Sw(9) = Off
@@ -339,7 +390,7 @@ Function isChipInSocket(DAT_nr As Integer, socket_nr As Integer) As Boolean
 '	isChipInSocket = isContactSensorTouches
 	Boolean TouchSuccess ' Can't just directly use Not Byte for converting 0 to success
 	TouchSuccess = Not TouchChip ' Should be 0 for touch, non zero error code
-	isChipInSocket = TouchSuccess
+	isChipInSocketTouch = TouchSuccess
     SetSpeed
 Fend
 
@@ -366,7 +417,7 @@ Function InsertIntoSocket As Boolean
 	VacuumValveClose
 	Wait 2
 	InsertIntoSocket = isContactSensorTouches
-	Go Here +Z(20)
+	Go Here +Z(CONTACT_DIST)
 	PlungerOff
 	SetSpeed
 	
@@ -383,11 +434,11 @@ Function InsertIntoSocketSoft As Boolean
 	Speed 1
 	Accel 1, 1
 	PlungerOn
-	Go Here -Z(3)
+	Go Here -Z(CONTACT_DIST - DROP_DIST)
 
 	VacuumValveClose
 	Wait 1
-	Go Here +Z(3)
+	Go Here +Z(CONTACT_DIST - DROP_DIST)
 	PlungerOff
 	Wait 2
 	
@@ -397,10 +448,10 @@ Function InsertIntoSocketSoft As Boolean
 	If Not TouchSuccess Then
 		Print "ERROR! Chip not at expected depth"
 		InsertIntoSocketSoft = False
-		Move Here +Z(20) ' Give you some room to see in the socket
+		Move Here +Z(50) ' Give you some room to see in the socket
 		Exit Function
 	EndIf
-	Move Here +Z(10)
+	Move Here +Z(CONTACT_DIST)
 	SetSpeed
 	InsertIntoSocketSoft = True
 Fend
@@ -421,6 +472,8 @@ Function PickupFromSocket As Boolean
 	Speed 1
 	Accel 1, 1
 
+	PlungerOn
+
 	Boolean TouchSuccess ' Can't just directly use Not Byte for converting 0 to success
 	TouchSuccess = Not TouchChip ' Should be 0 for touch, non zero error code
 	If Not TouchSuccess Then
@@ -438,9 +491,9 @@ Function PickupFromSocket As Boolean
 	Wait 1
 	VacuumValveOpen
 	Wait 1
-	PlungerOn
+
     Wait 1
-    Go Here +Z(20)
+    Go Here +Z(CONTACT_DIST)
     PlungerOff
     SetSpeed
 
@@ -456,22 +509,29 @@ Function UF_camera_light_OFF
 	Off 12
 Fend
 
-'Function JumpToSocket_camera(DAT_nr As Integer, socket_nr As Integer)
-'	If DAT_nr = 2 Then
-''		Jump P(200 + socket_nr) :Z(-97.60) +X(DF_CAMERA_OFFSET) -U(45)
-'		Jump P(200 + socket_nr) +Z(DF_CAM_Z_OFF) +X(XOffset(CU(Here) - 45)) +Y(YOffset(CU(Here) - 45)) -U(45)
-'	ElseIf DAT_nr = 1 Then
-'		'Jump P(100 + socket_nr) +U(135)
-'		Jump P(100 + socket_nr) +Z(DF_CAM_Z_OFF) +X(XOffset(CU(Here) + 135)) +Y(YOffset(CU(Here) + 135)) +U(135)
-'	EndIf
-'Fend
 
 Function JumpToSocket_camera(DAT_nr As Integer, socket_nr As Integer)
-	If DAT_nr = 2 Then
-		Jump P(200 + socket_nr) +Z(DF_CAM_Z_OFF) +X(XOffset(CU(P(200 + socket_nr)))) +Y(YOffset(CU(P(200 + socket_nr))))
-	ElseIf DAT_nr = 1 Then
-		Jump P(100 + socket_nr) +Z(DF_CAM_Z_OFF) +X(XOffset(CU(P(100 + socket_nr)))) +Y(YOffset(CU(P(100 + socket_nr))))
+	Integer SockP
+	SockP = DAT_nr * 100 + socket_nr
+	Double SockU
+	SockU = CU(P(SockP))
+'
+'	Boolean At45
+'	At45 = False
+'	If At45 Then
+'		If DAT_nr = 2 Then
+'			SockU = SockU - 45.
+'		ElseIf DAT_nr = 1 Then
+'			SockU = SockU + 45. '135.
+'		EndIf
+'	EndIf
+	
+	If Dist(Here, XY((CX(P(SockP)) + XOffset(SockU)), (CY(P(SockP)) + YOffset(SockU)), (CZ(P(SockP)) + DF_CAM_Z_OFF), SockU)) < 0.1 Then
+		Exit Function
 	EndIf
+	
+	Jump XY((CX(P(SockP)) + XOffset(SockU)), (CY(P(SockP)) + YOffset(SockU)), (CZ(P(SockP)) + DF_CAM_Z_OFF), SockU) LimZ JUMP_LIMIT
+
 Fend
 
 Function UF_take_picture$(basename$ As String) As String
@@ -766,9 +826,9 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 
 	' Change handeness to the target 
 	If tgt_pallet_nr = 1 Or tgt_DAT_nr = 1 Then
-    	Jump P_camera :U(dst_U) /R
+    	Jump P_camera :U(dst_U) /R LimZ JUMP_LIMIT
     ElseIf tgt_pallet_nr = 2 Or tgt_DAT_nr = 2 Then
-    	Jump P_camera :U(dst_U) /L
+    	Jump P_camera :U(dst_U) /L LimZ JUMP_LIMIT
     EndIf
 	
 
@@ -1236,7 +1296,7 @@ Function MoveChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_n
 	Print #fileNum, ",", DAT_nr, ",", socket_nr,
 
 	' Ensure that there is no chip in the socket
-	If isChipInSocket(DAT_nr, socket_nr) Then
+	If isChipInSocketTouch(DAT_nr, socket_nr) Then
 		RTS_error(fileNum, "Chip exists in the socket")
 		Go Here :Z(-10)
         MoveChipFromTrayToSocket = -200
@@ -1330,133 +1390,53 @@ Function RunMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr
 	SetSpeed
 	Int32 FullSocket_nr
 	FullSocket_nr = DAT_nr * 100 + socket_nr
+
+
+	' Test if there is a chip or obstruction in the socket.
 	
-
-	
-	' Use the DF camera to find the position and orientation of the socket mezzanine board
-	Print "First get socket position and check if socket is empty"
-	JumpToSocket_camera(DAT_nr, socket_nr)
-
-	' Vision sequence tollerance can be adjusted but sometimes fails, try multiple times
-	Int32 Attempts
-	Boolean Success
-	Attempts = 10
-	Success = False
-	Print "Getting precise socket position"
-	Do While ((Attempts > 0) And Not Success)
-		If Not FindSocketDirectionWithDF Then
-			'Print "Not found"
-			Attempts = Attempts - 1
-		Else
-			Print ""
-			Success = True
-			Exit Do
-		EndIf
-	Loop
-	If Not Success Then
-		Print "Cannot find socket alignment"
-		RunMoveChipTrayToSocket = -2
-		Exit Function
-	EndIf
-
-
-	' Print any deviations between the socket position in camera and defined point
-	Double SockDelX, SockDelY, SockDelU
-	SockDelX = SockPos(1) - CX(P(FullSocket_nr))
-	SockDelY = SockPos(2) - CY(P(FullSocket_nr))
-	SockDelU = SockPos(3) - CU(P(FullSocket_nr)) ' May need to correct by orientation value
-
-	Print "Socket position: Expected, Found, Offset"
-	Print "  X: ", CX(P(FullSocket_nr)), ", ", SockPos(1), ", ", SockDelX
-	Print "  Y: ", CY(P(FullSocket_nr)), ", ", SockPos(2), ", ", SockDelY
-	Print "  U: ", CU(P(FullSocket_nr)), ", ", SockPos(3), ", ", SockDelU
-
-	Print "Check to see if there is already a chip in the socket"
-	' See if camera detects a chip
-	Wait 1
-	Attempts = 5
-	Do While (Attempts > 0)
-		If FindChipDirectionWithDF Then
-			Print "ERROR: DF Camera can see a chip in the socket already"
-			RunMoveChipTrayToSocket = -3
-			Exit Function
-		EndIf
-		Attempts = Attempts - 1
-	Loop
-	Print "Socket empty, proceeding"
-	Wait 2
-	
-	' Get J4 angle offset for socket
-	Double SockAg4Offset
-	JumpToSocket(DAT_nr, socket_nr)
-	' With correction
-	Go Here +X(SockDelX) +Y(SockDelY) +U(SockDelU)
-	SockAg4Offset = CU(Here) - Agl(4)
-	Print " J4 angle at socket is ", Agl(4), " giving offset of ", SockAg4Offset
-
-	' Test if there is a chip or obstruction in the socket.	
-	Print "Physically checking for chip in socket"
-	If isChipInSocket(DAT_nr, socket_nr) Then
+	Print "Visually  checking for chip in socket"
+	If isChipInSocketCamera(DAT_nr, socket_nr) Then
 		Print "ERROR there is already a chip in this socket"
 		RunMoveChipTrayToSocket = -200
 		Exit Function
 	EndIf
 
-	Wait 2
+	' Use the DF camera to find the position and orientation of the socket mezzanine board
+	Print "Checking empty and getting socket offsets"
+	Double SocketResults(10)
+	If Not DFGetSocketAlignment(DAT_nr, socket_nr, ByRef SocketResults()) Then
+		Print "ERROR - Cannot get socket alignment"
+		Exit Function
+	EndIf
+	
+	Print "Physically checking for chip in socket"
+	If isChipInSocketTouch(DAT_nr, socket_nr) Then
+		Print "ERROR there is already a chip in this socket"
+		RunMoveChipTrayToSocket = -200
+		Exit Function
+	EndIf
+
 	
 	' Now go get the chip
 	Print "Socket O.K., moving to tray to check and pick up chip"
 	
-
-	JumpToTray_camera(pallet_nr, col_nr, row_nr)
-	Print "Getting chip orientation and position"
+	Wait 2
 	
-	Attempts = 10
-	Success = False
-	Do While ((Attempts > 0) And Not Success)
-		' TODO JW: Check chip dimensions are in range
-		If Not FindChipDirectionWithDF Then
-			Attempts = Attempts - 1
-		Else
-			Success = True
-			Exit Do
-		EndIf
-	Loop
-	If Not Success Then
-		Print "Cannot find chip alignment"
-		RunMoveChipTrayToSocket = -1
+	Print "Next go to the tray and check chip position and orientation"
+	Double TrayResults(10)
+	If Not DFGetTrayAlignment(pallet_nr, col_nr, row_nr, ByRef TrayResults()) Then
+		Print "ERROR - Cannot get socket alignment"
 		Exit Function
 	EndIf
-	Print "Chip found"
 	
-	
-	' Print any deviations between the chip position in camera and defined point
-	Double ChipDFDelX, ChipDFDelY, ChipDFDelU
-	ChipDFDelX = ChipPos(1) - CX(Pallet(pallet_nr, col_nr, row_nr))
-	ChipDFDelY = ChipPos(2) - CY(Pallet(pallet_nr, col_nr, row_nr))
-	ChipDFDelU = ChipPos(3) - CU(Pallet(pallet_nr, col_nr, row_nr)) ' May need to correct by orientation value
 
-	Print "Chip position with DF camera: Expected, Found, Offset"
-	Print "  X: ", CX(Pallet(pallet_nr, col_nr, row_nr)), ", ", ChipPos(1), ", ", ChipDFDelX
-	Print "  Y: ", CY(Pallet(pallet_nr, col_nr, row_nr)), ", ", ChipPos(2), ", ", ChipDFDelY
-	Print "  U: ", CU(Pallet(pallet_nr, col_nr, row_nr)), ", ", ChipPos(3), ", ", ChipDFDelU
 
-	
-	' Get J4 angle offset for chip at tray
-	Double TrayAg4Offset
-	JumpToTray(pallet_nr, col_nr, row_nr)
-	
-	' With correction from DF camera
-	Go Here +X(ChipDFDelX) +Y(ChipDFDelY) +U(ChipDFDelU)
-	SockAg4Offset = CU(Here) - Agl(4)
-	Print " J4 angle at tray is ", Agl(4), " giving offset of ", TrayAg4Offset
-		
 
 	Int32 ChipTypeNumber
 	ChipTypeNumber = (10 + socket_nr) / 10
 	' Calculate needed rotation to insert chip into socket in correct orientation
 	Double DeltaDir
-	DeltaDir = (SockPos(3) + SocketChipOrientation(ChipTypeNumber)) - ChipPos(3)
+	DeltaDir = (SocketResults(6) + SocketChipOrientation(ChipTypeNumber)) - TrayResults(6)
 	
 	' Reduce rotation so within +/- 180
 	If DeltaDir < -180. Then
@@ -1469,14 +1449,15 @@ Function RunMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr
 		Print "ERROR: Chip reorientation should fall within +/- 180 deg, but calculated at ", DeltaDir
 		Exit Function
 	EndIf
+		
 	
 	Print "Summary"
-	Print "Tray Chip Dir  = ", ChipPos(3)
-	Print "Sock Chip Dir  = ", (SockPos(3) + SocketChipOrientation(ChipTypeNumber))
+	Print "Tray Chip Dir  = ", TrayResults(6)
+	Print "Sock Chip Dir  = ", (SocketResults(6) + SocketChipOrientation(ChipTypeNumber))
 	Print "Chip rotation needed = ", DeltaDir
 	
-	Print "Tray Ag4Offset = ", TrayAg4Offset
-	Print "Sock Ag4Offset = ", SockAg4Offset
+	Print "Tray Ag4Offset = ", TrayResults(10)
+	Print "Sock Ag4Offset = ", SocketResults(10)
 	
 
 	Double PickU
@@ -1495,16 +1476,25 @@ Function RunMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr
 	EndIf
 	
 	Print "U value summary: chip, hand U, hand J4 angle"
-	Print "At tray   :", ChipPos(3), ", ", PickU, ", ", (PickU + TrayAg4Offset)
-	Print "At socket :", (ChipPos(3) + DeltaDir), ", ", (PickU + DeltaDir), ", ", (PickU + DeltaDir + SockAg4Offset)
+	Print "At tray   :", ChipPos(3), ", ", PickU, ", ", (PickU + TrayResults(10))
+	Print "At socket :", (ChipPos(3) + DeltaDir), ", ", (PickU + DeltaDir), ", ", (PickU + DeltaDir + SocketResults(10))
+
 	Wait 2
+
+
 
 
 	Print "Now attempt to pick up chip"
 	' All Okay so far, try picking up the chip
 	' TODO JW: Check for lid collisions
+	''' DFGetTrayAlignment should leave the hand at the chip position with the offsets
+	'	JumpToTray(pallet_nr, col_nr, row_nr)
+	'	Go Here +X(TrayResults(7)) +Y(TrayResults(8))
+	PickU = GetBoundAnglePM180(PickU)
 	Go Here :U(PickU)
+	Go Here :Z(CZ(Pallet(pallet_nr, col_nr, row_nr)))
 	
+
 	If Not isPressureOk Then
 		Print "ERROR Bad pressure"
 		RunMoveChipTrayToSocket = -2
@@ -1525,225 +1515,16 @@ Function RunMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr
 	
 	' Now chip has been picked up, go to the UF camera to make some more measurements of offsets	
 	
-	' Go to the UF camera	
-	JumpToCamera
-	Go Here +U(DeltaDir) ' TODO JW: Check rotation from pickup U to place U (Socket + ChipDirection + Socket Offset) isn't done somewhere else
 	
 	
-	Double UAtCam0
-	UAtCam0 = CU(Here)
-
-'	Boolean NeedReset
-'	NeedReset = False
-	Double Rotation1
-	Rotation1 = 0.
-	If (Agl(4) >= -45.) And (Agl(4) <= -45.) Then
-'		Go Here +U(90)
-'		NeedReset = True
-		If (Agl(4) >= 0) Then
-			Rotation1 = -90.
-		Else
-			Rotation1 = 90.
-		EndIf
-	EndIf
-	Go Here +U(Rotation1)
-	
-	Double UAtCam1
-	UAtCam1 = CU(Here)
-
-	' Now do some checks like key check and pin checks	
-	Double x1, x2, y1, y2, u1, u2
-
-	Attempts = 10
-	Success = False
-	Do While ((Attempts > 0) And Not Success)
-		If Not SITE_UF_CHIP_FIND Then
-			Attempts = Attempts - 1
-		Else
-			Success = True
-			Exit Do
-		EndIf
-	Loop
-	If Not Success Then
-		Print "ERROR UF camera cannot find chip"
-		RunMoveChipTrayToSocket = -5
-		Exit Function
-	EndIf
-	
-	' Store first measurement values
-	x1 = UFChipPos(1)
-	y1 = UFChipPos(2)
-	u1 = UFChipPos(3)
-	
-		
-	' Rotate to 180 deg from first measurements
-	Double Rotation2
-	Rotation2 = 0.
-	If (Agl(4) < 0.) Then
-		Rotation2 = 180.
-	Else
-		Rotation2 = -180
-	EndIf
-	Go Here +U(Rotation2)
-	
-	Double UAtCam2
-	UAtCam2 = CU(Here)
-	
-	Attempts = 10
-	Success = False
-	Do While ((Attempts > 0) And Not Success)
-		If Not SITE_UF_CHIP_FIND Then
-			Attempts = Attempts - 1
-		Else
-			Success = True
-			Exit Do
-		EndIf
-	Loop
-	If Not Success Then
-		Print "ERROR UF camera cannot find chip after 180 degree rotation"
-		RunMoveChipTrayToSocket = -6
+	Print "Next go to the UF camera and measure residual offsets "
+	Double UFChipResults(12)
+	' SocketResults(6) is target U value for hand, 
+	If Not UFGetChipAlignment(SocketResults(6), SocketChipOrientation(ChipTypeNumber), ByRef UFChipResults()) Then
+		Print "ERROR - Cannot get chip position offsets from UF camera"
 		Exit Function
 	EndIf
 
-	' Store second measurement values
-	x2 = UFChipPos(1)
-	y2 = UFChipPos(2)
-	u2 = UFChipPos(3)
-
-	' Measurements have been made, return to initial U at camera
-	' This should be same as PickU?
-	Go Here -U(Rotation1 + Rotation2)
-	
-	Print "Chip position measured with UF camera. Starting from", UAtCam0
-	Print "Rotate by ", Rotation1
-	Print "1st measurement at U=", UAtCam1
-	Print "  x1: ", x1
-	Print "  y1: ", y1
-	Print "  u1: ", u1
-	Print "Rotate by ", Rotation2
-	Print "2nd measurement at U=", UAtCam2
-	Print "  x2: ", x2
-	Print "  y2: ", y2
-	Print "  u2: ", u2
-	Print "Return U value by rotating by ", -(Rotation1 + Rotation2)
-	
-	' Correct for +90 degrees for first measurement by rotating -90
-	Double UF_Del_X, UF_Del_Y, UF_Del_U1, UF_Del_U2, UF_Del_U
-	
-	Print "UF chip center measurements"
-	Print "Rotation1 = ", Rotation1, ", Rotation2 = ", Rotation2
-	Print "HAND U1 =", UAtCam1, ", HAND U2=", UAtCam2
-	Print "x1 = ", x1, "   x2 = ", x2
-	Print "y1 = ", y1, "   y2 = ", y2
-	Print "u1 = ", u1, "   u2 = ", u2
-	
-	If (Abs(x1 - CX(P_camera)) > 10) Or (Abs(x2 - CX(P_camera)) > 10) Then
-		Print "ERROR: Position measured is more than 10 mm from P_camera in X"
-		Exit Function
-	EndIf
-	
-	If (Abs(x1 - CX(P_camera)) > 10) Or (Abs(x2 - CX(P_camera)) > 10) Then
-		Print "ERROR: Position measured is more than 10 mm from P_camera in X"
-		Exit Function
-	EndIf
-	
-	UF_Del_X = (x2 - x1) /2
-	UF_Del_Y = (y2 - y1) /2
-
-	UF_Del_X = UF_Del_X * Cos(DegToRad(-Rotation1)) - UF_Del_Y * Sin(DegToRad(-Rotation1))
-	
-	UF_Del_U1 = (SockPos(3) + SocketChipOrientation(ChipTypeNumber)) - (u1 - Rotation1)
-	UF_Del_U2 = (SockPos(3) + SocketChipOrientation(ChipTypeNumber)) - (u2 - Rotation1 - Rotation2)
-	
-	If UF_Del_U2 > 180. Then
-		Print "UF_DEL_U2 (", UF_Del_U2, ") out of range, try : ", UF_Del_U2 - 360.
-		UF_Del_U2 = UF_Del_U2 - 360.
-	ElseIf UF_Del_U2 < -180. Then
-		Print "UF_DEL_U2 (", UF_Del_U2, ") out of range, try : ", UF_Del_U2 + 360.
-		UF_Del_U2 = UF_Del_U2 + 360.
-	EndIf
-	
-	If Abs(UF_Del_U1) > 10. Then
-		Print "WARNING: U offset for 1st UF chip measurement out of +/- 10 deg"
-	EndIf
-	
-	If Abs(UF_Del_U2) > 10. Then
-		Print "WARNING: U offset for 2nd UF chip measurement out of +/- 10 deg"
-	EndIf
-	
-	If Abs(UF_Del_U2 - UF_Del_U1) > 2. Then
-		Print "WARNING: U offsets from UF measurements differ by more than +/- 2 deg"
-		Print "Socket position should be U = ", CU(P(FullSocket_nr))
-		Print "Measured position shoul be U = ", SockPos(3)
-		Print "With expected relative orientation of ", SocketChipOrientation(ChipTypeNumber)
-		Print "Chip in socket place U = ", (SockPos(3) + SocketChipOrientation(ChipTypeNumber))
-		Print "First measured chip  U = ", (u1 - Rotation1), " ; Without rotation correction = ", u1
-		Print "Second measured chip U = ", (u2 - Rotation1 - Rotation2), " ; Without rotation correction = ", u2
-		Print "Which differ by ", (u1 - (u2 - Rotation2))
-	EndIf
-	
-	' Need to make sure average is closest angle around -pi/+pi boundary
-	If Abs(UF_Del_U1 - UF_Del_U2) > 180 Then
-	' Need to average around -pi and pi
-		If Abs(UF_Del_U1) > Abs(UF_Del_U2) Then
-			' Closer to U2
-			UF_Del_U = (UF_Del_U2 - UF_Del_U1) /2
-		Else
-			' Closer to U1
-			UF_Del_U = (UF_Del_U1 - UF_Del_U2) /2
-		EndIf
-	Else
-		UF_Del_U = (UF_Del_U1 + UF_Del_U2) /2
-	EndIf
-	
-	Print "Corrections to chip position and orientation"
-	Print "Corrections measured from a rotation of ", Rotation1
-	Print "Correction in x axis : ", UF_Del_X
-	Print "Correction in y axis : ", UF_Del_Y
-	Print "Correction in u1   	: ", UF_Del_U1
-	Print "Correction in u2   	: ", UF_Del_U2
-	Print "Correction in u   	: ", UF_Del_U
-	
-	' Remove the first measurements rotation from PickU
-	UF_Del_X = UF_Del_X * Cos(DegToRad(-Rotation1)) - UF_Del_Y * Sin(DegToRad(-Rotation1))
-	UF_Del_Y = UF_Del_X * Sin(DegToRad(-Rotation1)) + UF_Del_Y * Cos(DegToRad(-Rotation1))
-
-' Correction requires rotation based on U offset
-' U offset here is about chip center, need to also rotate around J3 changing x and y offsets
-
-	Double CorrectX, CorrectY
-	CorrectX = Cos(DegToRad(UF_Del_U)) * UF_Del_X - Sin(DegToRad(UF_Del_U)) * UF_Del_Y
-	CorrectY = Sin(DegToRad(UF_Del_U)) * UF_Del_X + Cos(DegToRad(UF_Del_U)) * UF_Del_Y
-	If (Abs(CorrectX) > 10) Or (Abs(CorrectY) > 10) Then
-		Print "ERROR CORRECTION IS MORE THAN 10 mm"
-		Exit Function
-	EndIf
-	
-	Print "Corrections:"
-	Print " Delta X : ", CorrectX
-	Print " Delta Y : ", CorrectY
-	Print " Delta U : ", UF_Del_U
-
-'	Print "TEST CORRECTION"
-'	Go Here +U(UF_Del_U) +X(CorrectX) +Y(CorrectY)
-'	Attempts = 10
-'	Success = False
-'	Do While ((Attempts > 0) And Not Success)
-'		If Not SITE_UF_CHIP_FIND Then
-'			Attempts = Attempts - 1
-'		Else
-'			Success = True
-'			Exit Do
-'		EndIf
-'	Loop
-'	If Not Success Then
-'		Print "ERROR UF camera cannot find chip after 180 degree rotation"
-'		RunMoveChipTrayToSocket = -6
-'		Exit Function
-'	EndIf	
-'	Print "Delta X :", UFChipPos(1) - CX(P_camera)
-'	Print "Delta Y :", UFChipPos(2) - CY(P_camera)
-'	Print "Delta U :", UFChipPos(3) - (SockPos(3) + SocketChipOrientation(ChipTypeNumber))
 
 	' TODO Here is where will put any pin analysis as well
 
@@ -1757,7 +1538,8 @@ Function RunMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr
 	'''' See above where SockPos(3) comes into definition.
 	' Socket U correction should already be taken into account in both the angle and 
 	' chip X and Y displacement, but socket X and Y displacement must be taken into acccount here
-	Go Here +U(UF_Del_U) +X(CorrectX + SockDelX) +Y(CorrectY + SockDelY)
+	' X and Y displacement
+	Go Here +U(UFChipResults(12)) +X(UFChipResults(10) + SocketResults(7)) +Y(UFChipResults(11) + SocketResults(8))
 	
 	' DUMMY SOCKET FOR OFFSET TESTING
 	Boolean TESTSOCKET
@@ -1784,96 +1566,119 @@ Function RunMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr
 	EndIf
 	Go Here +Z(50)
 	' TODO JW: Add check using chip DF function and socket function to see if chip position in socket is consistent
+	' Using GetChipInSocketAlignment function
 	RunMoveChipTrayToSocket = 1
 Fend
 
-Function TestMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, DAT_nr As Integer, socket_nr As Integer) As Int64
-	On 12
-	SetSpeed
+
+
+''' Socket alignment from DF camera
+''' 
+' DFSockRes(1) - defined X
+' DFSockRes(2) - defined Y
+' DFSockRes(3) - defined U
+
+' DFSockRes(4) - measured X
+' DFSockRes(5) - measured Y
+' DFSockRes(6) - measured U
+
+' DFSockRes(7) - Offset X
+' DFSockRes(8) - Offset Y
+' DFSockRes(9) - Offset U
+
+' DFSockRes(10) - J4 offset at measured position
+
+Function DFGetSocketAlignment(DAT_nr As Integer, socket_nr As Integer, ByRef DFSockRes() As Double) As Boolean
+
+	' Maybe add check to see if already above socket or in sink
+	JumpToSocket_camera(DAT_nr, socket_nr)
+	
 	Int32 FullSocket_nr
 	FullSocket_nr = DAT_nr * 100 + socket_nr
-	Double DeltaDir
-	DeltaDir = -999
-	
-	' Use the DF camera to find the position and orientation of the socket mezzanine board
-	JumpToSocket_camera(DAT_nr, socket_nr)
-'	Print "SocketCameraPosition "
-'	Print "X=", CX(Here), ", Y= ", CY(Here), ", U=", CU(Here), ", Agl(4)=", Agl(4)
 
+	' Reset results array
+	Int32 i
+	For i = 1 To 10
+		DFSockRes(i) = 0.
+	Next
+	
+	DFSockRes(1) = CX(P(FullSocket_nr))
+	DFSockRes(2) = CY(P(FullSocket_nr))
+	DFSockRes(3) = CU(P(FullSocket_nr))
+	
+	' Vision sequence tollerance can be adjusted but sometimes fails, try multiple times
 	Int32 Attempts
 	Boolean Success
 	Attempts = 10
 	Success = False
-	Print "Attempting socket detection"
+	Print "Getting precise socket position"
 	Do While ((Attempts > 0) And Not Success)
 		If Not FindSocketDirectionWithDF Then
-			Print "Not found"
+			'Print "Not found"
 			Attempts = Attempts - 1
 		Else
-			Print "Found"
 			Success = True
 			Exit Do
 		EndIf
 	Loop
 	If Not Success Then
-		Print "Cannot find socket alignment"
-		TestMoveChipTrayToSocket = -2
+		Print "ERROR: Cannot find socket alignment"
+		DFGetSocketAlignment = False
 		Exit Function
 	EndIf
-
-			Print "Actual Socket Position in camera:"
-		Print "X=", SockPos(1), ", Y=", SockPos(2), ", USock=", SockPos(3)
-
+	DFSockRes(4) = SockPos(1)
+	DFSockRes(5) = SockPos(2)
+	DFSockRes(6) = SockPos(3)
 	' Print any deviations between the socket position in camera and defined point
-	Double SockDelX, SockDelY, SockDelU
-	SockDelX = SockPos(1) - CX(P(FullSocket_nr))
-	SockDelY = SockPos(2) - CY(P(FullSocket_nr))
-	SockDelU = SockPos(3) - CU(P(FullSocket_nr)) ' May need to correct by orientation value
-	Print "Socket is offset from expected position by "
-	Print " Delta X = ", SockDelX
-	Print " Delta Y = ", SockDelY
-	Print " Delta U = ", SockDelU
+	' Offset = Measured - Expected
+	DFSockRes(7) = DFSockRes(4) - DFSockRes(1) ' X
+	DFSockRes(8) = DFSockRes(5) - DFSockRes(2) ' Y
+	DFSockRes(9) = DFSockRes(6) - DFSockRes(3) ' U - May need to correct by orientation 
+
+	Go Here :X(DFSockRes(4)) :Y(DFSockRes(5)) :U(DFSockRes(6))
+	DFSockRes(10) = CU(Here) - Agl(4)
 	
-
-	' See if camera detects a chip
-	Wait 1
-	Attempts = 5
-	Do While (Attempts > 0)
-		If FindChipDirectionWithDF Then
-			Print "ERROR: DF Camera can see a chip in the socket already"
-			TestMoveChipTrayToSocket = -3
-			Exit Function
-		EndIf
-		Attempts = Attempts - 1
-	Loop
-	Wait 10
-	' Now move to the actual socket point in software to get the J4 angle offset
-	Double SockAg4Offset
-	JumpToSocket(DAT_nr, socket_nr)
-	Print "Defined socket position "
-	Print "X=", CX(Here), ", Y= ", CY(Here), ", U=", CU(Here), ", Agl(4)=", Agl(4)
-	SockAg4Offset = CU(P(FullSocket_nr)) - Agl(4)
-
-	Print "WARNING: Contact sensor test for chip in socket is currently commented out for testing"
-	'' TODO JW commented out for testing with dummy socket
-	'	' Test if there is a chip or obstruction in the socket.
-	'	If isChipInSocket(DAT_nr, socket_nr) Then
-	'		Print "ERROR there is already a chip in this socket"
-	'		TestMoveChipTrayToSocket = -200
-	'		Exit Function
-	'	EndIf
-
+	DFGetSocketAlignment = True
 	
-	Int32 ChipTypeNumber
-	ChipTypeNumber = 0 ' Should throw out of bounds error if not set below 
-	' Now go to the tray to pick up the chip
+Fend
+
+''' get the position and alignment of a chip in a tray position
+''' Socket alignment from DF camera
+'' Defined position
+' DFTrayRes(1) - defined X
+' DFTrayRes(2) - defined Y
+' DFTrayRes(3) - defined U
+' Measured position
+' DFTrayRes(4) - measured X
+' DFTrayRes(5) - measured Y
+' DFTrayRes(6) - measured U
+' Offsets 
+' DFTrayRes(7) - Offset X
+' DFTrayRes(8) - Offset Y
+' DFTrayRes(9) - Offset U
+
+' DFTrayRes(10) - J4 offset at measured position
+Function DFGetTrayAlignment(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, ByRef DFTrayRes() As Double) As Boolean
+
 	JumpToTray_camera(pallet_nr, col_nr, row_nr)
-	Print "Getting chip orientation and position"
-	Print "Should check the dimensions of the chip are within expected range"
+
+	' Reset results array
+	Int32 i
+	For i = 1 To 10
+		DFTrayRes(i) = 0.
+	Next
 	
+	DFTrayRes(1) = CX(Pallet(pallet_nr, col_nr, row_nr))
+	DFTrayRes(2) = CY(Pallet(pallet_nr, col_nr, row_nr))
+	DFTrayRes(3) = CU(Pallet(pallet_nr, col_nr, row_nr))
+
+	' Vision sequence tollerance can be adjusted but sometimes fails, try multiple times
+	Integer Attempts
 	Attempts = 10
+	Boolean Success
 	Success = False
 	Do While ((Attempts > 0) And Not Success)
+		' TODO JW: Check chip dimensions are in range
 		If Not FindChipDirectionWithDF Then
 			Attempts = Attempts - 1
 		Else
@@ -1883,109 +1688,61 @@ Function TestMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_n
 	Loop
 	If Not Success Then
 		Print "Cannot find chip alignment"
-		TestMoveChipTrayToSocket = -1
-		Exit Function
-	EndIf
-
-	Print "X=", ChipPos(1), ", Y=", ChipPos(2), ", UChip=", ChipPos(3)
-	
-	ChipTypeNumber = (10 + socket_nr) / 10
-	' JW TODO check this math, is the orientation wrt world or socket?
-	DeltaDir = (SockPos(3) + SocketChipOrientation(ChipTypeNumber)) - ChipPos(3)
-	
-	' Print any deviations between the chip position in camera and defined point
-	Double ChipDelX, ChipDelY, ChipDelU
-	ChipDelX = ChipPos(1) - CX(Pallet(pallet_nr, col_nr, row_nr))
-	ChipDelY = ChipPos(2) - CY(Pallet(pallet_nr, col_nr, row_nr))
-	ChipDelU = ChipPos(3) - CU(Pallet(pallet_nr, col_nr, row_nr)) ' May need to correct by orientation value
-	Print "Chip is offset from expected position by "
-	Print " Delta X = ", ChipDelX
-	Print " Delta Y = ", ChipDelY
-	Print " Delta U = ", ChipDelU
-	
-	Double TrayAg4Offset
-	JumpToTray(pallet_nr, col_nr, row_nr)
-	'Print "TrayPosition "
-	'Print "X=", CX(Here), ", Y= ", CY(Here), ", U=", CU(Here), ", Agl(4)=", Agl(4)
-	TrayAg4Offset = CU(Here) - Agl(4)
-	
-	If DeltaDir < -180. Then
-		DeltaDir = DeltaDir + 360.
-	ElseIf DeltaDir > 180. Then
-		DeltaDir = DeltaDir - 360.
-	EndIf
-	
-	Print "Summary"
-	Print "Tray Chip Dir  = ", ChipPos(3)
-	Print "Sock Chip Dir  = ", (SockPos(3) + SocketChipOrientation(ChipTypeNumber))
-	Print "Chip rotation needed = ", DeltaDir
-	
-	Print "Tray Ag4Offset = ", TrayAg4Offset
-	Print "Sock Ag4Offset = ", SockAg4Offset
-	
-
-
-	' If placement angle dosn't matter, may want to use something like	
-	' +/-(DeltaDir/2) from midpoint of Ag4 offsets?
-	' Other wise straight translation of U to get to target socket U
-	Double PickU
-	'	TgtAg4 = SockPos(3) - SockAg4Offset
-	PickU = CU(P(DAT_nr * 100 + socket_nr)) - DeltaDir
-
-	If PickU < -180. Then
-		PickU = PickU + 360.
-	ElseIf PickU > 180. Then
-		PickU = PickU - 360.
-	EndIf
-
-	Print "Pick up chip at U = ", PickU
-	
-	' All Okay so far, try picking up the chip	
-	JumpToTray(pallet_nr, col_nr, row_nr)
-	Go Here :U(PickU) '  :X(ChipPos(1)) :Y(ChipPos(2))
-	
-	If Not isPressureOk Then
-		Print "ERROR Bad pressure"
-		TestMoveChipTrayToSocket = -2
-		Exit Function
-	EndIf
-		
-	If Not isVacuumOk Then
-		Print "ERROR Bad vacuum"
-		TestMoveChipTrayToSocket = -3
 		Exit Function
 	EndIf
 	
-	'' TESTING TODOJOE insert an offset
-	Double InjectOffX, InjectOffY, InjectOffU
-	InjectOffX = 0.
-	InjectOffY = 0.
-	InjectOffU = 0.
-	Go Here +X(InjectOffX)
-	Go Here +Y(InjectOffY)
-	Go Here +U(InjectOffU)
+	Print "Chip found"
+	DFTrayRes(4) = ChipPos(1)
+	DFTrayRes(5) = ChipPos(2)
+	DFTrayRes(6) = ChipPos(3)
+	' Print any deviations between the socket position in camera and defined point
+	' Offset = Measured - Expected
+	DFTrayRes(7) = DFTrayRes(4) - DFTrayRes(1) ' X
+	DFTrayRes(8) = DFTrayRes(5) - DFTrayRes(2) ' Y
+	DFTrayRes(9) = DFTrayRes(6) - DFTrayRes(3) ' U - May need to correct by orientation 
+
+	Go Here :X(DFTrayRes(4)) :Y(DFTrayRes(5))
+	DFTrayRes(10) = CU(Here) - Agl(4)
 	
-	If Not PickupFromTray Then
-		Print "ERROR Can't pick up chip from tray"
-		TestMoveChipTrayToSocket = -4
-		Exit Function
-	EndIf
+	DFGetTrayAlignment = True
 	
-	' Go to the UF camera	
+Fend
+
+' Results index
+'' Tool positions
+' UFChipRes(1) - U_0 tool U when moved to camera
+' UFChipRes(2) - U_1 tool U at first measurement
+' UFChipRes(3) - U_2 tool U at second measurement
+'''  First measurements
+' UFChipRes(4) - x1
+' UFChipRes(5) - y1
+' UFChipRes(6) - u1
+''' Second measurements
+' UFChipRes(7) - x2
+' UFChipRes(8) - y2
+' UFChipRes(9) - u2
+''' Caclulated offsets
+' UFChipRes(10) - Offset in X
+' UFChipRes(11) - Offset in Y
+' UFChipRes(12) - Offset in U 
+' Must take exact target U value (including socket offset) to calculate offsets properly
+' TODO JW: Maybe have it return the offsets wrt U_0 then recalc offsets for specific socket offset
+' outside of this function?
+Function UFGetChipAlignment(TargetHandU As Double, TargetChipRotation As Double, ByRef UFChipRes() As Double) As Boolean
+	UFGetChipAlignment = False
+	Int32 i
+	For i = 1 To 12
+		UFChipRes(i) = 0.
+	Next i
+	
 	JumpToCamera
-	Go Here +U(DeltaDir) ' TODO JW: Check rotation from pickup U to place U (Socket + ChipDirection + Socket Offset) isn't done somewhere else
+	Go Here :U(TargetHandU)
+	UFChipRes(1) = TargetHandU ' This should be socket position + chip orientation offset
 	
-	
-	Double UAtCam0
-	UAtCam0 = CU(Here)
-
-'	Boolean NeedReset
-'	NeedReset = False
+	' If J4 angle is outside desired range, first add in extra rotation to prevent over turning
 	Double Rotation1
 	Rotation1 = 0.
 	If (Agl(4) >= -45.) And (Agl(4) <= -45.) Then
-'		Go Here +U(90)
-'		NeedReset = True
 		If (Agl(4) >= 0) Then
 			Rotation1 = -90.
 		Else
@@ -1994,13 +1751,12 @@ Function TestMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_n
 	EndIf
 	Go Here +U(Rotation1)
 	
-	Double UAtCam1
-	UAtCam1 = CU(Here)
+	UFChipRes(2) = CU(Here)
 
-	' Now do some checks like key check and pin checks	
-	Double x1, x2, y1, y2, u1, u2
-
+	' Take first measurements
+	Integer Attempts
 	Attempts = 10
+	Boolean Success
 	Success = False
 	Do While ((Attempts > 0) And Not Success)
 		If Not SITE_UF_CHIP_FIND Then
@@ -2012,15 +1768,15 @@ Function TestMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_n
 	Loop
 	If Not Success Then
 		Print "ERROR UF camera cannot find chip"
-		TestMoveChipTrayToSocket = -5
 		Exit Function
 	EndIf
 	
-	x1 = UFChipPos(1)
-	y1 = UFChipPos(2)
-	u1 = UFChipPos(3)
-	
-	
+	' Store first measurement values
+	UFChipRes(4) = UFChipPos(1)
+	UFChipRes(5) = UFChipPos(2)
+	UFChipRes(6) = UFChipPos(3)
+		
+	' Rotate to 180 deg from first measurements
 	Double Rotation2
 	Rotation2 = 0.
 	If (Agl(4) < 0.) Then
@@ -2030,10 +1786,8 @@ Function TestMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_n
 	EndIf
 	Go Here +U(Rotation2)
 	
-	Double UAtCam2
-	UAtCam2 = CU(Here)
+	UFChipRes(3) = CU(Here)
 	
-	' Attempt for the other rotation
 	Attempts = 10
 	Success = False
 	Do While ((Attempts > 0) And Not Success)
@@ -2046,202 +1800,158 @@ Function TestMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_n
 	Loop
 	If Not Success Then
 		Print "ERROR UF camera cannot find chip after 180 degree rotation"
-		TestMoveChipTrayToSocket = -6
 		Exit Function
 	EndIf
-	
 
-	x2 = UFChipPos(1)
-	y2 = UFChipPos(2)
-	u2 = UFChipPos(3)
+	' Store second measurement values
+	UFChipRes(7) = UFChipPos(1)
+	UFChipRes(8) = UFChipPos(2)
+	UFChipRes(9) = UFChipPos(3)
 
+	' Measurements have been made, return to initial U at camera
+	' This should be same as U_0
 	Go Here -U(Rotation1 + Rotation2)
 	
-	' Need to test this in different configurations make sure it always returns the right values
-	Print "Hand orientation at each measurement"
-	Print "Hand when first moved to camera"
-	Print "U = ", UAtCam0
-	Print "Target Chip U = ", (SockPos(3) + SocketChipOrientation(ChipTypeNumber))
-	Print "Hand at 1st measurement"
-	Print "U = ", UAtCam1
-	Print "UF chip position (", x1, ",", y1, ",", u1, ")"
-	Print "Hand at 2nd measurement"
-	Print "U = ", UAtCam2
-	Print "UF chip position (", x2, ",", y2, ",", u2, ")"
+	Print "Chip position measured with UF camera. Starting from", UFChipRes(1)
+	Print "Rotate by ", Rotation1
+	Print "1st measurement at U=", UFChipRes(2)
+	Print "  x1: ", UFChipRes(4)
+	Print "  y1: ", UFChipRes(5)
+	Print "  u1: ", UFChipRes(6)
+	Print "Rotate by ", Rotation2
+	Print "2nd measurement at U=", UFChipRes(3)
+	Print "  x2: ", UFChipRes(7)
+	Print "  y2: ", UFChipRes(8)
+	Print "  u2: ", UFChipRes(9)
+	Print "Return U value by rotating by ", -(Rotation1 + Rotation2)
 	
 	' Correct for +90 degrees for first measurement by rotating -90
-	Double UF_Del_X, UF_Del_Y, UF_Del_U1, UF_Del_U2, UF_Del_U
 	
-	Print "OFFSET MEASUREMENTS"
-	Print "x1 = ", x1, "   x2 = ", x2
-	Print "y1 = ", y1, "   y2 = ", y2
-	Print "u1 = ", u1, "   u2 = ", u2
+	Print "UF chip center measurements"
+	Print "Rotation1 = ", Rotation1, ", Rotation2 = ", Rotation2
+	Print "HAND U1 =", UFChipRes(2), ", HAND U2=", UFChipRes(3)
+	Print "x1 = ", UFChipRes(4), "   x2 = ", UFChipRes(7)
+	Print "y1 = ", UFChipRes(5), "   y2 = ", UFChipRes(8)
+	Print "u1 = ", UFChipRes(6), "   u2 = ", UFChipRes(9)
 	
-	If (Abs(x1 - CX(P_camera)) > 10) Or (Abs(x2 - CX(P_camera)) > 10) Then
+	If (Abs(UFChipRes(4) - CX(P_camera)) > 10) Or (Abs(UFChipRes(7) - CX(P_camera)) > 10) Then
 		Print "ERROR: Position measured is more than 10 mm from P_camera in X"
 		Exit Function
 	EndIf
 	
-	If (Abs(x1 - CX(P_camera)) > 10) Or (Abs(x2 - CX(P_camera)) > 10) Then
-		Print "ERROR: Position measured is more than 10 mm from P_camera in X"
+	If (Abs(UFChipRes(5) - CY(P_camera)) > 10) Or (Abs(UFChipRes(8) - CY(P_camera)) > 10) Then
+		Print "ERROR: Position measured is more than 10 mm from P_camera in Y"
 		Exit Function
 	EndIf
 	
-	UF_Del_X = (x2 - x1) /2
-	UF_Del_Y = (y2 - y1) /2
+	' Set X and Y offsets as distance from first measurement to axis of rotation
+	UFChipRes(10) = (UFChipRes(7) - UFChipRes(4)) / 2 ' X2 - X2 /2
+	UFChipRes(11) = (UFChipRes(8) - UFChipRes(5)) / 2 ' Y2 - Y1 /2
+	
+	' X and Y offsets should be corrected for the first rotation offset to get back to TargetU
+	UFChipRes(10) = UFChipRes(10) * Cos(DegToRad(-Rotation1)) - UFChipRes(11) * Sin(DegToRad(-Rotation1))
+	UFChipRes(11) = UFChipRes(10) * Sin(DegToRad(-Rotation1)) + UFChipRes(11) * Cos(DegToRad(-Rotation1))
+	
+	Double UF_DEL_U1, UF_DEL_U2
+	' Take out rotations to get offsets of tool U wrt to target U
+'	UF_DEL_U1 = (UFChipRes(1) + SocketChipOrientation(ChipTypeNumber)) - (u1 - Rotation1) ' Offset in 1st measurement
+'   UF_DEL_U2 = (UFChipRes(1) + SocketChipOrientation(ChipTypeNumber)) - (u2 - Rotation1 - Rotation2) ' Offset in 2nd measurement
+	UF_DEL_U1 = UFChipRes(2) + TargetChipRotation - UFChipRes(6)
+	UF_DEL_U2 = UFChipRes(3) + TargetChipRotation - UFChipRes(9)
+	
+	' TODO JOE come up with better way of returning angles in -180 to 180 degree range
+	If UF_DEL_U1 > 180. Then
+		Print "UF_DEL_U1 (", UF_DEL_U1, ") out of range, try : ", UF_DEL_U1 - 360.
+		UF_DEL_U1 = UF_DEL_U1 - 360.
+	ElseIf UF_DEL_U1 < -180. Then
+		Print "UF_DEL_U1 (", UF_DEL_U1, ") out of range, try : ", UF_DEL_U1 + 360.
+		UF_DEL_U1 = UF_DEL_U1 + 360.
+	EndIf
 
-	' TODO JW: This already includes U value of socket from vision sequence
-	' Are we double counting somehow?
-	UF_Del_U1 = (SockPos(3) + SocketChipOrientation(ChipTypeNumber)) - (u1 - Rotation1)
-	UF_Del_U2 = (SockPos(3) + SocketChipOrientation(ChipTypeNumber)) - (u2 - Rotation1 - Rotation2)
-	
-	If UF_Del_U2 > 180. Then
-		Print "UF_DEL_U2 (", UF_Del_U2, ") out of range, try : ", UF_Del_U2 - 360.
-		UF_Del_U2 = UF_Del_U2 - 360.
-	ElseIf UF_Del_U2 < -180. Then
-		Print "UF_DEL_U2 (", UF_Del_U2, ") out of range, try : ", UF_Del_U2 + 360.
-		UF_Del_U2 = UF_Del_U2 + 360.
+	If UF_DEL_U2 > 180. Then
+		Print "UF_DEL_U2 (", UF_DEL_U2, ") out of range, try : ", UF_DEL_U2 - 360.
+		UF_DEL_U2 = UF_DEL_U2 - 360.
+	ElseIf UF_DEL_U2 < -180. Then
+		Print "UF_DEL_U2 (", UF_DEL_U2, ") out of range, try : ", UF_DEL_U2 + 360.
+		UF_DEL_U2 = UF_DEL_U2 + 360.
 	EndIf
 	
-	If Abs(UF_Del_U1) > 10. Then
+	If Abs(UF_DEL_U1) > 10. Then
 		Print "WARNING: U offset for 1st UF chip measurement out of +/- 10 deg"
 	EndIf
 	
-	If Abs(UF_Del_U2) > 10. Then
+	If Abs(UF_DEL_U2) > 10. Then
 		Print "WARNING: U offset for 2nd UF chip measurement out of +/- 10 deg"
 	EndIf
 	
-	If Abs(UF_Del_U2 - UF_Del_U1) > 2. Then
+	If Abs(UF_DEL_U2 - UF_DEL_U1) > 2. Then
 		Print "WARNING: U offsets from UF measurements differ by more than +/- 2 deg"
-		Print "Socket position should be U = ", CU(P(FullSocket_nr))
-		Print "Measured position shoul be U = ", SockPos(3)
-		Print "With expected relative orientation of ", SocketChipOrientation(ChipTypeNumber)
-		Print "Chip in socket place U = ", (SockPos(3) + SocketChipOrientation(ChipTypeNumber))
-		Print "First measured chip  U = ", (u1 - Rotation1), " ; Without rotation correction = ", u1
-		Print "Second measured chip U = ", (u2 - Rotation1 - Rotation2), " ; Without rotation correction = ", u2
-		Print "Which differ by ", (u1 - (u2 - Rotation2))
+		Print " 1st U offset = ", UF_DEL_U1
+		Print " 2nd U offset = ", UF_DEL_U2
 	EndIf
-	' TODO JW need to average taking into account cyclic value
-	' I think if difference is larger than 180, need to either flip a sign or add/subtract 360 somewhere?
-	If Abs(UF_Del_U1 - UF_Del_U2) > 180 Then
+	
+	' Need to make sure average is closest angle around -pi/+pi boundary
+	If Abs(UF_DEL_U1 - UF_DEL_U2) > 180 Then
 	' Need to average around -pi and pi
-		If Abs(UF_Del_U1) > Abs(UF_Del_U2) Then
+		If Abs(UF_DEL_U1) > Abs(UF_DEL_U2) Then
 			' Closer to U2
-			UF_Del_U = (UF_Del_U2 - UF_Del_U1) /2
+			UFChipRes(12) = (UF_DEL_U2 - UF_DEL_U1) / 2
 		Else
 			' Closer to U1
-			UF_Del_U = (UF_Del_U1 - UF_Del_U2) /2
+			UFChipRes(12) = (UF_DEL_U1 - UF_DEL_U2) / 2
 		EndIf
 	Else
-		UF_Del_U = (UF_Del_U1 + UF_Del_U2) /2
+		UFChipRes(12) = (UF_DEL_U1 + UF_DEL_U2) / 2
 	EndIf
 	
 	Print "Corrections to chip position and orientation"
 	Print "Corrections measured from a rotation of ", Rotation1
-	Print "Correction in x axis : ", UF_Del_X
-	Print "Correction in y axis : ", UF_Del_Y
-	Print "Correction in u1   	: ", UF_Del_U1
-	Print "Correction in u2   	: ", UF_Del_U2
-	Print "Correction in u   	: ", UF_Del_U
-	Print "Removing first measurement rotation"
-	UF_Del_X = UF_Del_X * Cos(DegToRad(-Rotation1)) - UF_Del_Y * Sin(DegToRad(-Rotation1))
-	UF_Del_Y = UF_Del_X * Sin(DegToRad(-Rotation1)) + UF_Del_Y * Cos(DegToRad(-Rotation1))
-	Print "Correction in x axis : ", UF_Del_X
-	Print "Correction in y axis : ", UF_Del_Y
+	Print "Correction in x axis : ", UFChipRes(10)
+	Print "Correction in y axis : ", UFChipRes(11)
+	Print "Correction in u1   	: ", UF_DEL_U1
+	Print "Correction in u2   	: ", UF_DEL_U2
+	Print "Correction in u   	: ", UFChipRes(12)
 
-	
+
 ' Correction requires rotation based on U offset
 ' U offset here is about chip center, need to also rotate around J3 changing x and y offsets
 
-	Double CorrectX, CorrectY
-	CorrectX = Cos(DegToRad(UF_Del_U)) * UF_Del_X - Sin(DegToRad(UF_Del_U)) * UF_Del_Y
-	CorrectY = Sin(DegToRad(UF_Del_U)) * UF_Del_X + Cos(DegToRad(UF_Del_U)) * UF_Del_Y
-	If (Abs(CorrectX) > 10) Or (Abs(CorrectY) > 10) Then
+	UFChipRes(10) = Cos(DegToRad(UFChipRes(12))) * UFChipRes(10) - Sin(DegToRad(UFChipRes(12))) * UFChipRes(11)
+	UFChipRes(11) = Sin(DegToRad(UFChipRes(12))) * UFChipRes(10) + Cos(DegToRad(UFChipRes(12))) * UFChipRes(11)
+	If (Abs(UFChipRes(10)) > 10) Or (Abs(UFChipRes(11)) > 10) Then
 		Print "ERROR CORRECTION IS MORE THAN 10 mm"
 		Exit Function
 	EndIf
+	
+	Print "Corrections:"
+	Print " Delta X : ", UFChipRes(10)
+	Print " Delta Y : ", UFChipRes(11)
+	Print " Delta U : ", UFChipRes(12)
+	
+	UFGetChipAlignment = True
+	
+Fend
 
-'	Print "TEST CORRECTION"
-'	Go Here +U(UF_Del_U) +X(CorrectX) +Y(CorrectY)
-'	Attempts = 10
-'	Success = False
-'	Do While ((Attempts > 0) And Not Success)
-'		If Not SITE_UF_CHIP_FIND Then
-'			Attempts = Attempts - 1
-'		Else
-'			Success = True
-'			Exit Do
-'		EndIf
-'	Loop
-'	If Not Success Then
-'		Print "ERROR UF camera cannot find chip after 180 degree rotation"
-'		TestMoveChipTrayToSocket = -6
-'		Exit Function
-'	EndIf	
-'	Print "Delta X :", UFChipPos(1) - CX(P_camera)
-'	Print "Delta Y :", UFChipPos(2) - CY(P_camera)
-'	Print "Delta U :", UFChipPos(3) - (SockPos(3) + SocketChipOrientation(ChipTypeNumber))
+Function GetBoundAnglePM180(Angle As Double) As Double
+' Return an angle within -180 to 180 degrees
 
-	' TODO Here is where will put any pin analysis as well
-
-'	Wait 20
-	JumpToSocket(DAT_nr, socket_nr)
-	
-	' Apply some corrections
-	Print "Applying corrections at socket"
-	
-	'''' JW: U correction for socket is already taken into account in definition of UF_Del_X and UF_Del_Y
-	'''' See above where SockPos(3) comes into definition.
-'	'Correction is U dependent and so needs SockDelU to be included in chip x and y offsets
-'	Double CorrectXAtSocket, CorrectYAtSocket
-'	CorrectXAtSocket = Cos(DegToRad(UF_Del_U + SockDelU)) * UF_Del_X - Sin(DegToRad(UF_Del_U + SockDelU)) * UF_Del_Y
-'	CorrectYAtSocket = Sin(DegToRad(UF_Del_U + SockDelU)) * UF_Del_X + Cos(DegToRad(UF_Del_U + SockDelU)) * UF_Del_Y
-	
-	
-	Go Here +U(UF_Del_U + SockDelU) +X(CorrectX + SockDelX) +Y(CorrectY + SockDelY)
-	
-	' Correct for chip pick offset
-	
-	' DUMMY SOCKET FOR OFFSET TESTING	
-	If (socket_nr <> 7) Then
-		Print "WARNING: ATTEMPTING DUMMY PLACEMENT BUT WRONG SOCKET"
-		Exit Function
+	If Abs(Angle) < 180. Then
+		GetBoundAnglePM180 = Angle
+	EndIf
+	Int32 Quotiant
+	Double Offset
+	If Angle > 0 Then
+		Offset = +180.
 	Else
-		SetSpeed
-		
-		Go Here -Z(5) Till Sw(8) = On Or Sw(9) = Off
-		VacuumValveClose
-		Move Here +Z(50)
+		Offset = -180
 	EndIf
 	
-	
-'	If Not InsertIntoSocketSoft Then
-'		Print "ERROR Could not properly drop chip into socket"
-'		TestMoveChipTrayToSocket = -5
-'		Exit Function
-'	EndIf
-	
-'	Wait 20
-'	
-'	' For testing go back to the original tray position and put it back
-'	JumpToTray(pallet_nr, col_nr, row_nr)
-'	Go Here :U(PickU)
-'	
-'	' Testing with offsets
-'	Go Here +X(InjectOffX)
-'	Go Here +Y(InjectOffY)
-'	Go Here +U(InjectOffU)
-'	
-'	SetSpeed
-'	Move Here -Z(6)
-'	
-'	VacuumValveClose
-'	Move Here +Z(6)
-'	PumpOff
-'
-'	Move Here +Z(40)
+	Angle = Angle + Offset
+	Quotiant = Int(Angle) / 360
+	Angle = Angle - Quotiant * 360 - Offset
 
-	TestMoveChipTrayToSocket = 1
+	GetBoundAnglePM180 = Angle
+
 Fend
 
 Function SITE_UF_CHIP_FIND As Boolean '(ByRef Status As Boolean, ByRef ResX As Double, ByRef ResY As Double) As Boolean
@@ -2512,7 +2222,7 @@ Function MoveChipFromSocketToTray(DAT_nr As Integer, socket_nr As Integer, palle
 	Print #fileNum, ",", 0, ",", 0,
 
 	' Ensure that there is no chip in destination	
-	If isChipInTray(pallet_nr, col_nr, row_nr) Then
+	If isChipInTrayTouch(pallet_nr, col_nr, row_nr) Then
 		RTS_error(fileNum, "Chip exists in the destination ")
 		Go Here :Z(-10)
 		MoveChipFromSocketToTray = -200
@@ -2646,7 +2356,6 @@ Function MoveChipFromSocketToTray(DAT_nr As Integer, socket_nr As Integer, palle
 
 Fend
 
-
 Function RunMoveChipSocketToTray(DAT_nr As Integer, socket_nr As Integer, pallet_nr As Integer, col_nr As Integer, row_nr As Integer) As Int64
 	On 12
 	RunMoveChipSocketToTray = -999
@@ -2654,29 +2363,35 @@ Function RunMoveChipSocketToTray(DAT_nr As Integer, socket_nr As Integer, pallet
 	SetSpeed
 	
 	' Check tray destination is empty	
-	JumpToTray(pallet_nr, col_nr, row_nr)
-
-	If isChipInTray(pallet_nr, col_nr, row_nr) Then
+	' TODO JW add attempt loop
+	
+	If isChipInTrayCamera(pallet_nr, col_nr, row_nr) Then
 		Print("ERROR: Chip exists in tray")
 		Go Here +Z(10)
 		RunMoveChipSocketToTray = -200
 		Exit Function
 	EndIf
 	
+	If isChipInTrayTouch(pallet_nr, col_nr, row_nr) Then
+		Print("ERROR: Chip exists in tray")
+		Go Here +Z(10)
+		RunMoveChipSocketToTray = -200
+		Exit Function
+	EndIf
+
 	' Go to socket	
 	JumpToSocket_camera(DAT_nr, socket_nr)
 	' Check if chip is in socket?	
 	
-	Double DeltaDir
-	' Get chip direction/Get socket direction?
-	If FindChipDirectionWithDF Then
-		Print "X=", ChipPos(1), ", Y=", ChipPos(2), ", UChip=", ChipPos(3)
-		DeltaDir = SockPos(3) - ChipPos(3)
-	Else
-		Print "ERROR: Cannot find chip alignment"
-		RunMoveChipSocketToTray = -1
+	Double ChipSocketAlignment(15)
+	If Not GetChipInSocketAlignment(DAT_nr, socket_nr, ByRef ChipSocketAlignment()) Then
+		Print "ERROR: Cannot find get chip and socket alignment"
 		Exit Function
 	EndIf
+
+	' Offsets	
+	JumpToSocket(DAT_nr, socket_nr)
+	Go Here +X(ChipSocketAlignment(10)) +Y(ChipSocketAlignment(11)) +U(ChipSocketAlignment(12))
 	
 	' Pick up chip	
 	'PumpOn
@@ -2694,48 +2409,132 @@ Function RunMoveChipSocketToTray(DAT_nr As Integer, socket_nr As Integer, pallet
 		Exit Function
 	EndIf
 	
-	If FindSocketDirectionWithDF Then
-		Print "X=", SockPos(1), ", Y=", SockPos(2), ", USock=", SockPos(3)
-		Print "Difference between chip and socket centers:"
-		Print "DeltaX = ", (ChipPos(1) - SockPos(1))
-		Print "DeltaY = ", (ChipPos(2) - SockPos(2))
-	Else
-		Print "ERROR: Cannot find socket alignment"
-		RunMoveChipSocketToTray = -4
-		Exit Function
-	EndIf
-	
-	JumpToSocket(DAT_nr, socket_nr)
-	' Maybe this should be the chip position for consistency?
-	' Could check the difference
-	Move Here :X(SockPos(1)) :Y(SockPos(2))
-	
 	If Not PickupFromSocket Then
 		Print "ERROR: Cannot pick up chip from socket"
 		RunMoveChipSocketToTray = -5
 		Exit Function
 	EndIf
 	
-	
 	' WIll then go to camera 
 	JumpToCamera
 	Wait 10
-
+	
+'	Double UFChipResults(12)
+'	' TODO JW: Should target U here be consistent with test before placement? i.e., the socket hand U not the tray one
+'	' Still, the rotation between hand and chip should be defined by the intended tray orientation, not measured this time
+'		
+'	
+'	If Not UFGetChipAlignment(ChipSocketAlignment(6), TrayChipOrientation(pallet_nr), ByRef UFChipResults()) Then
+'		Print "ERROR - Cannot get chip position offsets from UF camera"
+'		Exit Function
+'	EndIf
+	
 	' Go to tray to place
 	JumpToTray(pallet_nr, col_nr, row_nr)
-	Int32 ChipTypeNo
-	ChipTypeNo = (10 + socket_nr) / 10
 	
-	Go Here +U(TrayChipOrientation(pallet_nr) + SocketChipOrientation(ChipTypeNo))
+	' TODO JW: Check this angle
+	Go Here +U(TrayChipOrientation(pallet_nr))
 	
-	Move Here -Z(8)
+	If Not DropToTray Then
+		Print "ERROR - Error placing chip back in tray"
+	EndIf
+	JumpToTray_camera(pallet_nr, col_nr, row_nr)
+	' Add another check that chip is back in tray	
 	
-	VacuumValveClose
-	PumpOff
 	
-	Move Here +Z(18)
 	
 	RunMoveChipSocketToTray = 1
+Fend
+
+''' Defined position of the socket
+' CinSRes(1) - X 
+' CinSRes(2) - Y 
+' CinSRes(3) - U
+''' Measured position of the socket
+' CinSRes(4) - X 
+' CinSRes(5) - Y 
+' CinSRes(6) - U
+''' Socket offsets (Defined -> Measured)
+' CinSRes(7) - X 
+' CinSRes(8) - Y 
+' CinSRes(9) - U
+'''Measured chip position
+'''Chip offsets from defined socket position (Defined socket -> Measured chip)
+' CinSRes(10) - X 
+' CinSRes(11) - Y 
+' CinSRes(12) - U
+''' Chip offsets from measured socket position (Measured socket -> Measured chip)
+' CinSRes(13) - X 
+' CinSRes(14) - Y 
+' CinSRes(15) - U
+
+Function GetChipInSocketAlignment(DAT_nr As Integer, socket_nr As Integer, ByRef CinSResults() As Double) As Boolean
+	GetChipInSocketAlignment = False
+
+	JumpToSocket_camera(DAT_nr, socket_nr)
+
+	Int32 FullSocket_nr
+	FullSocket_nr = DAT_nr * 100 + socket_nr
+	CinSResults(1) = CX(P(FullSocket_nr)) ' Socket X
+	CinSResults(2) = CY(P(FullSocket_nr)) ' Socket Y
+	CinSResults(3) = CU(P(FullSocket_nr)) ' Socket U
+
+	Int32 Attempts
+	Boolean Success
+	Attempts = 10
+	Success = False
+	Print "Getting precise socket position"
+	Do While ((Attempts > 0) And Not Success)
+		If Not FindSocketDirectionWithDF Then
+			'Print "Not found"
+			Attempts = Attempts - 1
+		Else
+			Success = True
+			Exit Do
+		EndIf
+	Loop
+	If Not Success Then
+		Print "ERROR: Cannot find socket alignment"
+		Exit Function
+	EndIf
+
+	' Get socket position	
+	CinSResults(4) = SockPos(1) ' Socket X
+	CinSResults(5) = SockPos(2) ' Socket Y
+	CinSResults(6) = SockPos(3) ' Socket U
+
+	Attempts = 10
+	Success = False
+	Do While ((Attempts > 0) And Not Success)
+		' TODO JW: Check chip dimensions are in range
+		If Not FindChipDirectionWithDF Then
+			Attempts = Attempts - 1
+		Else
+			Success = True
+			Exit Do
+		EndIf
+	Loop
+	If Not Success Then
+		Print "Cannot find chip alignment"
+		Exit Function
+	EndIf
+
+	' Get chip position
+	CinSResults(7) = ChipPos(1) ' Chip X
+	CinSResults(8) = ChipPos(2) ' Chip Y
+	CinSResults(9) = ChipPos(3) ' Chip U
+	
+	' Offsets from defined socket point (for steering)	
+	CinSResults(13) = ChipPos(1) - CinSResults(1) ' Offset in X (Socket -> Chip)
+	CinSResults(14) = ChipPos(2) - CinSResults(2)   ' Offset in Y
+	CinSResults(15) = ChipPos(3) - CinSResults(3)  ' Offset in U
+	
+	' Offsets from measured socket (for analysis)
+	CinSResults(13) = ChipPos(1) - SockPos(1) ' Offset in X (Socket -> Chip)
+	CinSResults(14) = ChipPos(2) - SockPos(2)   ' Offset in Y
+	CinSResults(15) = ChipPos(3) - SockPos(3)  ' Offset in U
+	
+	GetChipInSocketAlignment = True
 Fend
 
 
@@ -2808,7 +2607,7 @@ Function MoveChipFromTrayToTray(src_pallet_nr As Integer, src_col_nr As Integer,
 
 	' Ensure that there is no chip in destination	
 	If src_pallet_nr <> tgt_pallet_nr Or src_col_nr <> tgt_col_nr Or src_row_nr <> tgt_row_nr Then
-		If isChipInTray(tgt_pallet_nr, tgt_col_nr, tgt_row_nr) Then
+		If isChipInTrayTouch(tgt_pallet_nr, tgt_col_nr, tgt_row_nr) Then
 			RTS_error(fileNum, "Chip exists in the destination ")
 			Go Here :Z(-10)
 			MoveChipFromTrayToTray = -200
@@ -2973,11 +2772,11 @@ Function calibrate_socket(DAT_nr As Integer, socket_nr As Integer)
 	
 	Do Until check < 20 And check > -20 Or N_round > 10
 		VRun skt_cali_test
-		VGet skt_cali_test.Geom01.RobotXYU, isFound1, x_p1, y_p1, a_p1
+		VGet skt_cali_test.Geom01.RobotXYU, Isfound1, x_p1, y_p1, a_p1
 		'Print "P1 xyu: ", x_p1, y_p1, a_p1
-		VGet skt_cali_test.Geom02.RobotXYU, isFound2, x_p2, y_p2, a_p2
+		VGet skt_cali_test.Geom02.RobotXYU, Isfound2, x_p2, y_p2, a_p2
 		'Print "P2 xyu: ", x_p2, y_p2, a_p2
-		VGet skt_cali_test.Geom03.RobotXYU, isFound3, x_p3, y_p3, a_p3
+		VGet skt_cali_test.Geom03.RobotXYU, Isfound3, x_p3, y_p3, a_p3
 		'Print "P3 xyu: ", x_p3, y_p3, a_p3
 	
 
