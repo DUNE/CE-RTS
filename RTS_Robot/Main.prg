@@ -163,10 +163,26 @@ Function main
 '	SocketChipOrientation(2, 3) = -90
 	
 	On 12
-	RunMoveChipTrayToSocket(2, 15, 1, 1, 8)
-	JumpToCamera
-	Wait 20
-	RunMoveChipSocketToTray(1, 8, 2, 15, 1)
+
+	Print "TRAY TO TRAY MOVEMENT 1"
+	RunMoveChipTrayToTray(2, 15, 1, 2, 15, 3, GetBoundAnglePM180(CU(Pallet(2, 15, 3)) + 0))
+	Wait 2
+
+	Print "TRAY TO TRAY MOVEMENT 2"
+	RunMoveChipTrayToTray(2, 15, 3, 2, 15, 1, GetBoundAnglePM180(CU(Pallet(2, 15, 1)) + 90))
+	Wait 2
+
+	Print "TRAY TO TRAY MOVEMENT 3"
+	RunMoveChipTrayToTray(2, 15, 1, 2, 15, 1, GetBoundAnglePM180(CU(Pallet(2, 15, 1)) + 180))
+	Wait 2
+
+	Print "TRAY TO TRAY MOVEMENT 4"
+	RunMoveChipTrayToTray(2, 15, 1, 2, 15, 1, GetBoundAnglePM180(CU(Pallet(2, 15, 1)) + 0))
+'	RunMoveChipTrayToSocket(2, 15, 1, 1, 8)
+'	JumpToCamera
+'	Wait 20
+'	RunMoveChipSocketToTray(1, 8, 2, 15, 1)
+'	PumpOff
 ''	Off 12
 
 

@@ -57,5 +57,7 @@ Global Double SockPos(3)
 Global Double TrayChipOrientation(2) ' Default direction for chips in tray - in world coordinates
 Global Double SocketChipOrientation(3) ' Default direction for chips in sockets - relative to socket Mezzanine direction
 
+' Define the distance between the fiducial markers on LArASIC
+#define LArASICDimension 14.0 ' Need to measure
 
 
