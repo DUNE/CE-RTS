@@ -28,7 +28,7 @@ Function SelectSite
 	DF_CAM_Z_OFF = DF_CAM_FOCUS - CONTACT_DIST
 	
 	Print "Site selected is " + SITE$
-	Print "Chip type to be tested is" + CHIPTYPE$
+	Print "Chip type to be tested is " + CHIPTYPE$
 
 	POINTS_FILE$ = "points_" + SITE$ + ".pts"
 	LoadPoints POINTS_FILE$
