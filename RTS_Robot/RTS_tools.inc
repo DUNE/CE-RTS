@@ -17,7 +17,10 @@ Global Int32 trayNRows
 #define NSOCKETS 18
 Global Int32 nSoc ' Set by chip type for testing
 
-#define CONTACT_DIST 10.0
+#define CONTACT_DIST 20.0
+#define DROP_DIST 2.0
+
+#define JUMP_LIMIT -20.
 
 Global String REPO_DIR$
 Global String PROJ_DIR$
@@ -44,4 +47,17 @@ Global Double DAT_U(2, NSOCKETS)
 '
 '' chip SN
 ''Global String chip_SN$
+Global Double CornerVar(3)
+Global Double ChipPos(3)
+Global Double UFChipPos(3)
+Global Double SockPos(3)
+
+' In increments of 90 degrees from X axis, U0 offsets and socket find should
+' account for sub-90 degree variations between sockets and different RTS robots
+Global Double TrayChipOrientation(2) ' Default direction for chips in tray - in world coordinates
+Global Double SocketChipOrientation(3) ' Default direction for chips in sockets - relative to socket Mezzanine direction
+
+' Define the distance between the fiducial markers on LArASIC
+#define LArASICDimension 14.0 ' Need to measure
+
 
