@@ -1,8 +1,8 @@
 '#define REPO_DIR "C:\EpsonRC70\Projects\DUNE\CE-RTS"
 '#define RTS_DATA "C:\Users\coldelec\RTS\"
 #define NTRAYS 2
-#define TRAY_NCOLS 10 ' For TRAY and DAT arays use maximum size
-#define TRAY_NROWS 4
+#define TRAY_NCOLS 15 ' For TRAY and DAT arays use maximum size
+#define TRAY_NROWS 6
 #define TRAY_NCOLS_S 15
 #define TRAY_NROWS_S 6
 #define TRAY_NCOLS_L 10
@@ -14,7 +14,7 @@ Global Int32 trayNRows
 #define N_COLDADC_SOC 8
 #define N_COLDATA_SOC 2
 #define N_MSU_TEST_SOC 8
-#define NSOCKETS 22
+#define NSOCKETS 18
 Global Int32 nSoc ' Set by chip type for testing
 
 #define CONTACT_DIST 20.0

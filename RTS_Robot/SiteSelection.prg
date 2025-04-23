@@ -73,11 +73,11 @@ Function SelectSite
 	' But if we do any actual chip pick and place we need to know how many chips there actually are
 	' TODO Maybe move the pallet definition here since this is called at the start of main.
 	Select CHIPTYPE$
-		Case "LArASIC"
+		Case "LARASIC"
 			trayNCols = TRAY_NCOLS_S
 			trayNRows = TRAY_NROWS_S
 			nSoc = N_LARASIC_SOC
-		Case "ColdADC"
+		Case "COLDADC"
 			trayNCols = TRAY_NCOLS_S
 			trayNRows = TRAY_NROWS_S
 			nSoc = N_COLDADC_SOC
