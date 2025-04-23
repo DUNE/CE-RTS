@@ -48,16 +48,17 @@ Function SelectSite
 	EndIf
 	
 	'JW This probably doesn't need to cause it to crash, maybe create the directory with mkdir?
-	If Not FolderExists(RTS_DATA$) Then
-		Print "WARNING: RTS_DATA$ does not exist, creating it at"
-		Print RTS_DATA$
-		MkDir RTS_DATA$
-	EndIf
+'	If Not FolderExists(RTS_DATA$) Then
+'		Print "WARNING: RTS_DATA$ does not exist, creating it at"
+'		Print RTS_DATA$
+'		MkDir RTS_DATA$
+'	EndIf
+'
+'	If Not FolderExists(RTS_DATA$) Then
+'  		Print "***ERROR Can't create directory [" + RTS_DATA$ + "]"
+'  		Exit Function
+'	EndIf
 
-	If Not FolderExists(RTS_DATA$) Then
-  		Print "***ERROR Can't create directory [" + RTS_DATA$ + "]"
-  		Exit Function
-	EndIf
 	
 	If (HAND_U0 * HAND_U0 + DF_CAM_X_OFF_U0 * DF_CAM_X_OFF_U0 + DF_CAM_Y_OFF_U0 * DF_CAM_Y_OFF_U0 + DF_CAM_FOCUS * DF_CAM_FOCUS) < 1. Then
 		Print "WARNING: DF CAMERA OFFSETS NEED SETTING"
@@ -80,7 +81,7 @@ Function SelectSite
 		Case "ColdADC"
 			trayNCols = TRAY_NCOLS_S
 			trayNRows = TRAY_NROWS_S
-			nSoc = N_COLDADC_SOC
+			nSoc = N_ColdADC_SOC
 		Case "COLDATA"
 			trayNCols = TRAY_NCOLS_L
 			trayNRows = TRAY_NROWS_L

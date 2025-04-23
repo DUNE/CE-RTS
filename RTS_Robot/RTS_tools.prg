@@ -200,10 +200,10 @@ Function TouchChip As Byte
     Znow = CZ(Here)
     Zdiff = Znow - Zexpect
     If Zdiff > 1. Then
-    	Print "***ERROR: Contact too early - Check for obstruction"
+    	Print "***ERROR: Contact too early: Zdiff = ", Zdiff, " - Check for obstruction"
     	TouchChip = 1
     ElseIf Zdiff < -1. Then
-    	Print "No contact made"
+    	Print "No contact made: Zdiff = ", Zdiff
     	TouchChip = -1
     ElseIf (Not isContactSensorTouches) Then
     	Print "***ERROR: Contact not made but stopped in +/- 2mm of expected"
@@ -211,7 +211,7 @@ Function TouchChip As Byte
     Else
     	TouchChip = 0
 	EndIf
-
+	
 Fend
 
 
@@ -294,7 +294,7 @@ Function PlaceInTray As Boolean
 	EndIf
 	VacuumValveClose
     Wait 2
-    Go Here +Z(10)
+    Go Here +Z(CONTACT_DIST)
     SetSpeedSetting("MoveWithoutChip")
     PlaceInTray = True
 Fend
@@ -473,7 +473,7 @@ Function InsertIntoSocketSoft As Boolean
 	If Not TouchSuccess Then
 		Print "ERROR! Chip not at expected depth"
 		InsertIntoSocketSoft = False
-		Move Here +Z(50) ' Give you some room to see in the socket
+		Move Here :Z(JUMP_LIMIT - 5) ' Give you some room to see in the socket
 		Exit Function
 	EndIf
 	Move Here +Z(CONTACT_DIST)
@@ -498,9 +498,9 @@ Function PickupFromSocket As Boolean
 		Exit Function
 	EndIf
 	
-	PlungerOn
-	Wait 1
-	Go Here -Z(10)
+'	PlungerOn
+'	Wait 1
+'	Go Here -Z(10)
 
 
     SetSpeedSetting("PickAndPlace")
@@ -1338,11 +1338,11 @@ Function MoveChipFromTrayToSocket(DAT_nr As Integer, socket_nr As Integer, palle
 		
 	Integer status
 	Double corrs(2)
-	If ChipType$ = "COLDATA" Then
-		status = COLDATA_VisAnalysis(ByRef corrs())
-	Else
+'	If ChipType$ = "COLDATA" Then
+'		status = COLDATA_VisAnalysis(ByRef corrs())
+'	Else
 		status = ChipBottomAnaly(ts$, ByRef idx(), ByRef res())
-	EndIf
+'	EndIf
 
 	If status <> 0 Then
 		RTS_error(fileNum, "Analysis of chip bottom failed. Error = " + Str$(status))
@@ -1392,7 +1392,7 @@ Function MoveChipFromTrayToSocket(DAT_nr As Integer, socket_nr As Integer, palle
 	Print " dX = ", d_X, " dY = ", d_Y, " dU = ", d_U
 	If Abs(d_X) < 15 And Abs(d_Y) < 15 And Abs(d_U) < 20 Then
 		Go Here -X(d_X) -Y(d_Y) -U(d_U)
-		DropToSocket
+		InsertIntoSocketSoft
 	Else
 		RTS_error(fileNum, "Chip position out of limits")
         MoveChipFromTrayToSocket = -6
@@ -1521,12 +1521,12 @@ Function MoveChipFromSocketToTray(DAT_nr As Integer, socket_nr As Integer, palle
 	
 	Integer status
 	Double corrs(2)
-	If ChipType$ = "COLDATA" Then
-		status = COLDATA_VisAnalysis(ByRef corrs())
-	Else
+'	If ChipType$ = "COLDATA" Then
+'		status = COLDATA_VisAnalysis(ByRef corrs())
+'	Else
 		'ChipBottomAnaly(chip_SN$, ByRef idx(), ByRef status, ByRef res())
 		status = ChipBottomAnaly(ts$, ByRef idx(), ByRef res())
-	EndIf
+'	EndIf
 
 	If status <> 0 Then
 		RTS_error(fileNum, "Analysis of chip bottom failed. Error = " + Str$(status))
@@ -1678,7 +1678,7 @@ Function MoveChipFromTrayToTray(src_pallet_nr As Integer, src_col_nr As Integer,
 	If src_pallet_nr <> tgt_pallet_nr Or src_col_nr <> tgt_col_nr Or src_row_nr <> tgt_row_nr Then
 		If isChipInTrayTouch(tgt_pallet_nr, tgt_col_nr, tgt_row_nr) Then
 			RTS_error(fileNum, "Chip exists in the destination ")
-			Go Here :Z(-10)
+			Go Here :Z(JUMP_LIMIT)
 			MoveChipFromTrayToTray = -200
 			Exit Function
 		EndIf
@@ -1841,11 +1841,11 @@ Function calibrate_socket(DAT_nr As Integer, socket_nr As Integer)
 	
 	Do Until check < 20 And check > -20 Or N_round > 10
 		VRun skt_cali_test
-		VGet skt_cali_test.Geom01.RobotXYU, Isfound1, x_p1, y_p1, a_p1
+		VGet skt_cali_test.Geom01.RobotXYU, isFound1, x_p1, y_p1, a_p1
 		'Print "P1 xyu: ", x_p1, y_p1, a_p1
-		VGet skt_cali_test.Geom02.RobotXYU, Isfound2, x_p2, y_p2, a_p2
+		VGet skt_cali_test.Geom02.RobotXYU, isFound2, x_p2, y_p2, a_p2
 		'Print "P2 xyu: ", x_p2, y_p2, a_p2
-		VGet skt_cali_test.Geom03.RobotXYU, Isfound3, x_p3, y_p3, a_p3
+		VGet skt_cali_test.Geom03.RobotXYU, isFound3, x_p3, y_p3, a_p3
 		'Print "P3 xyu: ", x_p3, y_p3, a_p3
 	
 
@@ -1975,7 +1975,7 @@ Function RunMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr
 	Print "Next go to the tray and check chip position and orientation"
 	Double TrayResults(10)
 	If Not DFGetTrayAlignment(ts$, ByRef idx(), pallet_nr, col_nr, row_nr, ByRef TrayResults()) Then
-		RTS_error(fileNum, "Cannot get socket alignment")
+		RTS_error(fileNum, "Cannot get tray alignment")
 		Exit Function
 	EndIf
 	
@@ -2102,7 +2102,7 @@ Function RunMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr
 		
 		Go Here -Z(5) Till Sw(8) = On Or Sw(9) = Off
 		VacuumValveClose
-		Move Here +Z(50)
+		Move Here :Z(JUMP_LIMIT - 5)
 	Else
 		
 		If Not InsertIntoSocketSoft Then
@@ -2112,7 +2112,7 @@ Function RunMoveChipTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_nr
 		EndIf
 	
 	EndIf
-	Go Here +Z(50)
+	Go Here :Z(JUMP_LIMIT - 5)
 	' TODO JW: Add check using chip DF function and socket function to see if chip position in socket is consistent
 	' Using GetChipInSocketAlignment function
 		
@@ -2207,18 +2207,18 @@ Function RunMoveChipSocketToTray(DAT_nr As Integer, socket_nr As Integer, pallet
 	
 	If isChipInTrayCamera(pallet_nr, col_nr, row_nr) Then
 		RTS_error(fileNum, "Chip exists in tray")
-		Go Here +Z(10)
+		Go Here :Z(JUMP_LIMIT - 5)
 		RunMoveChipSocketToTray = -200
 		Exit Function
 	EndIf
 	
 	If isChipInTrayTouch(pallet_nr, col_nr, row_nr) Then
 		RTS_error(fileNum, "Chip exists in tray")
-		Go Here +Z(10)
+		Go Here :Z(JUMP_LIMIT - 5)
 		RunMoveChipSocketToTray = -200
 		Exit Function
 	EndIf
-
+	SetSpeedSetting("MoveWithoutChip")
 	' Go to socket	
 	JumpToSocket_camera(DAT_nr, socket_nr)
 	' Check if chip is in socket?	
@@ -2349,14 +2349,14 @@ Function RunMoveChipTrayToTray(src_pallet_nr As Integer, src_col_nr As Integer, 
 	
 		If isChipInTrayCamera(tgt_pallet_nr, tgt_col_nr, tgt_row_nr) Then
 			RTS_error(fileNum, "Chip exists in the destination ")
-			Go Here :Z(JUMP_LIMIT)
+			Go Here :Z(JUMP_LIMIT - 5)
 			RunMoveChipTrayToTray = -200
 			Exit Function
 		EndIf
 	
 		If isChipInTrayTouch(tgt_pallet_nr, tgt_col_nr, tgt_row_nr) Then
 			RTS_error(fileNum, "Chip exists in the destination or other obstruction")
-			Go Here :Z(JUMP_LIMIT)
+			Go Here :Z(JUMP_LIMIT - 5)
 			RunMoveChipTrayToTray = -200
 			Exit Function
 		EndIf
@@ -2449,11 +2449,6 @@ Function RunMoveChipTrayToTray(src_pallet_nr As Integer, src_col_nr As Integer, 
 Fend
 
 
-
-
-
-
-
 '''  Camera offset functions
 
 Function XOffset(UValue As Double) As Double
@@ -2464,7 +2459,7 @@ Function YOffset(UValue As Double) As Double
 	YOffset = DF_CAM_X_OFF_U0 * Sin(DegToRad(UValue - HAND_U0)) + DF_CAM_Y_OFF_U0 * Cos(DegToRad(UValue - HAND_U0))
 Fend
 
-<<<<<<< HEAD
+
 Function SetupDirectories
 	' Creates the directory RTS_DATA set in RTS_tools.inc if not already made 
 	' And the subdirectories \images and \pins  
@@ -2477,10 +2472,11 @@ Function SetupDirectories
 	If Not FolderExists(RTS_DATA$) Then
   		Print "***ERROR Can't create directory [" + RTS_DATA$ + "]"
   		Exit Function
+  	EndIf
 
 	' images subdirectory
 	String dir_images$
-	dir_images$ = RTS_DATA$ + "images"
+	dir_images$ = RTS_DATA$ + "\images"
 
 	If Not FolderExists(dir_images$) Then
   		MkDir dir_images$
@@ -2493,7 +2489,7 @@ Function SetupDirectories
 
 	' pins subdirectory
 	String dir_pins$
-	dir_pins$ = RTS_DATA$ + "pins"
+	dir_pins$ = RTS_DATA$ + "\pins"
 
 	If Not FolderExists(dir_pins$) Then
   		MkDir dir_pins$
@@ -2654,133 +2650,6 @@ Function LoadPositionFiles
 Fend
 
 
-Function COLDATA_VisAnalysis(ByRef corrections() As Double) As Integer
-	' Uses the upward facing camera to find the offset of the EOAT center of rotation
-	' and the chip center. Assumes the EOAT is currently holding a chip, it uses COLDATA_Corrs
-	' to find the chip center, then rotates it 180 degrees at runs it again. The difference
-	' in the center positions results in the offset of the EOAT center and chip center.
-	
-	Print "COLDATA_VisAnalysis start: ", Here
-	
-	' Turn the EOAT light on for better pictures of chip	
-	On 12
-	
-	' Run the vision sequence to find the chip center
-	VRun COLDATA_Corrs
-	
-	' Save the initial center position of the chip
-	Double X_0, Y_0, U_0
-	VGet COLDATA_Corrs.FindChip.CameraX, X_0
-	VGet COLDATA_Corrs.FindChip.CameraY, Y_0
-	VGet COLDATA_Corrs.FindChip.Angle, U_0
-	
-	Print "X, Y, U: ", X_0, Y_0, U_0
-	
-	' Rotate 180 degrees
-	Go Here +U(180)
-	
-	' Fine the new center of the chip after rotation
-	VRun COLDATA_Corrs
-	
-	' Save the new center position of the chip after rotation
-	Double X_180, Y_180, U_180
-	VGet COLDATA_Corrs.FindChip.CameraX, X_180
-	VGet COLDATA_Corrs.FindChip.CameraY, Y_180
-	VGet COLDATA_Corrs.FindChip.Angle, U_180
-	
-	Print "X2, Y2, U2: ", X_180, Y_180, U_180
-	
-	' Calculate the center of the tool (EAOT)
-	Double X_tool, Y_tool
-	X_tool = 0.5 * (X_0 + X_180)
-	Y_tool = 0.5 * (Y_0 + Y_180)
-	
-	' Calculate the correction to center the chip
-	Double X_COR, Y_COR
-	X_COR = 0.5 * (X_0 - X_180)
-	Y_COR = 0.5 * (Y_0 - Y_180)
-	Print "X_COR, YCOR: ", X_COR, Y_COR
-	
-	' Rotate back to initial position
-	Go Here -U(180)
-	
-	' Turn the light off
-	Off 12
-	
-	' Save corrections
-	corrections(1) = X_COR
-	corrections(2) = Y_COR
-	'corrections(3) = 0 'U_COR
-	
-Fend
-
-Function GetTrayCorrection(pallet_nr As Integer, col_nr As Integer, row_nr As Integer)
-	' This functions picks up a chip, runs the vision sequence to get the corrections	
-	' needed, so that a new tray/site can collect the initial chip correction information.
-	' This function would need to be used on each chip position before using the functions
-	' MoveChipFromTrayToSocket or MoveChipFromSocketToTray
-	
-	' Jump to the given tray position
-	JumpToTray(pallet_nr, col_nr, row_nr)
-	
-	' Attempt to pickup chip from tray, exit function if it fails
-	If Not PickupFromTray Then
-		Print "Can't pickup chip from socket"
-		Exit Function
-	EndIf
-	
-	' Move to the upward facing camera for corrections
-	Jump P_Camera
-	Wait 1
-	
-	' Run the calibration sequence and save the correction results
-	Double corrs(2)
-	Double res(3)
-	Integer status
-	
-	If CHIPTYPE$ = "COLDATA" Then
-		status = COLDATA_VisAnalysis(ByRef corrs())
-	Else
-		Print "ERROR: Not implemented for other chip types yet"
-		Exit Function
-	EndIf
-		
-	
-	Print "Previous tray corr:", tray_X(pallet_nr, col_nr, row_nr), tray_Y(pallet_nr, col_nr, row_nr)
-	Print "New corrections:", corrs(1), corrs(2)
-	
-	' Grab corrections from camera calibration
-	Double X_CORR_tray, Y_CORR_tray
-	X_CORR_tray = corrs(1)
-	Y_CORR_tray = corrs(2)
-	
-	' Save/update the tray position corrections
-	tray_X(pallet_nr, col_nr, row_nr) = X_CORR_tray
-	tray_Y(pallet_nr, col_nr, row_nr) = Y_CORR_tray
-	
-	' Jump to the given tray position
-	JumpToTray(pallet_nr, col_nr, row_nr)
-	
-	DropToTray
-	
-Fend
-
-Function GetAllTrayCorrections(pallet_nr As Integer)
-	' This function runs GetTrayCorrection for all chips in a tray,
-	' in order to fill the tray_xyu.csv files initially. This should
-	' only be needed the first time and whenever the tray_xyu.csv
-	' file is reset. 
-	
-	Integer i, j
-	For i = 1 To TRAY_NCOLS
-		For j = 1 To TRAY_NROWS
-			GetTrayCorrection(pallet_nr, i, j)
-		Next j
-	Next i
-
-Fend
-
-
 '''' Chip and socket direction functions ''''
 
 Function ThreeCornerFindDirection(isFoundTL As Boolean, xTL As Double, yTL As Double, isFoundTR As Boolean, xTR As Double, yTR As Double, isFoundBR As Boolean, xBR As Double, yBR As Double, isFoundBL As Boolean, xBL As Double, yBL As Double) As Boolean
@@ -2922,7 +2791,7 @@ Function FindChipDirectionWithDF As Boolean
 	EndIf
 	
 	Select CHIPTYPE$
-		Case "LARASIC"
+		Case "LArASIC"
 			If Abs(Hyp - LArASICDimension) > 0.5 Then
 				Print "CHIP DIMENSIONS ARE NOT WITHIN TOLERANCE"
 				Exit Function
@@ -3093,7 +2962,7 @@ Function FindSocketDirectionWithDF As Boolean
 	EndIf
 	
 	If isFoundTR Then
-		VGet MSU_SocketFind2.Geom01.RobotXYU, isFound1, xTR, yTR, uTR
+		VGet MSU_SocketFind2.Geom01.RobotXYU, Isfound1, xTR, yTR, uTR
 '		Print "TR : x=", xTR, ", y=", yTR		
 	Else
 		xTR = -9999.
@@ -3123,11 +2992,11 @@ Function FindSocketDirectionWithDF As Boolean
 '	Print "isFound TL:", isFoundTL
 '	
 	' When viewed from up right orientation, missing marker will be
-	' LARASIC - top left
-	' COLDADC - top right
+	' LArASIC - top left
+	' ColdADC - top right
 	' COLDATA - bottom right
 
-	' LARASIC
+	' LArASIC
 	'        T3
 	'
 	'
@@ -3671,4 +3540,131 @@ Function UFGetChipAlignment(id$ As String, ByRef idx() As Integer, TargetHandU A
 	
 Fend
 
+''''' FNAL FUNCTIONS ''''''
+
+Function COLDATA_VisAnalysis(ByRef corrections() As Double) As Integer
+	' Uses the upward facing camera to find the offset of the EOAT center of rotation
+	' and the chip center. Assumes the EOAT is currently holding a chip, it uses COLDATA_Corrs
+	' to find the chip center, then rotates it 180 degrees at runs it again. The difference
+	' in the center positions results in the offset of the EOAT center and chip center.
+	
+	Print "COLDATA_VisAnalysis start: ", Here
+	
+	' Turn the EOAT light on for better pictures of chip	
+	On 12
+	
+	' Run the vision sequence to find the chip center
+	VRun COLDATA_Corrs
+	
+	' Save the initial center position of the chip
+	Double X_0, Y_0, U_0
+	VGet COLDATA_Corrs.FindChip.CameraX, X_0
+	VGet COLDATA_Corrs.FindChip.CameraY, Y_0
+	VGet COLDATA_Corrs.FindChip.Angle, U_0
+	
+	Print "X, Y, U: ", X_0, Y_0, U_0
+	
+	' Rotate 180 degrees
+	Go Here +U(180)
+	
+	' Fine the new center of the chip after rotation
+	VRun COLDATA_Corrs
+	
+	' Save the new center position of the chip after rotation
+	Double X_180, Y_180, U_180
+	VGet COLDATA_Corrs.FindChip.CameraX, X_180
+	VGet COLDATA_Corrs.FindChip.CameraY, Y_180
+	VGet COLDATA_Corrs.FindChip.Angle, U_180
+	
+	Print "X2, Y2, U2: ", X_180, Y_180, U_180
+	
+	' Calculate the center of the tool (EAOT)
+	Double X_tool, Y_tool
+	X_tool = 0.5 * (X_0 + X_180)
+	Y_tool = 0.5 * (Y_0 + Y_180)
+	
+	' Calculate the correction to center the chip
+	Double X_COR, Y_COR
+	X_COR = 0.5 * (X_0 - X_180)
+	Y_COR = 0.5 * (Y_0 - Y_180)
+	Print "X_COR, YCOR: ", X_COR, Y_COR
+	
+	' Rotate back to initial position
+	Go Here -U(180)
+	
+	' Turn the light off
+	Off 12
+	
+	' Save corrections
+	corrections(1) = X_COR
+	corrections(2) = Y_COR
+	'corrections(3) = 0 'U_COR
+	
+Fend
+
+Function GetTrayCorrection(pallet_nr As Integer, col_nr As Integer, row_nr As Integer)
+	' This functions picks up a chip, runs the vision sequence to get the corrections	
+	' needed, so that a new tray/site can collect the initial chip correction information.
+	' This function would need to be used on each chip position before using the functions
+	' MoveChipFromTrayToSocket or MoveChipFromSocketToTray
+	
+	' Jump to the given tray position
+	JumpToTray(pallet_nr, col_nr, row_nr)
+	
+	' Attempt to pickup chip from tray, exit function if it fails
+	If Not PickupFromTray Then
+		Print "Can't pickup chip from socket"
+		Exit Function
+	EndIf
+	
+	' Move to the upward facing camera for corrections
+	Jump P_Camera
+	Wait 1
+	
+	' Run the calibration sequence and save the correction results
+	Double corrs(2)
+	Double res(3)
+	Integer status
+	
+	If CHIPTYPE$ = "COLDATA" Then
+		status = COLDATA_VisAnalysis(ByRef corrs())
+	Else
+		Print "ERROR: Not implemented for other chip types yet"
+		Exit Function
+	EndIf
+		
+	
+	Print "Previous tray corr:", tray_X(pallet_nr, col_nr, row_nr), tray_Y(pallet_nr, col_nr, row_nr)
+	Print "New corrections:", corrs(1), corrs(2)
+	
+	' Grab corrections from camera calibration
+	Double X_CORR_tray, Y_CORR_tray
+	X_CORR_tray = corrs(1)
+	Y_CORR_tray = corrs(2)
+	
+	' Save/update the tray position corrections
+	tray_X(pallet_nr, col_nr, row_nr) = X_CORR_tray
+	tray_Y(pallet_nr, col_nr, row_nr) = Y_CORR_tray
+	
+	' Jump to the given tray position
+	JumpToTray(pallet_nr, col_nr, row_nr)
+	
+	DropToTray
+	
+Fend
+
+Function GetAllTrayCorrections(pallet_nr As Integer)
+	' This function runs GetTrayCorrection for all chips in a tray,
+	' in order to fill the tray_xyu.csv files initially. This should
+	' only be needed the first time and whenever the tray_xyu.csv
+	' file is reset. 
+	
+	Integer i, j
+	For i = 1 To TRAY_NCOLS
+		For j = 1 To TRAY_NROWS
+			GetTrayCorrection(pallet_nr, i, j)
+		Next j
+	Next i
+
+Fend
 
