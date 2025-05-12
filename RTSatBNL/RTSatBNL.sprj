@@ -1,11 +1,11 @@
-ENVT0100,LM:2025/01/16 20:46:20:168,DS:0000008550,CS:14390,MA:D0-AD-08-5A-A1-24,EI:           
+ENVT0100,LM:2025/05/11 22:55:45:421,DS:0000008500,CS:26661,MA:C8-D9-D2-35-C3-5C,EI:           
 SystemProperties {
 	sRCVersion="7.5.4"
 	sRCRevision="R1"
 	sGUID="f6b86944-bb0f-47a8-88ef-95a7109d2a63"
-	sPath="C:\\EpsonRC70\\Projects\\RTSatBNL\\"
+	sPath="C:\\EpsonRC70\\Projects\\RTSatBNL_20250511\\RTSatBNL\\"
 	sCreated="1/31/2024 12:44:32 PM"
-	sLastModified="1/16/2025 3:45:48 PM"
+	sLastModified="5/11/2025 6:55:43 PM"
 	bBuildComplete=True
 	bFirstBuildComplete=True
 	bRebuildRequired=False
@@ -21,13 +21,13 @@ UserProperties {
 	bGlobalsDeclaredEachFile=False
 }
 ControllerConnection {
-	sName="Ethernet 1"
-	sType="Ethernet"
-	sIPAddress="192.168.0.2"
+	sName="T6 Sample"
+	sType="Virtual"
+	sIPAddress="127.0.0.1"
 	nPort=-1
-	sControllerName="R7D2010495"
-	nControllerType=393232
-	sControllerTypeName="RC700D"
+	sControllerName=""
+	nControllerType=6
+	sControllerTypeName="Virtual"
 }
 IOLabelFile {
 	sName="IOLabels.dat"
@@ -43,31 +43,31 @@ ProgramFile1 {
 	sName="Main.prg"
 	bCompiled=True
 	bStoreInController=True
-	sTimeSavedInController="1/16/2025 8:45:48 PM"
+	sTimeSavedInController="5/11/2025 10:55:43 PM"
 }
 ProgramFile2 {
 	sName="RTS_server.prg"
 	bCompiled=True
 	bStoreInController=True
-	sTimeSavedInController="6/25/2024 9:09:36 PM"
+	sTimeSavedInController="2/26/2025 4:53:28 PM"
 }
 ProgramFile3 {
 	sName="Calib_tools.prg"
 	bCompiled=True
 	bStoreInController=True
-	sTimeSavedInController="6/3/2024 3:12:00 PM"
+	sTimeSavedInController="6/3/2024 4:12:00 PM"
 }
 ProgramFile4 {
 	sName="RTS_tools.prg"
 	bCompiled=True
 	bStoreInController=True
-	sTimeSavedInController="1/16/2025 8:10:58 PM"
+	sTimeSavedInController="5/11/2025 9:48:04 PM"
 }
 ProgramFile5 {
 	sName="RTS_tools_xn.prg"
 	bCompiled=True
 	bStoreInController=True
-	sTimeSavedInController="1/15/2025 9:34:16 PM"
+	sTimeSavedInController="5/11/2025 10:53:55 PM"
 }
 nIncludeFileCount=2
 IncludeFile1 {
@@ -78,44 +78,39 @@ IncludeFile1 {
 IncludeFile2 {
 	sName="RTS_tools.inc"
 	bStoreInController=True
-	sTimeSavedInController="6/18/2024 4:45:12 PM"
+	sTimeSavedInController="4/3/2025 2:58:20 PM"
 }
-nPointFileCount=7
+nPointFileCount=6
 PointFile1 {
 	sName="robot1.pts"
 	nRobot=1
 	bDefault=True
-	sTimeSavedInController="1/16/2025 8:40:18 PM"
+	sTimeSavedInController="5/2/2025 2:53:56 PM"
 }
 PointFile2 {
 	sName="Calib_Stinger.pts"
 	nRobot=1
-	sTimeSavedInController="5/4/2024 12:58:24 AM"
+	sTimeSavedInController="5/4/2024 1:58:24 AM"
 }
 PointFile3 {
 	sName="Calib_UF_Stinger.pts"
 	nRobot=1
-	sTimeSavedInController="5/9/2024 3:54:38 PM"
+	sTimeSavedInController="5/9/2024 4:54:38 PM"
 }
 PointFile4 {
 	sName="Calib_DF_mark.pts"
 	nRobot=1
-	sTimeSavedInController="5/7/2024 10:35:54 PM"
+	sTimeSavedInController="5/7/2024 11:35:54 PM"
 }
 PointFile5 {
 	sName="Calib_DF_Socket.pts"
 	nRobot=1
-	sTimeSavedInController="5/8/2024 10:27:02 PM"
+	sTimeSavedInController="5/8/2024 11:27:02 PM"
 }
 PointFile6 {
-	sName="points_BNL.pts"
-	nRobot=1
-	sTimeSavedInController="1/16/2025 6:52:23 PM"
-}
-PointFile7 {
 	sName="skt_cal.pts"
 	nRobot=1
-	sTimeSavedInController="12/30/2024 8:30:06 PM"
+	sTimeSavedInController="12/30/2024 6:30:06 PM"
 }
 nForceFileCount=0
 OperatorSettings {
@@ -491,6 +486,6 @@ FGFile1 {
 }
 bFGCompiled=False
 Simulator {
-	sSimProjFile=""
+	sSimProjFile="C:\\EpsonRC70\\Simulator\\T6 Sample\\SimObjects.dat"
 }
 nPFFileCount=0

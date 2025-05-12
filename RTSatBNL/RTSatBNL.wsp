@@ -1,4 +1,4 @@
-ENVT0100,LM:2025/01/16 20:46:36:044,DS:0000004633,CS:27774,MA:D0-AD-08-5A-A1-24,EI:           
+ENVT0100,LM:2025/05/11 22:56:02:729,DS:0000004519,CS:12619,MA:C8-D9-D2-35-C3-5C,EI:           
 sActiveChild="Main.prg"
 bMdiMaximized=False
 nProgramFileCount=5
@@ -7,32 +7,32 @@ ProgramFile1 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=48
-		nTop=53
-		nWidth=1175
-		nHeight=635
+		nLeft=106
+		nTop=21
+		nWidth=963
+		nHeight=634
 	}
 }
 ProgramFile2 {
 	sName="RTS_server.prg"
-	bOpened=True
+	bOpened=False
 	nWinState=0
 	Window {
-		nLeft=-540
-		nTop=52
-		nWidth=1175
-		nHeight=610
+		nLeft=0
+		nTop=0
+		nWidth=1202
+		nHeight=526
 	}
 }
 ProgramFile3 {
 	sName="Calib_tools.prg"
-	bOpened=True
+	bOpened=False
 	nWinState=0
 	Window {
-		nLeft=-672
-		nTop=0
-		nWidth=1175
-		nHeight=770
+		nLeft=26
+		nTop=26
+		nWidth=1203
+		nHeight=501
 	}
 }
 ProgramFile4 {
@@ -40,10 +40,10 @@ ProgramFile4 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=-538
-		nTop=23
-		nWidth=1023
-		nHeight=684
+		nLeft=-5
+		nTop=-3
+		nWidth=997
+		nHeight=961
 	}
 }
 ProgramFile5 {
@@ -51,10 +51,10 @@ ProgramFile5 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=-461
-		nTop=82
-		nWidth=1077
-		nHeight=678
+		nLeft=411
+		nTop=9
+		nWidth=1188
+		nHeight=783
 	}
 }
 nIncludeFileCount=2
@@ -71,91 +71,80 @@ IncludeFile1 {
 }
 IncludeFile2 {
 	sName="RTS_tools.inc"
-	bOpened=False
-	nWinState=0
-	Window {
-		nLeft=102
-		nTop=78
-		nWidth=1176
-		nHeight=530
-	}
-}
-nPointFileCount=7
-PointFile1 {
-	sName="robot1.pts"
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=354
-		nTop=16
-		nWidth=794
-		nHeight=734
+		nLeft=29
+		nTop=70
+		nWidth=1200
+		nHeight=894
+	}
+}
+nPointFileCount=6
+PointFile1 {
+	sName="robot1.pts"
+	bOpened=False
+	nWinState=0
+	Window {
+		nLeft=124
+		nTop=39
+		nWidth=1201
+		nHeight=684
 	}
 }
 PointFile2 {
 	sName="Calib_Stinger.pts"
-	bOpened=True
+	bOpened=False
 	nWinState=0
 	Window {
-		nLeft=-672
-		nTop=0
-		nWidth=0
-		nHeight=0
+		nLeft=52
+		nTop=52
+		nWidth=1203
+		nHeight=501
 	}
 }
 PointFile3 {
 	sName="Calib_UF_Stinger.pts"
-	bOpened=True
+	bOpened=False
 	nWinState=0
 	Window {
-		nLeft=-672
-		nTop=0
-		nWidth=0
-		nHeight=0
+		nLeft=78
+		nTop=78
+		nWidth=1203
+		nHeight=501
 	}
 }
 PointFile4 {
 	sName="Calib_DF_mark.pts"
-	bOpened=True
+	bOpened=False
 	nWinState=0
 	Window {
-		nLeft=-672
-		nTop=0
-		nWidth=0
-		nHeight=0
+		nLeft=104
+		nTop=104
+		nWidth=1203
+		nHeight=501
 	}
 }
 PointFile5 {
 	sName="Calib_DF_Socket.pts"
-	bOpened=True
-	nWinState=0
-	Window {
-		nLeft=-672
-		nTop=0
-		nWidth=0
-		nHeight=0
-	}
-}
-PointFile6 {
-	sName="points_BNL.pts"
 	bOpened=False
 	nWinState=0
 	Window {
-		nLeft=592
-		nTop=20
-		nWidth=1170
-		nHeight=754
+		nLeft=130
+		nTop=130
+		nWidth=1203
+		nHeight=501
 	}
 }
-PointFile7 {
+PointFile6 {
 	sName="skt_cal.pts"
-	bOpened=True
+	bOpened=False
 	nWinState=0
 	Window {
-		nLeft=-672
-		nTop=0
-		nWidth=0
-		nHeight=0
+		nLeft=156
+		nTop=156
+		nWidth=1203
+		nHeight=501
 	}
 }
 nForceFileCount=0
@@ -163,20 +152,20 @@ sActiveWindow="main.prg"
 CmdWindow {
 	bOpened=False
 	Window {
-		nLeft=260
-		nTop=107
-		nWidth=1177
-		nHeight=534
+		nLeft=419
+		nTop=81
+		nWidth=933
+		nHeight=675
 	}
 	nWinState=0
 }
 RunWindow {
 	bOpened=False
 	Window {
-		nLeft=255
-		nTop=59
-		nWidth=1009
-		nHeight=626
+		nLeft=51
+		nTop=98
+		nWidth=843
+		nHeight=631
 	}
 	nWinState=0
 	nNumOfDisplays=1
@@ -219,10 +208,10 @@ IOLabelEditor {
 IOMonitor {
 	bOpened=False
 	Window {
-		nLeft=0
-		nTop=0
-		nWidth=0
-		nHeight=0
+		nLeft=739
+		nTop=314
+		nWidth=520
+		nHeight=375
 	}
 }
 Simulator {
@@ -255,10 +244,10 @@ Macros {
 RobotMgr {
 	bOpened=False
 	Window {
-		nLeft=84
-		nTop=71
-		nWidth=766
-		nHeight=530
+		nLeft=50
+		nTop=59
+		nWidth=764
+		nHeight=527
 	}
 }
 UserErrorEditor {
@@ -274,18 +263,18 @@ UserErrorEditor {
 VisionGuide {
 	bOpened=False
 	Window {
-		nLeft=6
-		nTop=85
-		nWidth=1177
-		nHeight=727
+		nLeft=62
+		nTop=41
+		nWidth=1305
+		nHeight=678
 	}
 	nWinState=0
 	bShowFlowChart=True
-	nSplitterDistance1=758
-	nSplitterDistance2=588
-	nSplitterDistance3=463
-	nSplitterDistance4=252
-	nSplitterDistance5=531
+	nSplitterDistance1=704
+	nSplitterDistance2=504
+	nSplitterDistance3=344
+	nSplitterDistance4=25
+	nSplitterDistance5=552
 }
 ForceGuide {
 	bOpened=False

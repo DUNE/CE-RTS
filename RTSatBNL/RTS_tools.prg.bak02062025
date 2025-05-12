@@ -64,7 +64,7 @@ Function SetSpeed
 	Accel 10, 10
 	'Speed 1
 	'Accel 1, 1
-	'Speed 50
+	'Speed 20
 Fend
 
 ' Jump to camera
@@ -92,12 +92,10 @@ Fend
 ' row_nr = 1..6
 ' col_nr = 1..15
 Function JumpToTray_camera(pallet_nr As Integer, col_nr As Integer, row_nr As Integer)
-	If pallet_nr = 1 Or pallet_nr = 11 Then
+	If pallet_nr = 1 Then
 		Jump Pallet(pallet_nr, col_nr, row_nr) +X(DF_CAMERA_OFFSET) :Z(DF_CAMERA_FOCUS) :U(HAND_U0 + 360)
-	ElseIf pallet_nr = 2 Or pallet_nr = 12 Then
+	ElseIf pallet_nr = 2 Then
 		Jump Pallet(pallet_nr, col_nr, row_nr) -X(DF_CAMERA_OFFSET) :Z(DF_CAMERA_FOCUS) :U(HAND_U0 + 180)
-	'ElseIf pallet_nr = 12 Then
-		'Jump Pallet(pallet_nr, col_nr, row_nr) +X(DF_CAMERA_OFFSET) :Z(DF_CAMERA_FOCUS) :U(HAND_U0)
 	EndIf
 Fend
 
@@ -140,8 +138,7 @@ Function DropToTray As Boolean
 	DropToTray = False
 	Speed 1
 	Accel 1, 1
-    Go Here -Z(8)
-    Wait 0.3
+    Go Here -Z(9)
 	If isContactSensorTouches Then
 	' XN			
 		'Go Here +Z(9) +Y(0.1)
@@ -157,7 +154,7 @@ Function DropToTray As Boolean
 	
 	
 	
-    Go Here -Z(2)
+    Go Here -Z(1)
     Wait 0.5
 	If Not isContactSensorTouches Then
 		Print "ERROR! Contact Sensor does not detect contact with the chip"
@@ -165,7 +162,7 @@ Function DropToTray As Boolean
 	EndIf
 	VacuumValveClose
     Wait 2
-    Go Here +Z(9)
+    Go Here +Z(10)
     SetSpeed
     DropToTray = True
 Fend
@@ -173,11 +170,10 @@ Fend
 
 Function JumpToSocket(DAT_nr As Integer, socket_nr As Integer)
 	If DAT_nr = 2 Then
-		Jump P(200 + socket_nr) :Z(-130)
+		Jump P(200 + socket_nr) :Z(-132.5)
 		Print P(200 + socket_nr)
 	ElseIf DAT_nr = 1 Then
-		Jump P(100 + socket_nr) :Z(-130)
-		'Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) :Z(-134.682)
+		Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) :Z(-134.682)
 		'Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) -U(135) :Z(-100.682)
 		Print P(100 + socket_nr)
 	EndIf
@@ -189,16 +185,7 @@ Function isChipInSocket(DAT_nr As Integer, socket_nr As Integer) As Boolean
 	Speed 1
 	Accel 1, 1
 	'Go Here -Z(10)
-	If DAT_nr = 1 Then
-		Go Here -Z(15)
-		'need to be tuned according to calibration result. Please run "Socket_height_calibration"
-	ElseIf DAT_nr = 2 Then
-		Go Here -Z(15)
-		'need to be tuned according to calibration result. Please run "Socket_height_calibration"
-	Else
-			Print "DAT number ", DAT_nr, " wrong, should be 1 or 2."
-	EndIf
-	
+	Go Here -Z(12)
     Wait 0.5
 	isChipInSocket = isContactSensorTouches
     SetSpeed
@@ -216,8 +203,7 @@ Function InsertIntoSocket As Boolean
 	Speed 1
 	Accel 1, 1
 	PlungerOn
-	Go Here -Z(13)
-	
+	Go Here -Z(10)
 	VacuumValveClose
 	Wait 2
 	InsertIntoSocket = isContactSensorTouches
@@ -229,7 +215,7 @@ Function InsertIntoSocket As Boolean
 Fend
 
 
-Function PickupFromSocket(DAT_nr As Integer) As Boolean
+Function PickupFromSocket As Boolean
 
 	PickupFromSocket = False
 
@@ -246,19 +232,16 @@ Function PickupFromSocket(DAT_nr As Integer) As Boolean
 	Accel 1, 1
 	'Go Here +U(45)
 	'Go Here -Z(10)
-	If DAT_nr = 1 Then
-		Go Here -Z(15)
-	ElseIf DAT_nr = 2 Then
-		Go Here -Z(16)
-	EndIf
+	Go Here -Z(14)
 	Wait 0.5
 	If Not isContactSensorTouches Then
-		Print "***ERROR! Do not detect chip in the socket, try again"
 		Go Here -Z(1)
+		Print "XN: no chip is detected, Try again -Z(2), "
 		If Not isContactSensorTouches Then
-			Print "***ERROR! Do not detect chip in the socket, give up"
+			Print "***ERROR! Do not detect chip in the socket"
 			Exit Function
 		EndIf
+		
 	EndIf
 	Wait 1
 	VacuumValveOpen
@@ -282,14 +265,10 @@ Function UF_camera_light_OFF
 Fend
 
 Function JumpToSocket_camera(DAT_nr As Integer, socket_nr As Integer)
-	If DAT_nr = 2 And socket_nr < 19 Then
+	If DAT_nr = 2 Then
 		Jump P(200 + socket_nr) :Z(-97.60) +X(DF_CAMERA_OFFSET) -U(45)
-	ElseIf DAT_nr = 2 And socket_nr > 19 Then
-		Jump P(200 + socket_nr) :Z(-97.60) +Y(DF_CAMERA_OFFSET) +U(0)
-	ElseIf DAT_nr = 1 And socket_nr < 19 Then
-		Jump P(100 + socket_nr) :Z(-97.60) +X(DF_CAMERA_OFFSET) +U(135)
-	ElseIf DAT_nr = 1 And socket_nr > 19 Then
-		Jump P(100 + socket_nr) :Z(-97.60) +X(DF_CAMERA_OFFSET) +U(90)
+	ElseIf DAT_nr = 1 Then
+		Jump P(100 + socket_nr) +U(135)
 	EndIf
 Fend
 
@@ -371,7 +350,7 @@ Fend
 'Function ChipBottomAnaly(chip_SN$ As String, ByRef idx() As Integer, ByRef status As Integer, ByRef res() As Double)
 Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As Double) As Integer
 
-	'Print "XN: ChipBottomAnaly start: ", Here
+	Print "XN: ChipBottomAnaly start: ", Here
 	Integer i, fileNum
 	
 	ChipBottomAnaly = 0
@@ -425,11 +404,6 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 		tgt_y0 = DAT_Y(tgt_DAT_nr, tgt_socket_nr)
 		tgt_u0 = DAT_U(tgt_DAT_nr, tgt_socket_nr)
 		dst_U = CU(P(100 * tgt_DAT_nr + tgt_socket_nr))
-	ElseIf tgt_pallet_nr > 0 And tgt_pallet_nr > NTRAYS And tgt_col_nr > 0 And tgt_col_nr <= TRAY_CD_NCOLS And tgt_row_nr > 0 And tgt_row_nr <= TRAY_CD_NROWS Then
-		tgt_x0 = tray_CD_X(tgt_pallet_nr, tgt_col_nr, tgt_row_nr)
-		tgt_y0 = tray_CD_Y(tgt_pallet_nr, tgt_col_nr, tgt_row_nr)
-		tgt_u0 = tray_CD_U(tgt_pallet_nr, tgt_col_nr, tgt_row_nr)
-		dst_U = CU(Pallet(tgt_pallet_nr, tgt_col_nr, tgt_row_nr))
 	Else
 		ChipBottomAnaly = 100
 		Exit Function
@@ -444,7 +418,7 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
     Print #fileNum, ",", pict_fname$,
 	
 	'Double tray_dx, tray_dy, tray_dU
-	'Print "XN: 1st VRun ChipBottom_Analy: ", Here
+	Print "XN: 1st VRun ChipBottom_Analy: ", Here
 	'Add angle test
 	'Go Here +U(2)
 	
@@ -497,7 +471,7 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 	'UF_take_picture(ByRef pict_fname$)
 	pict_fname$ = UF_take_picture$(id$ + "_02")
 	Print #fileNum, ",", pict_fname$,
-	'Print "XN: 2nd VRun ChipBottom_Analy: ", Here
+	Print "XN: 2nd VRun ChipBottom_Analy: ", Here
 	VRun ChipBottom_Analy
 	
 	VGet ChipBottom_Analy.Final.Found, ret_found
@@ -591,7 +565,7 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 
 	' Added 2024-06-18
 	' Re-evaluate the position of the tool
-	'Print "XN: 3rd VRun ChipBottom_Analy: ", Here
+	Print "XN: 3rd VRun ChipBottom_Analy: ", Here
 	VRun ChipBottom_Analy
 
 	VGet ChipBottom_Analy.Final.Found, ret_found
@@ -636,7 +610,7 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 	'UF_take_picture(ByRef pict_fname$)
 	'pict_fname$ = UF_take_picture$(id$ + "_02")
 	'Print #fileNum, ",", pict_fname$,
-	'Print "XN: 4th VRun ChipBottom_Analy: ", Here
+	Print "XN: 4th VRun ChipBottom_Analy: ", Here
 	VRun ChipBottom_Analy
 	
 	VGet ChipBottom_Analy.Final.Found, ret_found
@@ -767,7 +741,7 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 	pict_fname$ = UF_take_picture$(id$ + "_04")
 	Print #fileNum, ",", pict_fname$,
 	
-	'Print "XN: 5th VRun ChipBottom_Analy: ", Here
+	Print "XN: 5th VRun ChipBottom_Analy: ", Here
 
 	VRun ChipBottom_Analy
 	Print "XN1: X_0 Y_0 U_0: ", X_0, Y_0, U_0
@@ -808,45 +782,16 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 	' Analysis of pins
 	d_X = X_0 - X_tool
 	d_Y = Y_0 - Y_tool
-	If Abs(d_X) < 5 And Abs(d_Y) < 5 And Abs(U_0) < 5 Then
+	If Abs(d_X) < 1 And Abs(d_Y) < 1 And Abs(U_0) < 2 Then
 		Print "Positioning the chip for pin analysis: ",
 		Print " dX=", d_X, " dY=", d_Y, " dU=", U_0
 		'Go Here -X(d_X) -Y(d_Y) +U(U_0)
-		Go Here -X(d_X) -Y(d_Y) +U(U_0)
+		Go Here -X(d_X) -Y(d_Y) -U(U_0)
 	Else
 		ChipBottomAnaly = 6
 		Print "***ERROR ", 6
         Exit Function
 	EndIf
-
-	'XN ADD
-		VRun ChipBottom_Analy
-	Print "XN1: X_0 Y_0 U_0: ", X_0, Y_0, U_0
-	VGet ChipBottom_Analy.Final.Found, ret_found
-	If ret_found Then
-			
-		VGet ChipBottom_Analy.Final.CameraX, X_0
-		VGet ChipBottom_Analy.Final.CameraY, Y_0
-		VGet ChipBottom_Analy.Final.Angle, U_0
-
-		Print #fileNum, ",", ret_found,
-		Print #fileNum, ",", X_0, ",", Y_0, ",", U_0,
-
-		res(17) = X_0
-		res(18) = Y_0
-		res(19) = U_0
-
-	Else
-		
-		ChipBottomAnaly = 5
-		Print "***ERROR ", 5
-        Exit Function
-			
-	EndIf
-	Print "XN::Check after correction : X_0 Y_0 U_0: ", X_0, Y_0, U_0
-
-	'XN ADD end
-
 
 	pict_fname$ = UF_take_picture$(id$ + "_pins")
 	Print #fileNum, ",", pict_fname$,
@@ -879,7 +824,7 @@ Function ChipBottomAnaly(id$ As String, ByRef idx() As Integer, ByRef res() As D
 		EndIf
 	ElseIf tgt_DAT_nr = 2 Then
 		Print "Checking ASIC key"
-		'Print "XN: key check file:", pict_fname$
+		Print "XN: key check file:", pict_fname$
 		'VSet key_check.ImageFile, pict_fname$
 		VRun key_check
 		
@@ -1062,20 +1007,6 @@ Function MoveChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_n
 	String pict_fname$
 	pict_fname$ = DF_take_picture$(ts$ + "_SN")
 	Print #fileNum, ",", pict_fname$,
-	
-	''This is for ColDATA oritation detection based on OCR
-	'If pallet_nr > 10 Then
-	
-	''run ocr for direction check:
-	'Wait 2
-	'If OCR Then
-	'	Print "direction right"
-	'Else
-'		RTS_error(fileNum, "direction wrong")
-'        MoveChipFromTrayToSocket = -7
-'		Exit Function
-'	EndIf
-'	EndIf
 
 	'Print #fileNum, ",", chip_SN$,
 	
@@ -1094,30 +1025,25 @@ Function MoveChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_n
 				
 	JumpToTray(pallet_nr, col_nr, row_nr)
 	' Distort the pickup position on purpose
-	'Go Here +Y(1)
-	'Go Here -X(1)
-	'Go Here -U(2)
-		
+	'Go Here +Y(0.8)
+	'Go Here -X(0.8)
+	'Go Here -U(0.8)
 	If Not PickupFromTray Then
 		RTS_error(fileNum, "Can't pickup a chip from tray ")
         MoveChipFromTrayToSocket = -4
 		Exit Function
 	EndIf
 	'XNtest
-	'Print "XN: Jump to Tray ", Here
+	Print "XN: Jump to Tray ", Here
 
 	' Take picture of the bottom of the chip
 	JumpToCamera
-	'Print "XN: Jump to Camera ", Here
+	Print "XN: Jump to Camera ", Here
 	
 	Integer status
 	'ChipBottomAnaly(chip_SN$, ByRef idx(), ByRef status, ByRef res())
-	If pallet_nr > 10 Then
-		status = ChipBottomAnaly_CD(ts$, ByRef idx(), ByRef res())
-	Else
-		status = ChipBottomAnaly(ts$, ByRef idx(), ByRef res())
-		'Print "XN: After ChipBottomAnaly ", Here
-	EndIf
+	status = ChipBottomAnaly(ts$, ByRef idx(), ByRef res())
+	Print "XN: After ChipBottomAnaly ", Here
 
 	If status <> 0 Then
 		RTS_error(fileNum, "Analysis of chip bottom failed. Error = " + Str$(status))
@@ -1152,9 +1078,7 @@ Function MoveChipFromTrayToSocket(pallet_nr As Integer, col_nr As Integer, row_n
 	
 	' Take picture of chip in the socket
 	JumpToSocket_camera(DAT_nr, socket_nr)
-	UF_camera_light_ON
 	pict_fname$ = DF_take_picture$(ts$ + "_socket")
-	UF_camera_light_OFF
 	Print #fileNum, ",", pict_fname$,
 				
 	Print #fileNum, " "
@@ -1230,9 +1154,7 @@ Function MoveChipFromSocketToTray(DAT_nr As Integer, socket_nr As Integer, palle
 	' Take picture of chip in the socket
 	JumpToSocket_camera(DAT_nr, socket_nr)
 	String pict_fname$
-	UF_camera_light_ON
 	pict_fname$ = DF_take_picture$(ts$ + "_socket")
-	UF_camera_light_OFF
 	Print #fileNum, ",", pict_fname$,
 	'DF_take_picture_socket(socket_nr, ByRef pict_fname_socket$)
 	'Print #fileNum, ",", pict_fname_socket$,
@@ -1258,11 +1180,8 @@ Function MoveChipFromSocketToTray(DAT_nr As Integer, socket_nr As Integer, palle
 	'Go Here +Y(0.8)
 	'Go Here -X(0.8)
 	'Go Here +U(0.8)
-	'If pallet_nr = 11 Then
-	'	Go Here +U(90)
-	'EndIf
 
-	If Not PickupFromSocket(DAT_nr) Then
+	If Not PickupFromSocket Then
 		RTS_error(fileNum, "Can't pickup chip from socket")
         MoveChipFromSocketToTray = -300
 		Exit Function
@@ -1273,15 +1192,8 @@ Function MoveChipFromSocketToTray(DAT_nr As Integer, socket_nr As Integer, palle
 	
 	Integer status
 	'ChipBottomAnaly(chip_SN$, ByRef idx(), ByRef status, ByRef res())
-	'status = ChipBottomAnaly(ts$, ByRef idx(), ByRef res())
-	
-	If pallet_nr > 10 Then
-		status = ChipBottomAnaly_CD(ts$, ByRef idx(), ByRef res())
-	Else
-		status = ChipBottomAnaly(ts$, ByRef idx(), ByRef res())
-		'Print "XN: After ChipBottomAnaly ", Here
-	
-	EndIf
+	status = ChipBottomAnaly(ts$, ByRef idx(), ByRef res())
+
 	If status <> 0 Then
 		RTS_error(fileNum, "Analysis of chip bottom failed. Error = " + Str$(status))
         MoveChipFromSocketToTray = -4
@@ -1355,7 +1267,7 @@ Function MoveChipFromSocketToTray(DAT_nr As Integer, socket_nr As Integer, palle
         MoveChipFromSocketToTray = -5
         Exit Function
 	EndIf
-	
+
 	' Take a picture of the chip in the tray
 	JumpToTray_camera(pallet_nr, col_nr, row_nr)
 	pict_fname$ = DF_take_picture$(ts$ + "_SN")

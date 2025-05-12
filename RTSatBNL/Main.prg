@@ -37,6 +37,18 @@ Function main
   		Exit Function
 	EndIf
 	
+	String skt_calibration$
+	skt_calibration$ = RTS_DATA + "skt_calibration/"
+
+	If Not FolderExists(skt_calibration$) Then
+  		MkDir skt_calibration$
+	EndIf
+	
+	If Not FolderExists(skt_calibration$) Then
+  		Print "***ERROR Can't create directory [" + skt_calibration$ + "]"
+  		Exit Function
+	EndIf
+	
 	
 	' reset arrays	
 	Integer i, j, k
@@ -46,6 +58,17 @@ Function main
 				tray_X(i, j, k) = 0
 				tray_Y(i, j, k) = 0
 				tray_U(i, j, k) = 0
+			Next k
+		Next j
+	Next i
+	
+
+	For i = 1 To NTRAYS_CD
+		For j = 1 To TRAY_CD_NCOLS
+			For k = 1 To TRAY_CD_NROWS
+				tray_CD_X(i, j, k) = 0
+				tray_CD_Y(i, j, k) = 0
+				tray_CD_U(i, j, k) = 0
 			Next k
 		Next j
 	Next i
@@ -92,6 +115,30 @@ Function main
 	EndIf
 	Close #fileNum
 	
+	fileNum = FreeFile
+	fileName$ = RTS_DATA + "tray_CD_xyu.csv"
+	If FileExists(fileName$) Then
+		Print "Reading file ", fileName$
+		ROpen fileName$ As #fileNum
+		For i = 1 To NTRAYS_CD
+			For j = 1 To TRAY_CD_NCOLS
+				For k = 1 To TRAY_CD_NROWS
+					Input #fileNum, ii, jj, kk, x, y, u
+					If ii = i And jj = j And kk = k Then
+						'Input #fileNum, tray_X(i, j, k), tray_Y(i, j, k), tray_U(i, j, k)
+						tray_CD_X(i, j, k) = x
+						tray_CD_Y(i, j, k) = y
+						tray_CD_U(i, j, k) = u
+					Else
+						Print "Error reading file ", fileName$, " ijk=", i, " ", j, " ", k
+						Exit Function
+					EndIf
+				Next k
+			Next j
+		Next i
+	EndIf
+	Close #fileNum
+	
 	' load positions at camera of chips coming from sockets
 	fileNum = FreeFile
 	fileName$ = RTS_DATA + "socket_xyu.csv"
@@ -101,13 +148,15 @@ Function main
 		For i = 1 To 2
 			For j = 1 To NSOCKETS
 				Input #fileNum, ii, jj, x, y, u
+				'Print ii, jj, x, y, u
 				If ii = i And jj = j Then
 					DAT_X(i, j) = x
 					DAT_Y(i, j) = y
 					DAT_U(i, j) = u
 				Else
 					Print "Error reading file ", fileName$
-					Exit Function
+					
+					'Exit Function
 				EndIf
 			Next j
 		Next i
@@ -115,11 +164,9 @@ Function main
 	Close #fileNum
 		
 	VacuumValveClose
-	PumpOn
-	Wait 3
+	
 
-	Motor On
-	Power Low
+	'Power Low
 
 	SetSpeed
 	
@@ -128,56 +175,26 @@ Function main
 
 	' right tray
 	Pallet 2, Tray_Right_P1, Tray_Right_P2, Tray_Right_P3, Tray_Right_P4, TRAY_NCOLS, TRAY_NROWS
-
-    'JumpToCamera
-	'Call RTS_server
-
-	'JumpToTray(2, 15, 6)
-	'PickupFromTray
-	'JumpToCamera
-
 	
+	' left COLDATA tray
+	Pallet 11, Tray_Left_CD_P1, Tray_Left_CD_P2, Tray_Left_CD_P3, Tray_Left_CD_P4, TRAY_CD_NCOLS, TRAY_CD_NROWS
+
+	' right COLDATA tray
+	Pallet 12, Tray_Right_CD_P1, Tray_Right_CD_P2, Tray_Right_CD_P3, Tray_Right_CD_P4, TRAY_CD_NCOLS, TRAY_CD_NROWS
+
+	Wait 3
+    JumpToCamera
+	Call RTS_server
 
 
-	'MoveChipFromTrayToSocket(2, 1, 1, 2, 1)
-	'MoveChipFromSocketToTray(2, 1, 2, 1, 1)
+	'PumpOn
+	'Motor On
 	
-	
-	' load chips from tray 2 row 1 to DAT board 2
-	'For j = 1 To NSOCKETS
-	'	MoveChipFromTrayToSocket(2, j, 1, 2, j)
-	'Next j
-	
-	
-	'MoveChipFromSocketToTray(2, 1, 2, 1, 1)
-	'MoveChipFromSocketToTray(2, 2, 2, 2, 1)
-	'MoveChipFromSocketToTray(2, 3, 2, 3, 1)
-	'MoveChipFromSocketToTray(2, 4, 2, 4, 1)
-	'MoveChipFromSocketToTray(2, 5, 2, 5, 1)
-	'MoveChipFromSocketToTray(2, 6, 2, 6, 1)
-	'MoveChipFromSocketToTray(2, 7, 2, 7, 1)
-	'MoveChipFromSocketToTray(2, 2, 2, 9, 6)
-	'MoveChipFromSocketToTray(2, 3, 2, 10, 6)
-	'MoveChipFromSocketToTray(2, 4, 2, 11, 6)
-	'MoveChipFromSocketToTray(2, 5, 2, 12, 6)
-	'MoveChipFromSocketToTray(2, 6, 2, 13, 6)
-	'MoveChipFromSocketToTray(2, 7, 2, 14, 6)
-	'MoveChipFromSocketToTray(2, 8, 2, 15, 6)
-	'MoveChipFromTrayToTray(2, 1, 2, 1, 1, 2, 0)
-	'MoveChipFromTrayToTray(1, 1, 2, 2, 1, 2, 0)
-    'MoveChipFromTrayToTray(1, 15, 6, 1, 15, 6, 0)
-    'MoveChipFromTrayToTray(1, 15, 6, 2, 15, 6, 0)
-    'MoveChipFromTrayToTray(2, 15, 6, 1, 15, 6, 0)
-    'MoveChipFromTrayToTray(1, 1, 5, 1, 1, 5, 0)
-	
-	'MoveChipFromTrayToSocket(2, 15, 6, 2, 1)
-	'MoveChipFromSocketToTray(2, 1, 2, 15, 6)
-	'MoveChipFromSocketToTray(2, 1, 1, 15, 6)
-	'MoveChipFromTrayToSocket(1, 15, 6, 2, 1)
-	'MoveChipFromSocketToTray(2, 3, 2, 3, 1)
-	'MoveChipFromTrayToSocket(2, 3, 1, 2, 3)
+	'Socket_height_calibration_all
+	'Tray_calibration_all()
+	'MoveChipFromSocketToTray(1, 1, 1, 1, 1)
+	'MoveChipFromTrayToSocket(1, 1, 1, 1, 1)
 
-	'MoveChipFromTrayToSocket(2, 1, 1, 2, 1)
 
 	PumpOff
 		
@@ -291,7 +308,7 @@ Function SocketTakePlaceRepeat(DAT_nr As Integer, socket_nr As Integer, ncycles 
 		' Pickup from socket
 		JumpToSocket(DAT_nr, socket_nr)
 		'Go Here +U(45)
-		PickupFromSocket
+		PickupFromSocket(DAT_nr)
 			
 		' Take picture of the bottom of the chip
 		JumpToCamera

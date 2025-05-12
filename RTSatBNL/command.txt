@@ -1,4 +1,5 @@
 > motor Off
+> 
 
 > 
 > 
@@ -6,6 +7,7 @@
 > 
 > 
 > PumpOff
+> 
 > 
 > PumpOn
 > VacuumValveClose
@@ -16,8 +18,10 @@
 > Speed
 > 
 > PickupFromTray
-> JumpToTray(1, 15, 6) 
+> JumpToTray(2, 1, 1) 
+> 
 > DropToTray
+> 
 > UF_camera_light_ON
 > 
 > JumpToSocket 2,1
@@ -25,6 +29,8 @@
 > DropToTray
 > 
 > JumpToCamera
+> 
+> 
 > 
 !!Error: 2318, Cannot execute a motion command when an error has been detected.
 > 
@@ -38,6 +44,8 @@
 > JumpToTray(2, 15, 6)
 > 
 > JumpToTray(2, 1, 1)
+!!Error: 2318, Cannot execute a motion command when an error has been detected.
+> 
 > DropToTray
 > 
 > PickupFromTray
@@ -1204,7 +1212,9 @@ ERROR! Contact Sensor does not detect contact with the chip
 > JumpToCamera
 > 
 > 
+> 
 > Motor On 
+> 
 > 
 > 
 > 
@@ -1244,6 +1254,9 @@ ERROR! Contact Sensor does not detect contact with the chip
 !!Error: 4031, Cannot execute a motion command when the motor is in the off state.
 > 
 > 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> 
 > 
 > 
 !!Error: 4031, Cannot execute a motion command when the motor is in the off state.
@@ -1252,7 +1265,11 @@ ERROR! Contact Sensor does not detect contact with the chip
 > 
 > PumpOff
 > Motor Off
-> UF_camera_light_OFF
+> UF_camera_light_ON
+> 
+> 
+> 
+> 
 > 
 > 
 > 
@@ -1263,7 +1280,10 @@ ERROR! Contact Sensor does not detect contact with the chip
 > Motor On
 > 
 > 
-> JumpToTray(2,4,1)
+> JumpToTray(2,11,1)
+> 
+> 
+> 
 > 
 > 
 > 
@@ -1271,6 +1291,10 @@ ERROR! Contact Sensor does not detect contact with the chip
 > 
 > 
 > DropToTray
+> 
+> 
+> 
+> 
 > 
 > 
 
@@ -1295,8 +1319,23 @@ Bad vacuum
 > 
 > 
 > 
+> PumpOff
+> 
+> mootr off
+!!Error: 3100, Syntax error.
+> 
+!!Error: 3100, Syntax error.
+> 
+!!Error: 3100, Syntax error.
+> Motor Off
+> 
 > 
 > JumpToCamera
+> 
+> 
+> Shutdown
+!!Error: 2339, Cannot execute shutdown statement/function in Independent mode.
+> 
 > 
 > 
 > JumpToSocket(2,1)
@@ -1310,13 +1349,35 @@ Bad vacuum
 > 
 > 
 > 
-> 
-> 
-> 
-> 
+> PumpOff
 > Motor Off
 > 
 > 
+> 
+> 
+> Motor On
+> 
+> 
+> JumpToSocket_camera(1,11)
+> JumpToSocket(1,11)
+ X: -354.960 Y: -324.178 Z: -101.082 U:  229.826 V:    0.000 W:    0.000 /R /0
+> 
+> 
+> 
+> 
+> JumpToCamera
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> 
+> JumpToTray(2,7,1)
+> DropToTray
+> 
+> JumpToSocket_camera(1,1)
+> 
+ X: -272.086 Y: -325.139 Z: -100.085 U:  229.204 V:    0.000 W:    0.000 /R /0
+> 
+!!Error: 2318, Cannot execute a motion command when an error has been detected.
 > 
 > 
 > 
@@ -1364,6 +1425,36 @@ Bad vacuum
  X:  330.345 Y:  221.330 Z:  -10.000 U:   52.075 V:    0.000 W:    0.000 /L /0
 > 
 > 
+> motoroff
+!!Error: 3100, Syntax error.
+> Motor On
+> 
+> 
+> 
+> 
+> Print Here
+ X:  330.241 Y:  187.205 Z: -132.519 U:   49.086 V:    0.000 W:    0.000 /L /0
+> 
+ X:  330.241 Y:  220.302 Z: -132.519 U:   49.086 V:    0.000 W:    0.000 /L /0
+>
+>
+> 
+> JumpToSocket_camera(2,8)
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+!!Error: 3100, Syntax error.
+> 
+> 
 > 
 > 
 !!Error: 2318, Cannot execute a motion command when an error has been detected.
@@ -1373,10 +1464,719 @@ Bad vacuum
 !!Error: 2318, Cannot execute a motion command when an error has been detected.
 > 
 > 
-> JumpToTray(2,1,1)
->JumpToTray_camera(2,1,1) 
+> JumpToTray(2,9,3)
+> 
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> 
+> DropToTray
+> 
+> 
+!!Error: 2318, Cannot execute a motion command when an error has been detected.
+> 
+> Motor On
+> 
+> 
+> 
+> 
+> 
+> 
+> JumpToTray_camera(1,15,1)
+> Print Here
+ X:   28.995 Y:  443.360 Z:  -18.045 U:  364.174 V:    0.000 W:    0.000 /R /0
+> PumpOff
+> 
+> JumpToSocket(1,22)
+ X: -514.822 Y:  107.607 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> 
+ X: -514.822 Y:  107.607 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> Speed 1
+> Accel 1, 1
+> 
+ X: -514.822 Y:  107.607 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> Go Here +Z(10)
+> 
+> Motor On
+> PumpOn
+> 
 > 
 > JumpToCamera
+> 
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> 
+> 	VacuumValveOpen
+> 
+> PlungerOff
+> SetSpeed
+> 
+> DropToTray
+> 
+> Go Here +U(180)
+> 
+> 
+!!Error: 4001, Arm reached the limit of motion range., Robot 1, Joint 4
+> 
+> JumpToTray(11,1,1)
+> 
+JumpToTray(2,1,1)> 
+> 
+> JumpToTray(2,1,1)
+> 
+> 
+> DropToTray
+> PumpOff
+> Motor Off
+> 
+ERROR! Contact Sensor detects obstacle in the tray
+> 
+> JumpToCamera
+> 
+> 
+> VacuumValveClose
+> 
+> 
+> 
+> 
+> 
+> JumpToCamera
+> 
+> 
+> 
+> 
+> 
+> PickupFromTray
+> JumpToCamera
+> 
+> DropToTray
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> UF_camera_light_OFF
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> Motor Off
+!!Error: 2300, Robot in use. Cannot execute the motion command when other task is using the robot.
+> 
+> PumpOff
+> 
+> 
+> 
+> PickupFromTray
+> JumpToCamera
+> 
+> UF_camera_light_ON
+> 
+Bad vacuum
+> 
+Bad vacuum
+> VacuumValveClose
+> PumpOn
+> 
+> Go Here -U(45)
+> 
+> 
+> 
+!!Error: 3205, Point is not specified.
+> 
+> 
+> Print isContactSensorTouches
+ -1
+> 
+ 0
+> 
+ -1
+> PumpOn
+> 
+ X: -514.822 Y:  107.607 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> PickupFromSocket(1)
+> 
+Bad vacuum
+> 
+Bad vacuum
+> 
+> 
+!!Error: 3207, Formula is missing.
+> 
+!!Error: 3207, Formula is missing.
+> 
+> 
+> 
+ X: -514.822 Y:  107.607 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> 
+> PlungerOff
+> 
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> 
+> 
+> 
+> Print Here
+ X: -514.712 Y:  106.626 Z: -129.904 U:  278.399 V:    0.000 W:    0.000 /R /0
+> 
+> 
+> JumpToTray(11,10,1)
+> PickupFromTray
+> DropToTray
+> JumpToCamera
+> 
+> PlungerOn
+> 
+> 
+> JumpToSocket_camera(1,22)
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> 
+> 
+> 
+> 
+!!Error: 7013, Specified pallet is not defined. Specify a defined pallet or define the pallet.
+> 
+> 
+> 
+> 
+> 
+> 
+>JumpToTray_camera(1,3,1) 
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> 
+> Motor Off
+>       
+> JumpToCamera
+> 
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> 
+> 
+> 
+!!Error: 2318, Cannot execute a motion command when an error has been detected.
+> 
+> 
+> Print CU(Here)
+ 184.174
+> 
+> Print CX(Here)
+ 1.27426
+> 
+ 1.57897
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+
+> >Shutdown 
+!!Error: 3100, Syntax error.
+> 
+!!Error: 2300, Robot in use. Cannot execute the motion command when other task is using the robot.
+> 
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> JumpToCamera
+> 
+> 
+> 
 >Print P_Stinger_Calib_DF
 !!Error: 2513, Specified point label is not defined.
+> 
+> Motor Off
+> 
+> PumpOff
+> 
+> JumpToTray(11,1,1)
+>VacuumValveClose
+> 
+> Print Here
+ X: -313.374 Y:  443.140 Z:  -53.800 U:  319.174 V:    0.000 W:    0.000 /R /0
+> 
+> InsertIntoSocket
+> JumpToCamera
+> 
+> PickupFromSocket(1)
+> 
+> InsertIntoSocket
+> VacuumValveClose
+> 
+> 
+!!Error: 3207, Formula is missing.
+> 
+> VacuumValveClose
+> 
+> Go Here +Z(2)
+> 
+> PumpOn
+> 
+> 
+> Motor On
+> 
+> 
+> 
+> SetSpeed
+> 
+> 
+> 
+> JumpToCamera
+> 
+> PumpOff
+> Motor Off
+> 
+> 
+> 
+> InsertIntoSocket
+> JumpToCamera
+> 
+> 
+> 
+> 
+> JumpToTray(11,1,1)
+> 
+> 
+> Go Here +U(90)
+> DropToTray
+ERROR! Contact Sensor detects obstacle in the tray
+> 
+> 
+> JumpToTray(11,1,4)
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> Motor On
+> 
+> 
+!!Error: 4025, Cannot execute a motion command during emergency stop condition.
+> 
+> DropToTray
+> 
+> JumpToCamera
+> JumpToSocket_camera(1,21)
+!!Error: 2318, Cannot execute a motion command when an error has been detected.
+> 
+!!Error: 4025, Cannot execute a motion command during emergency stop condition.
+> 
+> 
+> SetSpeed
+> 
+> 
+> 
+> JumpToSocket(1,21)
+ X: -514.582 Y: -209.802 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> 
+ X: -514.582 Y: -209.802 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> JumpToSocket_camera(1,21)
+> 
+> JumpToTray(11,1,1)
+> 
+!!Error: 5058, Collision or abnormality of robot movement was detected in Low power mode., Robot 1, Joint 3
+> 
+> 
+> 
+> PickupFromTray
+> 
+Bad vacuum
+> Motor On
+!!Error: 5058, Collision or abnormality of robot movement was detected in Low power mode., Robot 1, Joint 3
+> 
+!!Error: 5058, Collision or abnormality of robot movement was detected in Low power mode., Robot 1, Joint 3
+> 
+> 
+> 
+> 
+> 
+> 
+> JumpToCamera
+> 
+> 
+> 
+> UF_camera_light_OFF
+> 
+> isContactSensorTouches
+> Print isContactSensorTouches
+ 0
+> 
+> 
+> JumpToCamera
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> 
+> DropToTray
+> 
+Bad vacuum
+> 
+> JumpToSocket(1,22)
+ X: -514.822 Y:  107.607 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> 
+ X: -514.822 Y:  107.607 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> 
+ X: -514.822 Y:  107.607 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> 
+ X: -514.822 Y:  107.607 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> 
+ X: -514.822 Y:  107.607 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> 
+ X: -514.822 Y:  107.607 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> PickupFromSocket(1)
+> 
+> InsertIntoSocket
+> 
+> 
+Bad vacuum
+> 
+> 
+***ERROR! Do not detect chip in the socket, try again
+***ERROR! Do not detect chip in the socket, give up
+> 
+***ERROR! Do not detect chip in the socket, try again
+***ERROR! Do not detect chip in the socket, give up
+> 
+ X: -514.582 Y: -209.802 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> InsertIntoSocket()
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+ X: -514.582 Y: -209.802 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> 
+> 
+> Go Here - Y(2.8)
+> PickupFromTray
+> JumpToCamera
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> 
+> UF_camera_light_ON
+> 
+> DropToTray
+> UF_camera_light_OFF
+> 
+> 
+!!Error: 3205, Point is not specified.
+> 
+> Print Here
+ X: -307.570 Y:  450.727 Z:  -53.800 U:  364.174 V:    0.000 W:    0.000 /R /0
+> InsertIntoSocket
+> 
+> JumpToSocket(1,21)
+ X: -514.582 Y: -209.802 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+ X: -514.582 Y: -209.802 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> 
+ X: -514.582 Y: -209.802 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> 
+ X: -514.582 Y: -209.802 Z: -100.085 U:  274.204 V:    0.000 W:    0.000 /R /0
+> PickupFromSocket(1)
+> 
+Bad vacuum
+> 
+Bad vacuum
+> 
+Bad vacuum
+> 
+> PlungerOff
+> 
+> 
+> 
+> 
+Bad vacuum
+> 
+!!Error: 3207, Formula is missing.
+> 
+> Go Here :Z(-1)
+> Go Here -U(10)
+> Motor Off
+> PumpOff
+> 
+> 
+> 
+> UF_camera_light_OFF
+> 
+> VacuumValveClose
+> 
+> PumpOff
+> 
+> Jump P(32)
+> 
+> 
+> JumpToTray(12,1,1)
+!!Error: 7013, Specified pallet is not defined. Specify a defined pallet or define the pallet.
+> 
+!!Error: 7013, Specified pallet is not defined. Specify a defined pallet or define the pallet.
+> 
+!!Error: 7012, Specified pallet number cannot be found. Specify a valid pallet number.
+> 
+> 
+!!Error: 3207, Formula is missing.
+> 
+> 
+> 
+> 
+> 
+> 
+> Motor Off
+> PumpOff
+> UF_camera_light_OFF
+> 
+> 
+!!Error: 4025, Cannot execute a motion command during emergency stop condition.
+> 
+!!Error: 4025, Cannot execute a motion command during emergency stop condition.
+> 
+> Motor On
+> 
+> 
+> PumpOff
+> 
+> 
+> 
+> JumpToCamera
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> 
+> 
+> 
+> 
+> 
+> JumpToTray_camera(12,1,1)
+> 
+> 
+> JumpToTray(12,1,1)
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> PickupFromTray
+> 
+> 
+> DropToTray
+> 
+> 
+ERROR! Contact Sensor does not detect contact with the chip
+> 
+ERROR! Contact Sensor does not detect contact with the chip
+> 
+ERROR! Contact Sensor detects obstacle in the tray
+> 
+> 
+ERROR! Contact Sensor detects obstacle in the tray
+> 
+ERROR! Contact Sensor detects obstacle in the tray
+> 
+> 
+> 
+> 
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> 
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+!!Error: 7013, Specified pallet is not defined. Specify a defined pallet or define the pallet.
+> 
+> 
+> 
+> DropToTray
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> PickupFromTray
+> 
+> JumpToCamera
+> 
+> 
+> Motor Off
+> PumpOff
+> Motor On
+> 
+> 
+> 
+> 
+> UF_camera_light_OFF
+> 
+> 
+> 
+> InsertIntoSocket
+> 
+> 
+Bad vacuum
+> Go Here + X(25)
+> Go Here + X(1)
+> Go Here + X(0.5)
+> Go Here - X(0.1)
+> Go Here - X(0.1)
+> 26.3
+> JumpToCamera
+> Go Here - X(26.3)
+> 
+> 
+> Go Here + X(26.3)
+> 
+> 
+> 
+> Go Here - Y(26.3)
+>  Go Here + Y(26.3)
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+!!Error: 3100, Syntax error.
+> 
+!!Error: 3100, Syntax error.
+> 
+!!Error: 3100, Syntax error.
+> 
+!!Error: 3100, Syntax error.
+> 
+!!Error: 4025, Cannot execute a motion command during emergency stop condition.
+> 
+> 
+> 
+> Motor Off
+> PumpOff
+> 
+> 
+> 
+> DropToTray
+> Print Here
+ X:    1.579 Y:  307.820 Z:  -79.229 U:  274.481 V:    0.000 W:    0.000 /R /0
+> 
+ X:    1.564 Y:  307.855 Z:  -79.250 U:  274.481 V:    0.000 W:    0.000 /R /0
+> JumpToCamera
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> Motor Off
+> 
+> 
+> 
+> Motor On
+> PumpOff
+> 
+> 
+> 
+> JumpToCamera
+> 
+> 
+> JumpToTray_camera(12,10,1)
+> 
+> 
+> 
+> 
+> PickupFromTray
+> DropToTray
+> 
+Bad vacuum
+> 
+!!Error: 7012, Specified pallet number cannot be found. Specify a valid pallet number.
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
+> 
+> 
+> SetSpeed
+> 
+> JumpToSocket_camera(2,21)
+> 
+> 
+!!Error: 2318, Cannot execute a motion command when an error has been detected.
+> 
+> Print Here
+ X:  514.497 Y: -152.743 Z:  -97.600 U:   94.174 V:    0.000 W:    0.000 /L /0
+> 
+> JumpToCamera
+> 
+> 
+> 
+
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> Motor On
+> 
+> 
+> 
+> 
+> Motor Off
+> 
+> PumpOff
+> 
+> 
+> 
+>> Motor Off
+!!Error: 3100, Syntax error.
+> 
+!!Error: 3100, Syntax error.
+> 
+!!Error: 3100, Syntax error.
+> 
+!!Error: 3100, Syntax error.
+> 
+!!Error: 3100, Syntax error.
+> 
+!!Error: 3100, Syntax error.
+> 
+> 
+> 
+> 
+ X:  400.000 Y:    0.000 Z:  -10.000 U:   49.174 V:    0.000 W:    0.000 /L /0
+> 
+> 
+> Go Here +X(5)
+> 
+> Go Here  +U(45)
+> 
+> 
+> 
+> 
+> 
+> JumpToTray_camera()
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
 > 

@@ -16,13 +16,40 @@ Function RTS_server
     Int64 status
     Integer pallet_nr, pallet_col, pallet_row, DAT_nr, socket_nr
     Integer src_pallet_nr, src_pallet_col, src_pallet_row, tgt_pallet_nr, tgt_pallet_col, tgt_pallet_row
+     
     
  	Do
     	Input #portNr, msg$
     	'Line Input #portNr, msg$
     	Print "Received reply: ", msg$
+    	
+  		Select msg$
+  			Case "CoverStatus"
+  				If Sw(13) = Off Then
+  					Print #portNr, "-198: Cover is not open!"
+  				Else
+  					Print #portNr, "197: Cover is open!"
+  				EndIf
+  			Default
+		     	Do
+		    		If Sw(13) = Off Then
+		    		    Print "Error: Cover is not open!"
+		    		    Print #portNr, "-199: Error, Cover is not open!"
+		    		    Pause
+		    		    Wait Sw(13) = On
+		    		    Print "Good! Cover is open! Resume in 10 seconds"
+		                Wait 10
+		                Wait Sw(13) = On
+		    		    Print #portNr, "199: Good, Cover is open!"
+		    		    Cont
+		    			Exit Do
+		    		Else
+		    			Exit Do
+		    		EndIf
+		    	 Loop
+  		Send
+  		 			
     	Select msg$
-
     		Case "MoveChipFromTrayToSocket"
     			PumpOn
     			' Receive source and destination parameters"
@@ -35,6 +62,7 @@ Function RTS_server
     			Print " to DAT board: ", DAT_nr, " socket", socket_nr
     			'Jump Pallet(1, 15, 6) :Z(-10)
     			'DO stuff
+    			
     			status = MoveChipFromTrayToSocket(pallet_nr, pallet_col, pallet_row, DAT_nr, socket_nr)
     			Print #portNr, Str$(status)
 
@@ -50,6 +78,7 @@ Function RTS_server
     			Print " to tray(", pallet_nr, ",", pallet_col, ",", pallet_row, ")",
     			'Jump Pallet(1, 15, 6) :Z(-10)
     			'DO stuff
+    			
     			status = MoveChipFromSocketToTray(DAT_nr, socket_nr, pallet_nr, pallet_col, pallet_row)
     			Print #portNr, Str$(status)
 
@@ -66,15 +95,41 @@ Function RTS_server
     			Print "Move chip from pallet(", src_pallet_nr, ",", src_pallet_col, ",", src_pallet_row, ")",
     			Print " to tray(", tgt_pallet_nr, ",", tgt_pallet_col, ",", tgt_pallet_row, ")"
     			status = MoveChipFromTrayToTray(src_pallet_nr, src_pallet_col, src_pallet_row, tgt_pallet_nr, tgt_pallet_col, tgt_pallet_row, 0)
+    			
     			Print #portNr, Str$(status)
     			
+     		Case "JumpToTray"
+    			' Receive destination parameters"
+    			Input #portNr, pallet_nr
+    			Input #portNr, pallet_col
+    			Input #portNr, pallet_row
+    			Print "Move chip to Tray(", pallet_nr, ",", pallet_col, ",", pallet_row, ")",
+    			JumpToTray(pallet_nr, pallet_col, pallet_row)
+      			Print #portNr, "JumpToTray"
+
+     		Case "JumpToSocket"
+    			' Receive destination parameters"
+    			Input #portNr, DAT_nr
+    			Input #portNr, socket_nr
+    			Print "Move chip to Socket(", DAT_nr, ",", socket_nr, ")",
+    			JumpToSocket(DAT_nr, socket_nr)
+      			Print #portNr, "JumpToSocket"
+      			
+    		Case "InsertIntoSocket"
+    			InsertIntoSocket
+    			Print #portNr, "InsertIntoSocket"
+    			
+    		Case "DropToTray"
+    			DropToTray
+    			Print #portNr, "DropToTray"
+
     		Case "JumpToCamera"
     			JumpToCamera
     			Print #portNr, "JumpToCamera"
-    			
+
     		Case "MotorOn"
-    			Motor On
-    			Print #portNr, "Motor On"
+    			 Motor On
+    			 Print #portNr, "Motor On"
     			
     		Case "PumpOff"
     			'Jump Pallet(1, 12, 6) :Z(-10)

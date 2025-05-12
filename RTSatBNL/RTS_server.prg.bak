@@ -68,10 +68,31 @@ Function RTS_server
     			status = MoveChipFromTrayToTray(src_pallet_nr, src_pallet_col, src_pallet_row, tgt_pallet_nr, tgt_pallet_col, tgt_pallet_row, 0)
     			Print #portNr, Str$(status)
     			
+     		Case "JumpToTray"
+    			' Receive destination parameters"
+    			Input #portNr, pallet_nr
+    			Input #portNr, pallet_col
+    			Input #portNr, pallet_row
+    			Print "Move chip to Tray(", pallet_nr, ",", pallet_col, ",", pallet_row, ")",
+    			JumpToTray(pallet_nr, pallet_col, pallet_row)
+      			Print #portNr, "JumpToTray"
+
+     		Case "JumpToSocket"
+    			' Receive destination parameters"
+    			Input #portNr, DAT_nr
+    			Input #portNr, socket_nr
+    			Print "Move chip to Socket(", DAT_nr, ",", socket_nr, ")",
+    			JumpToSocket(DAT_nr, socket_nr)
+      			Print #portNr, "JumpToSocket"
+      			
     		Case "JumpToCamera"
     			JumpToCamera
     			Print #portNr, "JumpToCamera"
     			
+    		Case "DropToTray"
+    			DropToTray
+    			Print #portNr, "DropToTray"
+
     		Case "MotorOn"
     			Motor On
     			Print #portNr, "Motor On"
@@ -87,25 +108,16 @@ Function RTS_server
 		    	JumpToCamera
 		    	Motor Off
 		    	Print #portNr, "RTS Quiet"
-		    	CloseNet #portNr
-		    	Wait 1
-	    		OpenNet #portNr As Server
-				Print "Waiting connection to port ", portNr
-				WaitNet #portNr
- 				'Print #portNr, "Data from host 1"
- 				Print "Connection established"
-				Print "Sending data to client"
-    			Print #portNr, "RTS ready"
+		    	'CloseNet #portNr
+		    	'Wait 1
+	    		'OpenNet #portNr As Server
+				'Print "Waiting connection to port ", portNr
+				'WaitNet #portNr
+ 				''Print #portNr, "Data from host 1"
+ 				'Print "Connection established"
+				'Print "Sending data to client"
+    			'Print #portNr, "RTS ready"
     			
-    		Case "Reconnect"
-	    		OpenNet #portNr As Server
-				Print "Waiting connection to port ", portNr
-				WaitNet #portNr
- 				'Print #portNr, "Data from host 1"
- 				Print "Connection established"
-				Print "Sending data to client"
-    			Print #portNr, "RTS ready"
-
     		Case "Shutdown"
 		    	CloseNet #portNr
 		    	PumpOff

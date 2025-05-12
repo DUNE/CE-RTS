@@ -1,0 +1,5 @@
+*.obj
+*.bak
+*.wsp
+*.prgfg
+.DS_Store
