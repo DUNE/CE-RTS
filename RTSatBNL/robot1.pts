@@ -1,4 +1,4 @@
-ENVT0100,LM:2025/05/02 14:53:57:133,DS:0000017690,CS:03595,MA:D0-AD-08-5A-A1-24,EI:           
+ENVT0100,LM:2025/05/14 18:46:16:671,DS:0000017691,CS:22375,MA:D0-AD-08-5A-A1-24,EI:           
 sVersion="2.0.0"
 nDisplayMode=2
 bDisplayR=False
@@ -566,7 +566,7 @@ Point22 {
 	rR=0
 	rS=0
 	rT=0
-	nLocal=0
+	nLocal=14
 	nHand=1
 	nElbow=1
 	nWrist=1

@@ -157,7 +157,7 @@ Function DropToTray As Boolean
 	
 	
 	
-    Go Here -Z(2)
+    Go Here -Z(2.5)
     Wait 0.5
 	If Not isContactSensorTouches Then
 		Print "ERROR! Contact Sensor does not detect contact with the chip"

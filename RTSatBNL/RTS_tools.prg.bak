@@ -179,7 +179,7 @@ Function JumpToSocket(DAT_nr As Integer, socket_nr As Integer)
 		Jump P(100 + socket_nr) :Z(-130)
 		'Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) :Z(-134.682)
 		'Jump P(100 + socket_nr) -X(DF_CAMERA_OFFSET) -U(135) :Z(-100.682)
-		Print P(100 + socket_nr)
+		'Print P(100 + socket_nr)
 	EndIf
 	
 Fend

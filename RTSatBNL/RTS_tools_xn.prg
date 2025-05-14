@@ -1147,23 +1147,24 @@ Function Tray_calibration_all()
 	fileNum = FreeFile
 	AOpen tray_calibration$ + fname$ As #fileNum
 	
-	Tray_position_calibration(1, 1, fileNum)
-	Tray_position_calibration(1, 2, fileNum)
-	Tray_position_calibration(1, 3, fileNum)
-	Tray_position_calibration(1, 4, fileNum)
-	Tray_position_calibration(2, 1, fileNum)
-	Tray_position_calibration(2, 2, fileNum)
-	Tray_position_calibration(2, 3, fileNum)
-	Tray_position_calibration(2, 4, fileNum)
+	'Tray_position_calibration(1, 1, fileNum)
+	'Tray_position_calibration(1, 2, fileNum)
+	'Tray_position_calibration(1, 3, fileNum)
+	'Tray_position_calibration(1, 4, fileNum)
+	'Tray_position_calibration(2, 1, fileNum)
+	'Tray_position_calibration(2, 2, fileNum)
+	'Tray_position_calibration(2, 3, fileNum)
+	'Tray_position_calibration(2, 4, fileNum)
 	
-	Tray_position_calibration(11, 1, fileNum)
-	Tray_position_calibration(11, 2, fileNum)
-	Tray_position_calibration(11, 3, fileNum)
-	Tray_position_calibration(11, 4, fileNum)
-	Tray_position_calibration(12, 1, fileNum)
-	Tray_position_calibration(12, 2, fileNum)
-	Tray_position_calibration(12, 3, fileNum)
-	Tray_position_calibration(12, 4, fileNum)
+	'Tray_position_calibration(11, 1, fileNum)
+	'Tray_position_calibration(11, 2, fileNum)
+	'Tray_position_calibration(11, 3, fileNum)
+	'Tray_position_calibration(11, 4, fileNum)
+	'Tray_position_calibration(12, 1, fileNum)
+	'Tray_position_calibration(12, 2, fileNum)
+	'Tray_position_calibration(12, 3, fileNum)
+	'Tray_position_calibration(12, 4, fileNum)
+	UF_camera_light_OFF
 	
 	Close #fileNum
 	

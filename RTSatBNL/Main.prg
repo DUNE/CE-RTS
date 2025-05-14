@@ -49,6 +49,18 @@ Function main
   		Exit Function
 	EndIf
 	
+	String tray_calibration$
+	tray_calibration$ = RTS_DATA + "tray_calibration/"
+
+	If Not FolderExists(tray_calibration$) Then
+  		MkDir tray_calibration$
+	EndIf
+	
+	If Not FolderExists(tray_calibration$) Then
+  		Print "***ERROR Can't create directory [" + tray_calibration$ + "]"
+  		Exit Function
+	EndIf
+	
 	
 	' reset arrays	
 	Integer i, j, k
@@ -183,15 +195,15 @@ Function main
 	Pallet 12, Tray_Right_CD_P1, Tray_Right_CD_P2, Tray_Right_CD_P3, Tray_Right_CD_P4, TRAY_CD_NCOLS, TRAY_CD_NROWS
 
 	Wait 3
-    JumpToCamera
-	Call RTS_server
+    'JumpToCamera
+	'Call RTS_server
 
 
-	'PumpOn
-	'Motor On
+	PumpOn
+	Motor On
 	
 	'Socket_height_calibration_all
-	'Tray_calibration_all()
+	Tray_calibration_all()
 	'MoveChipFromSocketToTray(1, 1, 1, 1, 1)
 	'MoveChipFromTrayToSocket(1, 1, 1, 1, 1)
 

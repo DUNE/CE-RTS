@@ -1,4 +1,4 @@
-ENVT0100,LM:2025/05/02 14:53:03:439,DS:0000017690,CS:01035,MA:D0-AD-08-5A-A1-24,EI:           
+ENVT0100,LM:2025/05/14 18:44:13:743,DS:0000017691,CS:23653,MA:D0-AD-08-5A-A1-24,EI:           
 sVersion="2.0.0"
 nDisplayMode=2
 bDisplayR=False
@@ -167,7 +167,7 @@ Point7 {
 	sLabel="Tray_Right_P1"
 	sDescription=""
 	nUndefined=0
-	rX=25.901
+	rX=26.901
 	rY=443.433
 	rZ=-64
 	rU=139.174
@@ -193,7 +193,7 @@ Point8 {
 	sLabel="Tray_Right_P2"
 	sDescription=""
 	nUndefined=0
-	rX=310.119
+	rX=311.119
 	rY=443.892
 	rZ=-64.2
 	rU=139.174
@@ -219,7 +219,7 @@ Point9 {
 	sLabel="Tray_Right_P3"
 	sDescription=""
 	nUndefined=0
-	rX=25.699
+	rX=26.699
 	rY=548.433
 	rZ=-63.6
 	rU=139.174
@@ -245,7 +245,7 @@ Point10 {
 	sLabel="Tray_Right_P4"
 	sDescription=""
 	nUndefined=0
-	rX=309.939
+	rX=310.939
 	rY=548.91
 	rZ=-64
 	rU=139.174
@@ -566,7 +566,7 @@ Point22 {
 	rR=0
 	rS=0
 	rT=0
-	nLocal=0
+	nLocal=14
 	nHand=1
 	nElbow=1
 	nWrist=1
@@ -1442,7 +1442,7 @@ Point56 {
 	sDescription=""
 	nUndefined=448
 	rX=514.497
-	rY=-210.802
+	rY=-211.001
 	rZ=-10
 	rU=94.174
 	rV=0

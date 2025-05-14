@@ -183,17 +183,17 @@ Function main
 	Pallet 12, Tray_Right_CD_P1, Tray_Right_CD_P2, Tray_Right_CD_P3, Tray_Right_CD_P4, TRAY_CD_NCOLS, TRAY_CD_NROWS
 
 	Wait 3
-    JumpToCamera
-	Call RTS_server
+    'JumpToCamera
+	'Call RTS_server
 
 
-	'PumpOn
-	'Motor On
+	PumpOn
+	Motor On
 	
 	'Socket_height_calibration_all
-	'Tray_calibration_all()
-	MoveChipFromSocketToTray(1, 1, 1, 1, 1)
-	MoveChipFromTrayToSocket(1, 1, 1, 1, 1)
+	Tray_calibration_all()
+	'MoveChipFromSocketToTray(1, 1, 1, 1, 1)
+	'MoveChipFromTrayToSocket(1, 1, 1, 1, 1)
 
 
 	PumpOff

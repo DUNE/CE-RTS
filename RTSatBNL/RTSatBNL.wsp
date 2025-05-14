@@ -1,5 +1,5 @@
-ENVT0100,LM:2025/05/11 22:56:02:729,DS:0000004519,CS:12619,MA:C8-D9-D2-35-C3-5C,EI:           
-sActiveChild="Main.prg"
+ENVT0100,LM:2025/05/14 18:59:20:225,DS:0000004516,CS:28783,MA:D0-AD-08-5A-A1-24,EI:           
+sActiveChild="Command"
 bMdiMaximized=False
 nProgramFileCount=5
 ProgramFile1 {
@@ -7,15 +7,15 @@ ProgramFile1 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=106
-		nTop=21
-		nWidth=963
-		nHeight=634
+		nLeft=78
+		nTop=15
+		nWidth=961
+		nHeight=626
 	}
 }
 ProgramFile2 {
 	sName="RTS_server.prg"
-	bOpened=False
+	bOpened=True
 	nWinState=0
 	Window {
 		nLeft=0
@@ -51,10 +51,10 @@ ProgramFile5 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=411
-		nTop=9
-		nWidth=1188
-		nHeight=783
+		nLeft=510
+		nTop=-2
+		nWidth=891
+		nHeight=780
 	}
 }
 nIncludeFileCount=2
@@ -74,20 +74,20 @@ IncludeFile2 {
 	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=29
-		nTop=70
-		nWidth=1200
-		nHeight=894
+		nLeft=30
+		nTop=84
+		nWidth=1199
+		nHeight=890
 	}
 }
 nPointFileCount=6
 PointFile1 {
 	sName="robot1.pts"
-	bOpened=False
+	bOpened=True
 	nWinState=0
 	Window {
-		nLeft=124
-		nTop=39
+		nLeft=680
+		nTop=22
 		nWidth=1201
 		nHeight=684
 	}
@@ -150,7 +150,7 @@ PointFile6 {
 nForceFileCount=0
 sActiveWindow="main.prg"
 CmdWindow {
-	bOpened=False
+	bOpened=True
 	Window {
 		nLeft=419
 		nTop=81
@@ -162,10 +162,10 @@ CmdWindow {
 RunWindow {
 	bOpened=False
 	Window {
-		nLeft=51
-		nTop=98
-		nWidth=843
-		nHeight=631
+		nLeft=225
+		nTop=46
+		nWidth=841
+		nHeight=624
 	}
 	nWinState=0
 	nNumOfDisplays=1
@@ -272,8 +272,8 @@ VisionGuide {
 	bShowFlowChart=True
 	nSplitterDistance1=704
 	nSplitterDistance2=504
-	nSplitterDistance3=344
-	nSplitterDistance4=25
+	nSplitterDistance3=473
+	nSplitterDistance4=173
 	nSplitterDistance5=552
 }
 ForceGuide {

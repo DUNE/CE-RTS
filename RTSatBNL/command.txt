@@ -2165,6 +2165,17 @@ Bad vacuum
 > Go Here  +U(45)
 > 
 > 
+> Motor On
+> 
+> 
+> UF_camera_light_OFF
+> 
+> 
+> JumpToCamera
+> 
+> 
+!!Error: 4031, Cannot execute a motion command when the motor is in the off state.
+> 
 > 
 > 
 > 
