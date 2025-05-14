@@ -68,13 +68,14 @@ Function main
 '	Print "TRAY TO TRAY MOVEMENT 4"
 '	RunMoveChipTrayToTray(2, 15, 1, 2, 15, 1, GetBoundAnglePM180(CU(Pallet(2, 15, 1)) + 0))
 
-	RunMoveChipTrayToSocket(2, 15, 1, 1, 8)
-	JumpToCamera
-	Wait 5
+'	RunMoveChipTrayToSocket(2, 15, 1, 1, 8)
+'	JumpToCamera
+'	Wait 5
 	RunMoveChipSocketToTray(1, 8, 2, 15, 1)
 	PumpOff
 	Off 12
-
+'	RunMoveChipToUFCamera(2, 15, 1)
+	
 	
 Fend
 

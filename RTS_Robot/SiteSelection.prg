@@ -152,8 +152,8 @@ Function SetSiteValues()
 	EndIf
 	' Store the focal distance, from which the Z offset is defined by suntracting contact offset)
 	DeltaZ = (CZ(PScrewDFLeft) - CZ(Here))
-	Move Here +Z(10)
-	Print "Check if stinger is in contact with screw, if O.K. "
+	Move Here +Z(CONTACT_DIST)
+	Print "Check if stinger is in aligned with screw, if O.K. "
 	Print "Set DF_CAM_FOCUS to ", DeltaZ
  	Print "Set DF_CAM_Z_OFF to ", DeltaZ - CONTACT_DIST
 	SetSpeed

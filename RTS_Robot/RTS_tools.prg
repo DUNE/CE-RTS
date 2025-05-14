@@ -2203,8 +2203,7 @@ Function RunMoveChipSocketToTray(DAT_nr As Integer, socket_nr As Integer, pallet
 	SetSpeedSetting("MoveWithoutChip")
 	
 	' Check tray destination is empty	
-	' TODO JW add attempt loop
-	
+
 	If isChipInTrayCamera(pallet_nr, col_nr, row_nr) Then
 		RTS_error(fileNum, "Chip exists in tray")
 		Go Here :Z(JUMP_LIMIT - 5)
@@ -2231,11 +2230,25 @@ Function RunMoveChipSocketToTray(DAT_nr As Integer, socket_nr As Integer, pallet
 
 	' Offsets	
 	JumpToSocket(DAT_nr, socket_nr)
-	Go Here +X(ChipSocketAlignment(10)) +Y(ChipSocketAlignment(11)) +U(ChipSocketAlignment(12))
+	' We want to pick up the chip with the hand corrected for the socket position
+	' but not corrected for the chip position
+	' That way the chip offset measured with the UF camera is more useful when
+	' we return to place the next chip
 	
+		Print "CORRECTIONS"
+		Print "DelX = ", ChipSocketAlignment(10)
+		Print "DelY = ", ChipSocketAlignment(11)
+		Print "DelU = ", ChipSocketAlignment(12)
+	
+	Go Here +X(ChipSocketAlignment(10)) +Y(ChipSocketAlignment(11)) +U(ChipSocketAlignment(12))
+
+	
+	
+	Double UPick
+	UPick = CU(Here)
 	' Pick up chip	
 	'PumpOn
-	'Wait 1
+	Wait 1
 	
 	If Not isPressureOk Then
 		RTS_error(fileNum, "Bad pressure")
@@ -2257,31 +2270,48 @@ Function RunMoveChipSocketToTray(DAT_nr As Integer, socket_nr As Integer, pallet
 	
 	' WIll then go to camera 
 	JumpToCamera
-	Wait 10
+	Wait 1
 	
-'	Double UFChipResults(12)
-'	' TODO JW: Should target U here be consistent with test before placement? i.e., the socket hand U not the tray one
-'	' Still, the rotation between hand and chip should be defined by the intended tray orientation, not measured this time
-'		
-'	
-'	If Not UFGetChipAlignment(ChipSocketAlignment(6), TrayChipOrientation(pallet_nr), ByRef UFChipResults()) Then
-'		Print "ERROR - Cannot get chip position offsets from UF camera"
-'		Exit Function
-'	EndIf
+	Double UFChipResults(12)
+	' TODO JW: Should target U here be consistent with test before placement? i.e., the socket hand U not the tray one
+	' Still, the rotation between hand and chip should be defined by the intended tray orientation, not measured this time
+
+	' Target U here is the U of the hand at pickup, this should be aligned with the measured socket but not the measured chip in socket	
+	' so that any chip offset can be accurately measured
+	
+	' ChipSocketAlignment(6) + SocketChipOrientation(ChipTypeNumber)
+	Int32 ChipTypeNumber
+	ChipTypeNumber = (10 + socket_nr) / 10
+		
+	If Not UFGetChipAlignment(ts$, ByRef idx(), UPick, SocketChipOrientation(ChipTypeNumber), ByRef UFChipResults()) Then
+		Print "ERROR - Cannot get chip position offsets from UF camera"
+		Exit Function
+	EndIf
+	
+	' Store offsets of chip from this chip for next chip
+	DAT_X(DAT_nr, socket_nr) = UFChipResults(10)
+	DAT_Y(DAT_nr, socket_nr) = UFChipResults(11)
+	DAT_U(DAT_nr, socket_nr) = UFChipResults(12)
 	
 	' Go to tray to place
 	JumpToTray(pallet_nr, col_nr, row_nr)
 	
-	' TODO JW: Check this angle
-	Go Here +U(TrayChipOrientation(pallet_nr))
+	
+	Double DeltaDir
+	' SocketChipOrientation is relative to socket not world
+	DeltaDir = (CU(Pallet(pallet_nr, col_nr, row_nr)) - TrayChipOrientation(pallet_nr)) - (UPick + SocketChipOrientation(ChipTypeNumber))
+	DeltaDir = GetBoundAnglePM180(DeltaDir)
+	Go Here +U(DeltaDir)
+	
+	' Tray precision isn't as neccessary, and chip will move slightly in drop	
+	' Don't need to apply any more corrections assuming chip is within ~1mm of expectation
+	
 	
 	If Not DropToTray Then
 		RTS_error(fileNum, "Could not place chip back in tray")
 	EndIf
 	JumpToTray_camera(pallet_nr, col_nr, row_nr)
 	' Add another check that chip is back in tray	
-	
-	
 	
 	RunMoveChipSocketToTray = 1
 		
@@ -2448,6 +2478,204 @@ Function RunMoveChipTrayToTray(src_pallet_nr As Integer, src_col_nr As Integer, 
 
 Fend
 
+Function RunMoveChipToUFCamera(pallet_nr As Integer, col_nr As Integer, row_nr As Integer) As Int64
+
+	On 12
+	
+	Int32 ChipTypeNumber
+	Double USock
+	Select CHIPTYPE$
+		Case "LArASIC"
+			ChipTypeNumber = 1
+			USock = CU(Socket_L_08)
+		Case "ColdADC"
+			ChipTypeNumber = 2
+			USock = CU(Socket_L_18)
+		Case "COLDATA"
+			ChipTypeNumber = 3
+			USock = CU(Socket_L_22)
+		Default
+			Print "WARNING: NO CHIP TYPE SELECTED. ASSUMING LARASIC"
+			ChipTypeNumber = 1
+			USock = CU(Socket_L_08)
+	Send
+
+	String ts$
+	ts$ = FmtStr$(Date$ + " " + Time$, "yyyymmddhhnnss")
+	
+	RunMoveChipToUFCamera = Val(ts$)
+
+	SetSpeed
+	
+	String fname$
+	fname$ = "manip.csv"
+	
+	Integer fileNum
+	fileNum = FreeFile
+	AOpen RTS_DATA$ + "\" + fname$ As #fileNum
+	
+	Integer i
+	Integer idx(20)
+	For i = 1 To 20
+		idx(i) = 0
+	Next i
+	
+	idx(1) = fileNum
+	
+	
+	Double res(30)
+	
+	idx(2) = pallet_nr
+	idx(3) = col_nr
+	idx(4) = row_nr
+	idx(5) = 0
+	idx(6) = 0
+	idx(7) = 0
+	idx(8) = 0
+	idx(9) = 0
+	idx(10) = 0
+	idx(11) = 0
+	
+	
+	'String d$, t$
+ 	'd$ = Date$
+	't$ = Time$
+	'Print #fileNum, d$, " ", t$,
+	Print #fileNum, ts$,
+	' pallet source
+	Print #fileNum, ",", pallet_nr, ",", col_nr, ",", row_nr,
+	' pallet target
+	Print #fileNum, ",", 0, ",", 0, ",", 0,
+	' socket source
+	Print #fileNum, ",", 0, ",", 0,
+	' socket target
+	Print #fileNum, ",", 0, ",", 0,
+	
+			
+	On 12
+	SetSpeedSetting("MoveWithoutChip")
+
+	
+	' Go to the chip
+	
+	Print "Next go to the tray and check chip position and orientation"
+	Double TrayResults(10)
+	If Not DFGetTrayAlignment(ts$, ByRef idx(), pallet_nr, col_nr, row_nr, ByRef TrayResults()) Then
+'		Print "ERROR: Cannot get tray alignment"
+		RTS_error(fileNum, "Cannot get tray alignment")
+		Exit Function
+	EndIf
+
+
+	Print "Summary"
+	Print "Tray Chip Dir  = ", TrayResults(6)
+	Print "Tray Ag4Offset = ", TrayResults(10)
+	
+
+	Wait 2
+
+
+	Print "Now attempt to pick up chip"
+	' All Okay so far, try picking up the chip
+	' TODO JW: Check for lid collisions
+
+'	Go Here :U(PickU)
+	' Starting from JumpToTray_camera position, moves to corrected in XYU, but needs to go to correct Z
+	Go Here :Z(CZ(Pallet(pallet_nr, col_nr, row_nr)))
+	
+
+	If Not isPressureOk Then
+		Print "ERROR: Bad pressure"
+		RTS_error(fileNum, "Bad pressure")
+		RunMoveChipToUFCamera = -2
+		Exit Function
+	EndIf
+		
+	If Not isVacuumOk Then
+		Print "ERROR: Bad vacuum"
+		RTS_error(fileNum, "Bad vacuum")
+		RunMoveChipToUFCamera = -3
+		Exit Function
+	EndIf
+	
+	If Not PickupFromTray Then
+		Print "ERROR: Can't pick up chip from tray"
+		RTS_error(fileNum, "Can't pick up chip from tray")
+		RunMoveChipToUFCamera = -4
+		Exit Function
+	EndIf
+	
+	' Now chip has been picked up, go to the UF camera to make some more measurements of offsets	
+	
+	Print "Next go to the UF camera and measure residual offsets "
+	
+	Double UFChipResults(12)
+	' SocketResults(6) is target U value for hand, 
+	If Not UFGetChipAlignment(ts$, ByRef idx(), USock, SocketChipOrientation(ChipTypeNumber), ByRef UFChipResults()) Then
+		RTS_error(fileNum, "Cannot get chip position offsets from UF camera")
+		Exit Function
+	EndIf
+
+	Print "UF chip find results"
+	Print "	RU0: ", UFChipResults(1)
+	Print "First measurement, RU1: ", UFChipResults(2)
+	Print "	X1: ", UFChipResults(4)
+	Print "	Y1: ", UFChipResults(5)
+	Print "	U1: ", UFChipResults(6)
+	Print "First measurement, RU2: ", UFChipResults(3)
+	Print "	X2: ", UFChipResults(7)
+	Print "	Y2: ", UFChipResults(8)
+	Print "	U2: ", UFChipResults(9)
+	Print "Offsets at RU0: Chip to Center of Rotation"
+	Print "	DeltaX: ", UFChipResults(10)
+	Print "	DeltaY: ", UFChipResults(11)
+	Print "	DeltaU: ", UFChipResults(12)
+
+	' Try the pin analysis 
+	Go Here :U(UFChipResults(1))
+	If Abs(UFChipResults(10)) > 5 Or Abs(UFChipResults(11)) > 5 Then
+		RTS_error(fileNum, "Correction in XY is too large")
+		Exit Function
+	EndIf
+	
+	Move Here +X(UFChipResults(10)) +Y(UFChipResults(11)) +U(UFChipResults(12))
+
+
+	Print #fileNum, " "
+	Close #fileNum
+
+Fend
+
+Function ReturnChipToTray(pallet_nr As Integer, col_nr As Integer, row_nr As Integer, PlaceU As Double) As Int64
+	' If holding chip, go back to tray and put chip back 	
+	JumpToTray_camera(pallet_nr, col_nr, row_nr)
+	
+	
+	If isChipInTrayCamera(pallet_nr, col_nr, row_nr) Then
+		Print "ERROR: Chip exists in the destination "
+'		RTS_error(fileNum, "Chip exists in the destination ")
+		Go Here :Z(JUMP_LIMIT - 5)
+		ReturnChipToTray = -200
+		Exit Function
+	EndIf
+	
+	' Otherwise go to tray position
+	JumpToTray(pallet_nr, col_nr, row_nr)
+	
+	PlaceU = GetBoundAnglePM180(PlaceU)
+		
+	Go Here :U(PlaceU)
+	
+	If Not DropToTray Then
+		Print "ERROR: Could not place chip back in tray"
+		'RTS_error(fileNum, "Could not place chip back in tray")
+	EndIf
+	JumpToTray_camera(pallet_nr, col_nr, row_nr)
+	' Add another check that chip is back in tray	
+	
+	ReturnChipToTray = 1
+	
+Fend
 
 '''  Camera offset functions
 
@@ -2962,7 +3190,7 @@ Function FindSocketDirectionWithDF As Boolean
 	EndIf
 	
 	If isFoundTR Then
-		VGet MSU_SocketFind2.Geom01.RobotXYU, Isfound1, xTR, yTR, uTR
+		VGet MSU_SocketFind2.Geom01.RobotXYU, isFound1, xTR, yTR, uTR
 '		Print "TR : x=", xTR, ", y=", yTR		
 	Else
 		xTR = -9999.
@@ -3165,9 +3393,9 @@ Function GetChipInSocketAlignment(id$ As String, ByRef idx() As Integer, DAT_nr 
 	CinSResults(9) = ChipPos(3) ' Chip U
 	
 	' Offsets from defined socket point (for steering)	
-	CinSResults(13) = ChipPos(1) - CinSResults(1) ' Offset in X (Socket -> Chip)
-	CinSResults(14) = ChipPos(2) - CinSResults(2)   ' Offset in Y
-	CinSResults(15) = ChipPos(3) - CinSResults(3)  ' Offset in U
+	CinSResults(10) = ChipPos(1) - CinSResults(1) ' Offset in X (Socket -> Chip)
+	CinSResults(11) = ChipPos(2) - CinSResults(2)   ' Offset in Y
+	CinSResults(12) = ChipPos(3) - CinSResults(3)  ' Offset in U
 	
 	' Offsets from measured socket (for analysis)
 	CinSResults(13) = ChipPos(1) - SockPos(1) ' Offset in X (Socket -> Chip)
@@ -3476,7 +3704,7 @@ Function UFGetChipAlignment(id$ As String, ByRef idx() As Integer, TargetHandU A
 	EndIf
 	
 	' Set X and Y offsets as distance from first measurement to axis of rotation
-	UFChipRes(10) = (UFChipRes(7) - UFChipRes(4)) / 2 ' X2 - X2 /2
+	UFChipRes(10) = (UFChipRes(7) - UFChipRes(4)) / 2 ' X2 - X1 /2
 	UFChipRes(11) = (UFChipRes(8) - UFChipRes(5)) / 2 ' Y2 - Y1 /2
 	
 	' X and Y offsets should be corrected for the first rotation offset to get back to TargetU
@@ -3667,4 +3895,160 @@ Function GetAllTrayCorrections(pallet_nr As Integer)
 	Next i
 
 Fend
+
+'Function RunUFPinAnalysis As Integer
+'	
+'	Double TPA(32)
+'	Double TPX(32)
+'	Double TPY(32)
+'	Double TPXD(32)
+'	Double TPYD(32)
+'	
+'	
+'
+'	Select SITE$
+'		Case "MSU"
+'			VRun MSU_UF_PinsSmall
+'			VGet MSU_UF_PinsSmall
+'		
+'	Send
+'	
+'Fend
+'
+'Function RunUFPinAnalysisSide(side$ As String, ByRef PinStatus() As Boolean) As Integer
+'	
+'	Double tolerance
+'	tolerance = 0.1
+'	
+'	Int32 nPins
+'	' Change max nPins if coldata functionality is added
+'	nPins = 32
+'	nSpaces = nPins - 1
+'	
+'		
+'	Double PA(nPins) ' Pin blob Area
+'	Double PX(nPins) ' Pin X position
+'	Double PY(nPins) ' Pin Y position
+'	Double PXD(nSpaces) ' inter pin distance in X
+'	Double PYD(nSpaces) ' inter pin distance in Y
+'	
+'	Boolean passed
+'	passed = False
+'	
+'	Int32 i, nFound
+'	For i = 1 To nPins
+'		PinStatus(i) = 0
+'		PA(i) = 0.
+'		PX(i) = 0.
+'		PY(i) = 0.
+'		If i <> nPins Then
+'			PXD(i) = 0.
+'			PYD(i) = 0.
+'		EndIf
+'	Next
+'
+'
+'	Select SITE$
+'		Case "MSU"
+'			VRun MSU_UF_PinsSmall
+'			VGet MSU_UF_PinsSmall.side$.Passed, passed
+'			
+'			For i = 1 To nFound
+'				VSet MSU_UF_PinsSmall.side$.CurrentResult, i
+'				VGet MSU_UF_PinsSmall.side$.CameraX, PX(i)
+'				VGet MSU_UF_PinsSmall.side$.CameraY, PY(i)
+'				VGet MSU_UF_PinsSmall.side$.Area, PA(i)
+'			Next
+'		
+'		Default
+'			Print "Site not supported by RunUFPinAnalysisSide"
+'			RunUFPinAnalysisSide = -100
+'			Exit Function
+'		
+'	Send
+'	
+'	If nFound <> nPins Then
+'		RunUFPinAnalysisSide = -RunUFPinAnalysisSide
+'		Print "Error, only found ", nFound, " pins for ", side$
+'		Exit Function
+'	EndIf
+'	
+'	Double AvX, AvY, AvA, AvDX, AvDY
+'	AvX = 0.
+'	AvY = 0.
+'	AvA = 0.
+'	AvDX = 0.
+'	AvDY = 0.
+'	i = 0
+'	For i = 1 To nFound
+'		AvX = AvX + PX(i)
+'		AvY = AvY + PY(i)
+'		AvA = AvA + PA(i)
+'		If i <> 1 Then
+'			PXD(i - 1) = PX(i) - PX(i - 1)
+'			PYD(i - 1) = PY(i) - PY(i - 1)
+'			AvDX = AvDX + PXD(i - 1)
+'			AvDY = AvDY + PYD(i - 1)
+'		EndIf
+'	Next
+'	AvX = AvX / nFound
+'	AvY = AvY / nFound
+'	AvA = AvA / nFound
+'	AvDX = AvDX / nFound
+'	AvDY = AvDY / nFound
+'	
+'	' Get residuals and standard deviation
+'	Double ResX(nPins), ResY(nPins), ResA(nPins), ResDX(nSpaces), ResDY(nSpaces)
+'	Double SdX, SdY, SdA, SdDX, SdDY
+'	Double m
+'	m = 0
+'	For i = 1 To nFound
+'		ResX(i) = PX(i) - AvX ' x - xbar
+'		SdX = SdX + ResX(i) * ResX(i) ' Sum((x-xbar)^2) 
+'		ResY(i) = PY(i) - AvY
+'		SdY = SdY + ResY(i) * ResY(i)
+'		m = m + ResX(i) * ResY(i) ' Sum((x - xbar)(y - ybar))
+'		
+'		ResA(i) = PA(i) - AvA
+'		SdA = SdA + ResA(i) * ResA(i)
+'		If i <> 1 Then
+'			ResDX(i - 1) = PXD(i - 1) - AvDX
+'			SdDX = SdDX + ResDX(i - 1) * ResDX(i - 1)
+'			ResDY(i - 1) = PYD(i - 1) - AvDY
+'			SdDY = SdDY + ResDY(i - 1) * ResDY(i - 1)
+'		EndIf
+'	Next
+'
+'	' Check if X or Y has larger spread, then look at X or Y differences
+'	Double b
+'	b = 0
+'	If SdX > SdY Then
+'		' Look for differences in X
+'	Else
+'		' Look for differences in Y
+'
+'	EndIf
+'	
+'
+'
+'	SdX = Sqr(SdX / nFound) ' sd = sqrt(Sum((x-xbar)^2)/N)
+'	SdY = Sqr(SdY / nFound)
+'	SdDX = Sqr(SdDX / nFound)
+'	SdDY = Sqr(SdDY / nFound)
+'
+'	
+'	
+'
+'		
+''	ElseIf side$ = "BlobLeft" Or side$ = "BlobRight" Then
+''		' Look for y differences
+''		SideLength = PY(nFound) - PY(1)
+''	Else
+'		Print "ERROR PIN SIDE NOT VALID"
+'		Exit Function
+'	EndIf
+'	
+'
+'	
+'Fend
 

@@ -1,6 +1,5 @@
-ENVT0100,LM:2025/04/16 18:30:32:078,DS:0000005803,CS:27950,MA:B8-85-84-9F-6A-05,EI:           
+ENVT0100,LM:2025/05/02 17:48:55:795,DS:0000005786,CS:16681,MA:B8-85-84-9F-6A-05,EI:           
 sVersion="2.0.0"
-nDisplayMode=1
 bDisplayR=False
 bDisplayS=False
 bDisplayT=False
@@ -11,17 +10,17 @@ Point1 {
 	sLabel="P_Camera"
 	sDescription=""
 	nUndefined=0
-	rX=1.718
-	rY=306.543
+	rX=2.082
+	rY=306.654
 	rZ=-79.068
-	rU=-0.947
+	rU=-0.84
 	rV=0
 	rW=0
 	rR=0
 	rS=0
 	rT=0
 	nLocal=0
-	nHand=1
+	nHand=2
 	nElbow=1
 	nWrist=1
 	nJ1Flag=0
