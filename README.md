@@ -1,4 +1,6 @@
 
+**WARNING:: 05/19/2025**, Current version have some problem with LarASIC and ColdADC, due to failure seperate some specific rotation for COLDATA and LarASIC and ColdADC. It is expected to be fixed in 2 weeks from now.
+
 This is the test version we use at BNL. It might not be very general to everyone but we are trying to do it.
 
 If you have any question about this version please contact:
