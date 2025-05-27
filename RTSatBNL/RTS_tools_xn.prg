@@ -202,7 +202,7 @@ Function JumpToSocket_cor(DAT_nr As Integer, socket_nr As Integer, fileNum As In
 				quality_len = True
 			EndIf
 
-			If check < 20 Or check > -20 Then
+			If check < 20 And check > -20 Then
 				quality_pen = True
 			EndIf
 
@@ -244,7 +244,7 @@ Function JumpToSocket_cor(DAT_nr As Integer, socket_nr As Integer, fileNum As In
 					quality_len = True
 				EndIf
 				
-				If check < 20 Or check > -20 Then
+				If check < 20 And check > -20 Then
 					quality_pen = True
 				EndIf
 
@@ -284,7 +284,7 @@ Function JumpToSocket_cor(DAT_nr As Integer, socket_nr As Integer, fileNum As In
 				quality_len = True
 			EndIf
 
-			If check < 40 Or check > -40 Then
+			If check < 40 And check > -40 Then
 				quality_pen = True
 			EndIf
 		EndIf
@@ -323,7 +323,7 @@ Function JumpToSocket_cor(DAT_nr As Integer, socket_nr As Integer, fileNum As In
 				quality_len = True
 			EndIf
 
-			If check < 40 Or check > -40 Then
+			If check < 40 And check > -40 Then
 				quality_pen = True
 			EndIf
 		EndIf
